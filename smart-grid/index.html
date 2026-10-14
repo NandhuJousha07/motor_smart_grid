@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="grid-data-url" content="data/versions.json">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<!-- URL of visitor-counter.php on your website. Where it is missing (e.g. claude.ai) the page falls back to its own counter. -->
+<meta name="grid-visitor-counter" content="visitor-counter.php">
+<title>Motor Smart GRID</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+
+<div class="wrap">
+  <div class="masthead">
+    <div class="masthead-row">
+      <div>
+        <h1>Motor Smart GRID</h1>
+        <div class="place" id="place-text">06 – 31 October 2026</div>
+        <div class="version-note" id="version-note"></div>
+      </div>
+      <div class="brand-mark"><svg class="brand-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 320" role="img" aria-label="Animated infinity loading logo">
+  <defs>
+    <linearGradient id="flow" x1="0%" y1="50%" x2="100%" y2="50%">
+      <stop offset="0%" stop-color="#011F5B"/>
+      <stop offset="42%" stop-color="#011F5B"/>
+      <stop offset="50%" stop-color="#FF5800"/>
+      <stop offset="58%" stop-color="#FF5800"/>
+      <stop offset="100%" stop-color="#011F5B"/>
+      <animateTransform attributeName="gradientTransform"
+        type="translate" from="-1 0" to="1 0" dur="1.4s" repeatCount="indefinite"/>
+    </linearGradient>
+
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="5" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <path id="infinityPath"
+      d="M105 160 C105 72 215 55 300 160 C385 265 495 248 495 160 C495 72 385 55 300 160 C215 265 105 248 105 160 Z"/>
+  </defs>
+
+  <!-- Soft moving glow -->
+  <use href="#infinityPath" fill="none" stroke="#FF5800" stroke-width="34"
+       opacity=".16" filter="url(#glow)">
+    <animate attributeName="stroke-dashoffset" from="0" to="-900" dur="1.4s" repeatCount="indefinite"/>
+  </use>
+
+  <!-- Main flowing infinity ribbon -->
+  <use href="#infinityPath" fill="none" stroke="url(#flow)" stroke-width="30"
+       stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Moving highlight -->
+  <use href="#infinityPath" fill="none" stroke="#FFFFFF" stroke-width="4"
+       stroke-linecap="round" stroke-dasharray="18 850" opacity=".72">
+    <animate attributeName="stroke-dashoffset" from="0" to="-868" dur="1.15s" repeatCount="indefinite"/>
+  </use>
+
+  <!-- Small orange energy streak -->
+  <path d="M88 112 C122 54 190 39 238 70" fill="none"
+        stroke="#FF5800" stroke-width="7" stroke-linecap="round" opacity=".9">
+    <animate attributeName="stroke-dashoffset" from="0" to="150" dur=".8s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values=".25;1;.25" dur="1.2s" repeatCount="indefinite"/>
+  </path>
+
+  <!-- Small navy energy streak -->
+  <path d="M362 250 C410 281 478 266 512 208" fill="none"
+        stroke="#011F5B" stroke-width="7" stroke-linecap="round" opacity=".9">
+    <animate attributeName="stroke-dashoffset" from="0" to="-150" dur=".8s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values=".25;1;.25" dur="1.2s" repeatCount="indefinite"/>
+  </path>
+</svg></div>
+    </div>
+  </div>
+
+  <div class="controls" id="controls-bar">
+    <div class="controls-row">
+      <select id="filter-state" autocomplete="off"></select>
+      <div class="combobox" id="segment-combobox">
+        <button type="button" class="multiselect-btn" id="segment-btn">All segments</button>
+        <div class="multiselect-panel" id="segment-panel" hidden>
+          <input type="text" class="ms-search" id="segment-search" placeholder="Type to filter…" autocomplete="off">
+          <div class="ms-options" id="segment-options"></div>
+        </div>
+      </div>
+      <div class="multiselect" id="company-multiselect">
+        <button type="button" class="multiselect-btn" id="company-btn">All insurers</button>
+        <div class="multiselect-panel" id="company-panel" hidden>
+          <input type="text" class="ms-search" id="company-search" placeholder="Type to filter…" autocomplete="off">
+          <div class="ms-options" id="company-options"></div>
+        </div>
+      </div>
+      <button class="clear-btn" id="clear-btn">Clear filters</button>
+      <div class="age-seg" id="age-seg" data-mode="both" role="radiogroup" aria-label="Vehicle age" hidden>
+        <span class="thumb" aria-hidden="true"></span>
+        <button type="button" class="age-opt" role="radio" data-age="new" aria-checked="false">New</button>
+        <button type="button" class="age-opt" role="radio" data-age="both" aria-checked="true">Both</button>
+        <button type="button" class="age-opt" role="radio" data-age="old" aria-checked="false">Rollover / Renewal</button>
+      </div>
+    </div>
+    <div class="search-box">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <input type="text" id="search" placeholder="Search insurer, segment, RTO, remark — or GVW: 1547 for weight-band lookup" autocomplete="off">
+    </div>
+    <div class="result-count-row">
+      <div class="result-count" id="result-count"></div>
+      <div class="current-section-label" id="current-section-label" hidden></div>
+      <div class="open-version-tag" id="open-version-tag"></div>
+      <div class="live-clock" id="live-clock"></div>
+    </div>
+  </div>
+
+  <section class="version-bar" id="version-bar" aria-label="GRID versions" hidden></section>
+  <div class="version-open" id="version-open" hidden><h2 id="version-open-name"></h2><span class="vchip" id="version-open-chip"></span></div>
+
+  <div id="results"></div>
+
+  <footer>
+    For every vehicle category and RTO zone, the best available payout per insurer is ranked first within its segment — the top three rows in each table are highlighted, with the leading offer marked <strong>BEST</strong>. Search matches insurer names, segment text, RTO codes and remark text together — or type <strong>GVW: 1547</strong> to find every LCV/MCV/HCV segment whose weight range actually covers that figure, including wide-span bands like "0 to 40000". This grid reflects insurer-submitted commission terms for the period shown and may change without notice — always confirm before quoting a rate.
+    <div class="visitor-count" id="visitor-count" hidden>Today's visitors: <b id="visitor-today-n"></b> &nbsp;·&nbsp; Total visitors: <b id="visitor-count-n"></b></div>
+  </footer>
+</div>
+
+<div class="watermark" id="watermark"></div>
+
+
+<script src="assets/app.js" defer></script>
+</body>
+</html>
