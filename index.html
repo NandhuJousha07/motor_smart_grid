@@ -2,16 +2,15 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="grid-data-url" content="data/grid-data.json">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow, noarchive">
-<!-- Your own website: URL of visitor-counter.php (leave empty on claude.ai) -->
+<!-- URL of visitor-counter.php on your website. Where it is missing (e.g. claude.ai) the page falls back to its own counter. -->
 <meta name="grid-visitor-counter" content="visitor-counter.php">
 <title>Motor Smart GRID</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/styles.css">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/motor-smart-grid.css">
 </head>
 <body>
 
@@ -20,7 +19,7 @@
     <div class="masthead-row">
       <div>
         <h1>Motor Smart GRID</h1>
-        <div class="place" id="place-text">06 – 31 October 2026</div>
+        <div class="place" id="place-text">22 – 31 October 2026</div>
         <div class="version-note" id="version-note"></div>
       </div>
       <div class="brand-mark"><svg class="brand-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 320" role="img" aria-label="Animated infinity loading logo">
@@ -82,7 +81,7 @@
 
   <div class="controls" id="controls-bar">
     <div class="controls-row">
-      <select id="filter-state"></select>
+      <select id="filter-state" autocomplete="off"></select>
       <div class="combobox" id="segment-combobox">
         <button type="button" class="multiselect-btn" id="segment-btn">All segments</button>
         <div class="multiselect-panel" id="segment-panel" hidden>
@@ -98,6 +97,12 @@
         </div>
       </div>
       <button class="clear-btn" id="clear-btn">Clear filters</button>
+      <div class="age-seg" id="age-seg" data-mode="both" role="radiogroup" aria-label="Vehicle age" hidden>
+        <span class="thumb" aria-hidden="true"></span>
+        <button type="button" class="age-opt" role="radio" data-age="new" aria-checked="false">New</button>
+        <button type="button" class="age-opt" role="radio" data-age="both" aria-checked="true">Both</button>
+        <button type="button" class="age-opt" role="radio" data-age="old" aria-checked="false">Rollover / Renewal</button>
+      </div>
     </div>
     <div class="search-box">
       <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
@@ -106,21 +111,24 @@
     <div class="result-count-row">
       <div class="result-count" id="result-count"></div>
       <div class="current-section-label" id="current-section-label" hidden></div>
+      <div class="open-version-tag" id="open-version-tag"></div>
       <div class="live-clock" id="live-clock"></div>
     </div>
   </div>
+
+  <section class="version-bar" id="version-bar" aria-label="GRID versions" hidden></section>
+  <div class="version-open" id="version-open" hidden><h2 id="version-open-name"></h2><span class="vchip" id="version-open-chip"></span></div>
 
   <div id="results"></div>
 
   <footer>
     For every vehicle category and RTO zone, the best available payout per insurer is ranked first within its segment — the top three rows in each table are highlighted, with the leading offer marked <strong>BEST</strong>. Search matches insurer names, segment text, RTO codes and remark text together — or type <strong>GVW: 1547</strong> to find every LCV/MCV/HCV segment whose weight range actually covers that figure, including wide-span bands like "0 to 40000". This grid reflects insurer-submitted commission terms for the period shown and may change without notice — always confirm before quoting a rate.
-    <div class="visitor-count" id="visitor-count" hidden>Total visitors: <b id="visitor-count-n"></b></div>
+    <div class="visitor-count" id="visitor-count" hidden>Today's visitors: <b id="visitor-today-n"></b> &nbsp;·&nbsp; Total visitors: <b id="visitor-count-n"></b></div>
   </footer>
 </div>
 
 <div class="watermark" id="watermark"></div>
 
-
-<script src="assets/app.js" defer></script>
+<script src="js/motor-smart-grid.js"></script>
 </body>
 </html>

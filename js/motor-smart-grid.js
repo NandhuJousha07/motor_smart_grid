@@ -1,3 +1,4 @@
+/* Motor Smart GRID – page script. Data files in data/ are encoded; see DEPLOYMENT_GUIDE.md. */
 /* ===== Motor Smart GRID – data protection =====================================
    Deterrents only: blocks right-click, inspect / view-source / save / print
    shortcuts, copying and text selection, and hides the GRID while developer
@@ -125,9 +126,12 @@ function __gridDecode(src){
     .then(function(d){ if (!(d && show(Number(d.visitors), Number(d.today)))) claudeCount(); })
     .catch(function(){ warn(url + ' could not be reached.'); claudeCount(); });
 })();
-function startGrid(DATA){
+fetch('data/versions.json', { cache:'no-cache' })
+  .then(function(r){ if (!r.ok) throw new Error('data/versions.json answered HTTP ' + r.status); return r.json(); })
+  .then(function(src){
+  var DATA = __gridDecode(src);
   // ---- GRID versions, month-wise. DATA = {versions:[{id,name,label,month,version,start,end,period,note,data|file}]}
-  // A version carries its rates inline (data) or as a separate file (file), loaded when it is opened.
+  // Each version's rates are a separate file in data/ (file), loaded when that version is opened.
   var VERS = (DATA && DATA.versions) ? DATA.versions
     : [{ id:'grid', name:'', label:'', month:DATA.publishedMonth || '', version:DATA.version || '', start:'', end:'',
          period:DATA.periodDisplay || '', note:DATA.revisionNote || '', data:DATA }];
@@ -1352,8 +1356,8 @@ function startGrid(DATA){
     el.textContent = STATE_LABEL[st];
   }
   // Months in a dropdown (newest first); the chosen month's versions sit beside it on one line.
-  // Versions that have not started yet are not shown.
-  function shownVersions(){ return VERS.filter(function(v){ return versionState(v) !== 'upcoming' || v === openVersion; }); }
+  // Versions that have not started yet are shown too, marked "Upcoming", so they can be checked before they apply.
+  function shownVersions(){ return VERS; }
   function monthsOf(list){
     var ms = [];
     list.forEach(function(v){ if (ms.indexOf(v.month) === -1) ms.push(v.month); });
@@ -1448,25 +1452,9 @@ function startGrid(DATA){
 
   render();
   } // initGrid
-}
-
-/* ---- Loader (split deployment): the version list, then each version's rates when opened ---- */
-(function(){
-  var meta = document.querySelector('meta[name="grid-data-url"]');
-  var DATA_URL = (meta && meta.content) || 'data/versions.json';
-  var base = DATA_URL.replace(/[^\/]*$/, '');
-  var box = document.getElementById('results');
-  if (box) box.innerHTML = '<div class="empty"><h3>Loading GRID…</h3></div>';
-  fetch(DATA_URL, { cache: 'no-cache' })
-    .then(function(r){ if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
-    .then(function(d){
-      var cat = __gridDecode(d);
-      (cat.versions || []).forEach(function(v){ if (v.file && !/^(\/|https?:)/.test(v.file)) v.file = base + v.file; });
-      if (box) box.innerHTML = '';
-      startGrid(cat);
-    })
-    .catch(function(err){
-      if (box) box.innerHTML = '<div class="empty"><h3>GRID data could not be loaded</h3><p>' +
-        String(err.message).replace(/[<>&]/g, '') + ' — please refresh, or contact the MIS team.</p></div>';
-    });
-})();
+})
+  .catch(function(err){
+    var box = document.getElementById('results');
+    if (box) box.innerHTML = '<div class="empty"><h3>GRID data could not be loaded</h3><p>' +
+      String((err && err.message) || err).replace(/[<>&]/g, '') + ' — please refresh, or contact the MIS team.</p></div>';
+  });

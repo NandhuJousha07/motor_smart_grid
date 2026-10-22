@@ -1,0 +1,395 @@
+/* Motor Smart GRID – styles */
+/* Body text: Atkinson Hyperlegible (SIL Open Font License 1.1, Braille Institute) — designed so that
+   i, l and I never look alike. Digits are left out (its zero is slashed), so numbers use the system font.
+   Served from fonts/, so it shows even where Google Fonts is blocked. */
+@font-face{ font-family:'Atkinson Hyperlegible'; font-style:normal; font-weight:400; font-display:swap;
+  src:url('../fonts/atkinson-hyperlegible-400.woff2') format('woff2');
+  unicode-range:U+0000-002F, U+003A-10FFFF; }
+@font-face{ font-family:'Atkinson Hyperlegible'; font-style:normal; font-weight:700; font-display:swap;
+  src:url('../fonts/atkinson-hyperlegible-700.woff2') format('woff2');
+  unicode-range:U+0000-002F, U+003A-10FFFF; }
+:root{
+  --paper:#F7F5EF;
+  --paper-raised:#FFFFFF;
+  --ink:#20242B;
+  --ink-soft:#565C66;
+  --navy:#1B3B6F;
+  --navy-deep:#12294D;
+  --gold:#B8860B;
+  --gold-deep:#8A6508;
+  --gold-tint:#FBF0D9;
+  --gold-tint-strong:#F6E3B8;
+  --line:#DEDACB;
+  --line-soft:#EAE7DB;
+  --danger:#8A3324;
+  --success:#1E7A3D;
+  --radius:3px;
+  --age-new:#1E7A3D; --age-new-tint:#E3F1E7; --age-old:#1E7A3D; --age-old-tint:#E3F1E7; --age-both:#1B3B6F; --age-on:#FFFFFF;
+}
+:root:not([data-theme="light"]){ }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]){
+    --paper:#15181D;
+    --paper-raised:#1D2127;
+    --ink:#E9E7E0;
+    --ink-soft:#A2A8B3;
+    --navy:#6E93C7;
+    --navy-deep:#9DBBE6;
+    --gold:#E0B24A;
+    --gold-deep:#F2C766;
+    --gold-tint:#2B2513;
+    --gold-tint-strong:#3A3018;
+    --line:#333844;
+    --line-soft:#262A32;
+    --danger:#F27F63;
+    --success:#4ECB7A;
+    --age-new:#4ECB7A; --age-new-tint:#17301F; --age-old:#4ECB7A; --age-old-tint:#17301F; --age-both:#6E93C7; --age-on:#15181D;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#15181D;
+  --paper-raised:#1D2127;
+  --ink:#E9E7E0;
+  --ink-soft:#A2A8B3;
+  --navy:#6E93C7;
+  --navy-deep:#9DBBE6;
+  --gold:#E0B24A;
+  --gold-deep:#F2C766;
+  --gold-tint:#2B2513;
+  --gold-tint-strong:#3A3018;
+  --line:#333844;
+  --line-soft:#262A32;
+  --danger:#F27F63;
+  --success:#4ECB7A;
+  --age-new:#4ECB7A; --age-new-tint:#17301F; --age-old:#4ECB7A; --age-old-tint:#17301F; --age-both:#6E93C7; --age-on:#15181D;
+}
+
+*{ box-sizing:border-box; }
+html,body{ margin:0; padding:0; }
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:'Atkinson Hyperlegible', -apple-system, BlinkMacSystemFont, 'Segoe UI', Verdana, sans-serif;
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+}
+h1,h2,h3{ font-family:'IBM Plex Serif', Georgia, serif; margin:0; }
+
+.wrap{ max-width:1180px; margin:0 auto; padding:0 24px; }
+
+/* ---------- Masthead ---------- */
+.masthead{
+  border-bottom:2px solid var(--navy);
+  padding:36px 0 20px;
+}
+.masthead-row{
+  display:flex; justify-content:space-between; align-items:flex-end; gap:24px; flex-wrap:wrap;
+}
+.masthead h1{
+  font-size:34px; font-weight:700; color:var(--navy-deep); letter-spacing:-0.01em;
+}
+.masthead .place{
+  font-size:15px; color:var(--ink-soft); margin-top:6px;
+}
+.version-note{
+  font-size:12.5px; color:var(--gold-deep); margin-top:4px; font-weight:600;
+}
+.brand-mark{ line-height:0; }
+.brand-mark .brand-logo{ width:150px; height:auto; display:block; }
+
+/* ---------- Version bar (month-wise) ---------- */
+.version-bar{ margin-top:16px; display:flex; gap:8px 12px; align-items:center; flex-wrap:wrap; }
+.version-bar[hidden], .version-open[hidden]{ display:none; }
+.vb-month-label{ font-size:12px; font-weight:600; letter-spacing:.04em; text-transform:uppercase; color:var(--ink-soft); }
+.vb-month-select{ font-family:'IBM Plex Serif', Georgia, serif; font-weight:600; font-size:14.5px; color:var(--navy-deep); padding:6px 30px 6px 10px; }
+.vb-month-select:focus-visible{ outline:2px solid var(--navy); outline-offset:-1px; }
+.vb-list{ display:flex; gap:8px; flex-wrap:wrap; min-width:0; }
+.vbtn{ font:inherit; text-align:left; cursor:pointer; background:var(--paper-raised); color:var(--ink);
+  border:1px solid var(--line); border-radius:var(--radius); padding:6px 10px; display:inline-flex; align-items:center; gap:8px; white-space:nowrap; }
+.vbtn:hover{ border-color:var(--navy); }
+.vbtn:focus-visible{ outline:2px solid var(--gold); outline-offset:2px; }
+.vbtn[aria-pressed="true"]{ border-color:var(--navy); box-shadow:inset 0 0 0 1px var(--navy); background:var(--gold-tint); }
+.vb-v{ font-weight:700; font-size:13px; color:var(--navy); }
+.vb-d{ font-size:12px; color:var(--ink-soft); font-variant-numeric:tabular-nums; white-space:nowrap; }
+.vchip{ font-size:10.5px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; padding:1px 7px;
+  border-radius:20px; border:1px solid currentColor; color:var(--ink-soft); white-space:nowrap; line-height:1.5; }
+.vchip.current{ color:var(--success); }
+.vchip.upcoming{ color:var(--gold-deep); }
+.version-open{ margin-top:16px; padding-bottom:8px; border-bottom:2px solid var(--navy);
+  display:flex; gap:6px 12px; align-items:center; flex-wrap:wrap; }
+.version-open h2{ font-size:18px; font-weight:600; color:var(--navy-deep); overflow-wrap:anywhere; }
+.open-version-tag{ font-size:12.5px; font-weight:600; color:var(--navy); }
+
+/* ---------- Controls ---------- */
+.controls{
+  position:sticky; top:0; z-index:20;
+  background:var(--paper);
+  border-bottom:1px solid var(--line);
+  padding:14px 0;
+}
+.controls-row{
+  display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+}
+.search-box{
+  position:relative; width:100%; margin-top:12px;
+}
+.search-box input{
+  width:100%; padding:13px 16px 13px 42px; font-size:15.5px;
+  border:1px solid var(--line); border-radius:var(--radius);
+  background:var(--paper-raised); color:var(--ink);
+  font-family:inherit;
+}
+.search-box input::placeholder{ color:var(--ink-soft); opacity:.85; white-space:normal; }
+.search-box input:focus{ outline:2px solid var(--navy); outline-offset:-1px; }
+.search-box svg{
+  position:absolute; left:14px; top:50%; transform:translateY(-50%);
+  width:17px; height:17px; stroke:var(--ink-soft); pointer-events:none;
+}
+select{
+  padding:10px 30px 10px 12px; font-size:14px; border:1px solid var(--line);
+  border-radius:var(--radius); background:var(--paper-raised); color:var(--ink);
+  font-family:inherit; cursor:pointer;
+  appearance:none;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path d='M0 0l5 6 5-6z' fill='%23565C66'/></svg>");
+  background-repeat:no-repeat; background-position:right 12px center;
+}
+.multiselect, .combobox{ position:relative; }
+.multiselect-btn{
+  padding:10px 30px 10px 12px; font-size:14px; border:1px solid var(--line);
+  border-radius:var(--radius); background:var(--paper-raised); color:var(--ink);
+  font-family:inherit; cursor:pointer; text-align:left; min-width:150px;
+  appearance:none;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path d='M0 0l5 6 5-6z' fill='%23565C66'/></svg>");
+  background-repeat:no-repeat; background-position:right 12px center;
+}
+.multiselect-btn:focus, .multiselect-btn.open{ outline:2px solid var(--navy); outline-offset:-1px; }
+.multiselect-panel{
+  position:absolute; top:calc(100% + 4px); left:0; z-index:25; min-width:240px; max-width:320px;
+  background:var(--paper-raised); border:1px solid var(--line);
+  border-radius:var(--radius); box-shadow:0 6px 20px rgba(0,0,0,.12); padding:6px 0;
+  display:flex; flex-direction:column;
+}
+/* The [hidden] attribute is how JS shows/hides these panels — this rule must win
+   over the plain .multiselect-panel{ display:flex } above (same selector specificity,
+   so without this, "hidden" is silently ignored and the panel never actually hides,
+   which is exactly what let both the Segment and Insurer panels appear open at once). */
+.multiselect-panel[hidden]{ display:none; }
+.ms-search{
+  margin:2px 10px 6px; padding:7px 10px; font-size:13px; font-family:inherit;
+  border:1px solid var(--line); border-radius:3px; background:var(--paper); color:var(--ink);
+  flex:none;
+}
+.ms-search:focus{ outline:2px solid var(--navy); outline-offset:-1px; }
+.ms-options{ max-height:240px; overflow-y:auto; }
+.multiselect-panel label, .ms-option{
+  display:flex; align-items:center; gap:8px; padding:7px 14px; font-size:13.5px;
+  color:var(--ink); cursor:pointer; white-space:nowrap;
+}
+/* Same fix as .multiselect-panel[hidden] above, but for the individual option rows —
+   the type-to-filter search sets [hidden] on each non-matching row via JS, and without
+   this override that was being silently ignored the same way, so every row stayed
+   visible regardless of what was typed. */
+.multiselect-panel label[hidden], .ms-option[hidden]{ display:none; }
+.multiselect-panel label:hover, .ms-option:hover{ background:var(--line-soft); }
+.multiselect-panel input[type="checkbox"]{ margin:0; cursor:pointer; accent-color:var(--navy); }
+.ms-option.ms-selected{ background:var(--gold-tint); font-weight:700; color:var(--gold-deep); }
+/* Keyboard-navigation highlight (Down/Up arrow) — distinct from ms-selected so it's
+   clear which row is "currently highlighted" vs. "already the active filter". */
+.ms-option.ms-active, .multiselect-panel label.ms-active{
+  background:var(--line-soft); outline:2px solid var(--navy); outline-offset:-2px;
+}
+.multiselect-panel .ms-action{
+  padding:7px 14px; font-size:12px; color:var(--navy); cursor:pointer; border-top:1px solid var(--line);
+  margin-top:4px; font-weight:600; flex:none;
+}
+.multiselect-panel .ms-action:hover{ background:var(--line-soft); }
+.clear-btn{
+  padding:10px 14px; font-size:13.5px; border:1px solid var(--line); border-radius:var(--radius);
+  background:transparent; color:var(--ink-soft); cursor:pointer; font-family:inherit;
+}
+.clear-btn:hover{ border-color:var(--navy); color:var(--navy); }
+/* Vehicle age: one 3-position selector — New (green) | Both (navy) | Rollover / Renewal (green) */
+.age-seg[hidden]{ display:none; }
+.age-seg{ position:relative; display:inline-grid; grid-template-columns:repeat(3, auto); align-items:stretch; gap:2px;
+  border:1px solid var(--line); border-radius:22px; background:var(--paper-raised); padding:3px; }
+.age-seg .thumb{ position:absolute; top:3px; bottom:3px; left:3px; border-radius:18px; background:var(--age-both);
+  transition:transform .18s ease, width .18s ease, background-color .18s ease; pointer-events:none; }
+.age-seg[data-mode="new"] .thumb{ background:var(--age-new); }
+.age-seg[data-mode="old"] .thumb{ background:var(--age-old); }
+.age-opt{ position:relative; z-index:1; font:inherit; font-size:13px; font-weight:700; color:var(--ink-soft);
+  background:none; border:0; border-radius:18px; padding:7px 14px; cursor:pointer; white-space:nowrap; }
+.age-opt[data-age="new"]{ color:var(--age-new); background:var(--age-new-tint); }
+.age-opt[data-age="old"]{ color:var(--age-old); background:var(--age-old-tint); }
+.age-opt[data-age="both"]{ color:var(--age-both); }
+.age-opt[aria-checked="true"]{ color:var(--age-on); background:transparent; }
+.age-opt:hover{ filter:brightness(.92); }
+.age-opt:focus-visible{ outline:2px solid var(--gold); outline-offset:1px; }
+@media (prefers-reduced-motion: reduce){ .age-seg .thumb{ transition:none; } }
+.result-count-row{
+  display:flex; justify-content:space-between; align-items:baseline;
+  flex-wrap:wrap; gap:6px 14px; padding-top:10px;
+}
+.result-count{ font-size:13px; color:var(--ink-soft); }
+.result-count b{ color:var(--ink); font-variant-numeric: tabular-nums; }
+.current-section-label{
+  font-size:14px; font-weight:700; color:var(--navy-deep);
+}
+.live-clock{
+  font-size:11.5px; color:var(--ink-soft); font-variant-numeric: tabular-nums;
+  white-space:nowrap; opacity:.85;
+}
+
+/* ---------- Section groups ---------- */
+.section-group{ margin-top:34px; }
+.state-group{ margin-top:44px; }
+.state-group:first-child{ margin-top:0; }
+.state-heading{
+  font-size:26px; font-weight:700; color:var(--gold-deep);
+  border-bottom:2px solid var(--gold); padding-bottom:8px; margin-bottom:6px;
+}
+.section-head{
+  display:flex; align-items:baseline; gap:10px; margin-bottom:10px;
+  border-bottom:1px solid var(--line); padding-bottom:8px;
+}
+.section-head h2{ font-size:19px; font-weight:600; color:var(--navy-deep); }
+.section-head .count{ font-size:12.5px; color:var(--ink-soft); }
+
+table{ width:100%; border-collapse:collapse; }
+thead th{
+  text-align:center; font-size:14px; letter-spacing:.03em; font-weight:700;
+  color:var(--ink-soft); padding:8px 10px; border-bottom:2px solid var(--line);
+  background:var(--paper-raised);
+  position:sticky; top:var(--controls-height, 112px); z-index:15;
+  box-shadow: 0 1px 0 var(--line);
+}
+thead th.num, td.num{ text-align:center; }
+
+/* Each record is two table rows: a compact one-line "fields" row (Insurer/Segment/
+   Package/TP) and a full-width "remarks" row directly beneath it with no gap between
+   them, so they read as one visual unit. A bold rule after the remarks row is the
+   only separator between one record and the next — no per-row hairline clutter. */
+tr.fields-row td{ border-bottom:none; padding-bottom:3px; }
+tr.remarks-row td{ border-bottom:none; padding-top:0; padding-bottom:8px; }
+tr.remarks-row{ border-bottom:2.5px solid var(--ink-soft); }
+tr.fields-row.best, tr.remarks-row.best{ background:var(--gold-tint); }
+tr.remarks-row.best{ border-bottom-color:var(--gold-deep); }
+tr.fields-row.best.rank0 td:first-child, tr.remarks-row.best.rank0 td:first-child{
+  box-shadow: inset 3px 0 0 var(--gold-deep);
+}
+tr.fields-row:hover, tr.remarks-row:hover{ background:var(--line-soft); }
+tr.fields-row.best:hover, tr.remarks-row.best:hover{ background:var(--gold-tint-strong); }
+
+td{ padding:7px 10px; font-size:13.5px; vertical-align:top; }
+td.company{ font-weight:600; white-space:nowrap; }
+td.segment{ color:var(--ink); font-weight:700; }
+td.rate{
+  font-variant-numeric: tabular-nums; font-weight:700; font-size:14.5px;
+  white-space:nowrap; text-align:center; color:var(--ink);
+}
+td.rate.pkg{ color:var(--navy-deep); }
+td.remarks{ color:var(--ink-soft); font-size:11px; font-weight:700; line-height:1.4; }
+.remark-bundle{ padding:1px 0; }
+.remark-or{
+  text-align:center; font-weight:700; font-size:10.5px; letter-spacing:.06em;
+  color:var(--gold-deep); padding:2px 0; margin:0;
+}
+.declined-flash{
+  color:var(--danger); font-weight:700;
+}
+.rto-flash{
+  color:var(--success); font-weight:700;
+}
+.badge{
+  display:inline-block; font-size:9.5px; font-weight:700; letter-spacing:.04em;
+  color:var(--gold-deep); background:transparent; border:1px solid var(--gold);
+  border-radius:2px; padding:1px 5px; margin-left:6px; vertical-align:1px;
+}
+
+/* Mobile card layout */
+.cards{ display:none; }
+.card{
+  background:var(--paper-raised); border:1px solid var(--line-soft); border-radius:var(--radius);
+  padding:12px 14px; margin-bottom:8px;
+}
+.card.best{ background:var(--gold-tint); border-color:var(--gold-tint-strong); }
+.card.best.rank0{ box-shadow: inset 3px 0 0 var(--gold-deep); }
+.card-top{ display:flex; justify-content:space-between; align-items:flex-start; gap:10px; }
+.card-company{ font-weight:700; font-size:14.5px; }
+.card-rate{ font-variant-numeric: tabular-nums; font-weight:700; font-size:16px; color:var(--navy-deep); white-space:nowrap; }
+.card-segment{ font-size:13px; color:var(--ink); margin-top:3px; font-weight:700; }
+.card-remarks{ font-size:11px; font-weight:700; color:var(--ink-soft); margin-top:6px; line-height:1.4; }
+
+.empty{
+  text-align:center; padding:60px 20px; color:var(--ink-soft);
+}
+.empty h3{ font-size:17px; color:var(--ink); margin-bottom:6px; }
+
+footer{
+  margin-top:56px; padding:22px 0 40px; border-top:1px solid var(--line);
+  font-size:12px; color:var(--ink-soft); line-height:1.7;
+}
+.watermark{
+  position:fixed; bottom:12px; right:14px; z-index:30;
+  font-size:11px; color:var(--ink-soft); background:var(--paper-raised);
+  border:1px solid var(--line); border-radius:3px; padding:5px 11px;
+  opacity:.82; font-variant-numeric: tabular-nums; box-shadow:0 2px 8px rgba(0,0,0,.08);
+  pointer-events:none;
+}
+
+@media (max-width:760px){
+  .masthead{ padding:24px 0 16px; }
+  .masthead h1{ font-size:26px; }
+  .masthead-row{ flex-direction:column; align-items:flex-start; }
+  .brand-mark .brand-logo{ width:110px; }
+  table{ display:none; }
+  .cards{ display:block; }
+  .wrap{ padding:0 16px; }
+  .watermark{ font-size:9.5px; padding:4px 8px; bottom:6px; right:6px; }
+  .result-count-row{ flex-direction:column; align-items:flex-start; gap:2px; }
+  .search-box input{ font-size:12px; padding:11px 12px 11px 34px; }
+  .vb-list{ width:100%; }
+  .version-open h2{ font-size:16px; }
+}
+
+/* Long RTO lists without spaces must wrap instead of widening the page on phones */
+td.remarks, .card-remarks, .card-segment, td.segment{ overflow-wrap:anywhere; word-break:break-word; }
+
+
+/* ---------- Visitor counter (footer) ---------- */
+.visitor-count{ margin-top:10px; font-size:12.5px; color:var(--ink-soft); }
+.visitor-count[hidden]{ display:none; }
+.visitor-count b{ color:var(--navy-deep); font-variant-numeric:tabular-nums; font-size:13.5px; }
+
+/* ---------- Promotional offer badge (e.g. POSP Special Offer) ---------- */
+.offer-badge{
+  display:flex; align-items:flex-start; gap:8px; margin:6px 0 2px; padding:7px 12px 7px 10px;
+  background:linear-gradient(100deg, #FFF3C4 0%, #FFD866 55%, #FFB534 100%);
+  border:1px solid #E08A00; border-left:5px solid #FF5800; border-radius:6px;
+  color:#3A2200; font-size:12.5px; font-weight:600; line-height:1.4;
+  box-shadow:0 1px 0 rgba(255,88,0,.18);
+}
+.offer-bolt{ font-size:16px; line-height:1.1; flex:none; }
+.offer-title{ color:#B23C00; font-weight:800; letter-spacing:.02em; text-transform:uppercase; margin-right:4px; }
+.offer-text{ color:#3A2200; }
+.offer-badge mark{ background:#fff; }
+@media (prefers-reduced-motion: no-preference){
+  .offer-badge{ background-size:200% 100%; animation:offerShine 4s ease-in-out infinite; }
+  @keyframes offerShine{ 0%,100%{ background-position:0% 0; } 50%{ background-position:100% 0; } }
+}
+
+/* ---------- Data protection ---------- */
+body{ -webkit-user-select:none; user-select:none; -webkit-touch-callout:none; }
+input, textarea, select{ -webkit-user-select:text; user-select:text; }
+img, svg{ -webkit-user-drag:none; }
+.protect-shield{
+  position:fixed; inset:0; z-index:9999; display:none; align-items:center; justify-content:center;
+  background:var(--paper); color:var(--ink); text-align:center; padding:24px;
+  font-family:'Atkinson Hyperlegible', -apple-system, BlinkMacSystemFont, 'Segoe UI', Verdana, sans-serif;
+}
+.protect-shield.on{ display:flex; }
+.protect-shield h2{ font-size:20px; margin:0 0 8px; color:var(--navy-deep); }
+.protect-shield p{ margin:0; color:var(--ink-soft); font-size:14px; }
+@media print{
+  body > *{ display:none !important; }
+  body::after{ content:"Printing is disabled for the Motor Smart GRID."; display:block; padding:40px; font:16px sans-serif; }
+}
