@@ -1,4 +1,3 @@
-/* Motor Smart GRID – page script. Data files in data/ are encoded; see DEPLOYMENT_GUIDE.md. */
 /* ===== Motor Smart GRID – data protection =====================================
    Deterrents only: blocks right-click, inspect / view-source / save / print
    shortcuts, copying and text selection, and hides the GRID while developer
@@ -126,12 +125,9 @@ function __gridDecode(src){
     .then(function(d){ if (!(d && show(Number(d.visitors), Number(d.today)))) claudeCount(); })
     .catch(function(){ warn(url + ' could not be reached.'); claudeCount(); });
 })();
-fetch('data/versions.json', { cache:'no-cache' })
-  .then(function(r){ if (!r.ok) throw new Error('data/versions.json answered HTTP ' + r.status); return r.json(); })
-  .then(function(src){
-  var DATA = __gridDecode(src);
+function startGrid(DATA){
   // ---- GRID versions, month-wise. DATA = {versions:[{id,name,label,month,version,start,end,period,note,data|file}]}
-  // Each version's rates are a separate file in data/ (file), loaded when that version is opened.
+  // A version carries its rates inline (data) or as a separate file (file), loaded when it is opened.
   var VERS = (DATA && DATA.versions) ? DATA.versions
     : [{ id:'grid', name:'', label:'', month:DATA.publishedMonth || '', version:DATA.version || '', start:'', end:'',
          period:DATA.periodDisplay || '', note:DATA.revisionNote || '', data:DATA }];
@@ -770,6 +766,27 @@ fetch('data/versions.json', { cache:'no-cache' })
   // literal " OR " separator (see build_json2.py). Split those back apart so each full
   // condition reads as its own line, with a centered "OR" between them, instead of one
   // long run-on line that's hard to parse at a glance.
+  // Rate change against the earlier rate (set by the build, see monthly-update/compare.py):
+  // ▲ Increased (green), ▼ Decreased (red), both when one condition went up and another down,
+  // New when there was no earlier rate. Hovering shows the earlier rate.
+  function revHtml(r){
+    if (!r || !r.chg) return '';
+    var was = r.was ? 'Earlier rate: ' + r.was : '';
+    var first = String(r.rev) === '1';
+    var tip = function(k){
+      if (k === 'new') return first ? 'New rate added in Version 1 (not in the original GRID workbook)' : 'New rate in Version ' + r.rev + ' – no earlier rate to compare';
+      return (k === 'up' ? 'Increased' : 'Decreased') + ' in Version ' + r.rev + (first ? ' (against the original GRID workbook)' : ' (against Version ' + (Number(r.rev) - 1) + ')') + (was ? ' – ' + was : '');
+    };
+    var b = function(k, txt){ return '<span class="chg-badge ' + k + '" title="' + escapeHtml(tip(k)) + '">' + txt + '</span>'; };
+    // the change itself, e.g. "▲ Increased +3.00", "▼ Decreased −5.00(OD)", "▲ Increased TP +5.00"
+    var up = '\u25B2 Increased' + (r.dup ? ' <b class="chg-val">' + escapeHtml(r.dup) + '</b>' : '');
+    var dn = '\u25BC Decreased' + (r.ddn ? ' <b class="chg-val">' + escapeHtml(r.ddn) + '</b>' : '');
+    if (r.chg === 'up') return b('up', up);
+    if (r.chg === 'down') return b('down', dn);
+    if (r.chg === 'mixed') return b('up', up) + b('down', dn);
+    if (r.chg === 'new') return b('new', 'New');
+    return '';
+  }
   // A promotional offer attached to a rate (manual correction), shown as its own branded badge.
   function offerHtml(r, q){
     var o = r && r.offer; if (!o) return '';
@@ -1002,7 +1019,7 @@ fetch('data/versions.json', { cache:'no-cache' })
       var tpHtml = '<td class="rate">' + escapeHtml(r.single ? '—' : (r.tp||'NA')) + (tpIsBest?'<span class="badge">BEST</span>':'') + '</td>';
       html += '<tr class="fields-row '+cls+'">' +
         (showState ? '<td class="company">' + escapeHtml(stateName(r.state)) + '</td>' : '') +
-        '<td class="company">' + highlight(r.company, q) + '</td>' +
+        '<td class="company">' + highlight(r.company, q) + revHtml(r) + '</td>' +
         '<td class="segment">' + highlight(r.segment, q) + '</td>' +
         pkgHtml + tpHtml +
         '</tr>';
@@ -1021,7 +1038,7 @@ fetch('data/versions.json', { cache:'no-cache' })
       var cls = isBest ? 'best rank' + idx : '';
       var rateStr = r.single ? (r.package||'NA') : ((r.package||'NA') + (r.tp ? ' / TP ' + r.tp : ''));
       html += '<div class="card '+cls+'">' +
-        '<div class="card-top"><div class="card-company">' + highlight(r.company, q) + (idx===0?'<span class="badge">BEST</span>':'') + '</div>' +
+        '<div class="card-top"><div class="card-company">' + highlight(r.company, q) + revHtml(r) + (idx===0?'<span class="badge">BEST</span>':'') + '</div>' +
         '<div class="card-rate">' + escapeHtml(rateStr) + '</div></div>' +
         '<div class="card-segment">' + (showState ? escapeHtml(stateName(r.state)) + ' — ' : '') + highlight(r.segment, q) + '</div>' +
         '<div class="card-remarks">' + formatRemarks(r.remarks, q) + offerHtml(r, q) + '</div>' +
@@ -1065,7 +1082,7 @@ fetch('data/versions.json', { cache:'no-cache' })
         tpHtml = '<td class="rate">' + escapeHtml(r.tp||'NA') + (tpIsBest?'<span class="badge">BEST</span>':'') + '</td>';
       }
       html += '<tr class="fields-row '+cls+'">' +
-        '<td class="company">' + highlight(r.company, q) + '</td>' +
+        '<td class="company">' + highlight(r.company, q) + revHtml(r) + '</td>' +
         '<td class="segment">' + highlight(r.segment, q) + '</td>' +
         pkgHtml + tpHtml +
         '</tr>';
@@ -1081,7 +1098,7 @@ fetch('data/versions.json', { cache:'no-cache' })
       var cls = isBest ? 'best rank' + r.rank : '';
       var rateStr = r.single ? (r.package||'NA') : ((r.package||'NA') + (r.tp ? ' / TP ' + r.tp : ''));
       html += '<div class="card '+cls+'">' +
-        '<div class="card-top"><div class="card-company">' + highlight(r.company, q) + (r.rank===0?'<span class="badge">BEST</span>':'') + '</div>' +
+        '<div class="card-top"><div class="card-company">' + highlight(r.company, q) + revHtml(r) + (r.rank===0?'<span class="badge">BEST</span>':'') + '</div>' +
         '<div class="card-rate">' + escapeHtml(rateStr) + '</div></div>' +
         '<div class="card-segment">' + highlight(r.segment, q) + '</div>' +
         '<div class="card-remarks">' + formatRemarks(r.remarks, q) + offerHtml(r, q) + '</div>' +
@@ -1128,7 +1145,7 @@ fetch('data/versions.json', { cache:'no-cache' })
         // A row that explicitly declines the searched RTO pays nothing there — never
         // show it as a result for that RTO, no matter how else it might match.
         if (isRtoCodeQuery && isRtoDeclined(r.remarks, normRtoCode)) return false;
-        var hay = normalizeHaystack(r.company + ' ' + r.title + ' ' + r.segment + ' ' + r.remarks + (r.offer ? ' ' + (r.offer.title || '') + ' ' + (r.offer.text || r.offer) : ''));
+        var hay = normalizeHaystack(r.company + (r.chg ? ' revised' + ({up:' increased', down:' decreased', mixed:' increased decreased', 'new':' new rate'}[r.chg] || '') : '') + ' ' + r.title + ' ' + r.segment + ' ' + r.remarks + (r.offer ? ' ' + (r.offer.title || '') + ' ' + (r.offer.text || r.offer) : ''));
         var textMatch = hay.indexOf(normalizeQuery(q)) !== -1;
         // A specific RTO code search (e.g. "TN07") should also surface rows scoped to
         // "All RTO(s)" / "All TN RTO(s)" — those blanket-cover every RTO, including the
@@ -1452,9 +1469,25 @@ fetch('data/versions.json', { cache:'no-cache' })
 
   render();
   } // initGrid
-})
-  .catch(function(err){
-    var box = document.getElementById('results');
-    if (box) box.innerHTML = '<div class="empty"><h3>GRID data could not be loaded</h3><p>' +
-      String((err && err.message) || err).replace(/[<>&]/g, '') + ' — please refresh, or contact the MIS team.</p></div>';
-  });
+}
+
+/* ---- Loader (split deployment): the version list, then each version's rates when opened ---- */
+(function(){
+  var meta = document.querySelector('meta[name="grid-data-url"]');
+  var DATA_URL = (meta && meta.content) || 'data/versions.json';
+  var base = DATA_URL.replace(/[^\/]*$/, '');
+  var box = document.getElementById('results');
+  if (box) box.innerHTML = '<div class="empty"><h3>Loading GRID…</h3></div>';
+  fetch(DATA_URL, { cache: 'no-cache' })
+    .then(function(r){ if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(function(d){
+      var cat = __gridDecode(d);
+      (cat.versions || []).forEach(function(v){ if (v.file && !/^(\/|https?:)/.test(v.file)) v.file = base + v.file; });
+      if (box) box.innerHTML = '';
+      startGrid(cat);
+    })
+    .catch(function(err){
+      if (box) box.innerHTML = '<div class="empty"><h3>GRID data could not be loaded</h3><p>' +
+        String(err.message).replace(/[<>&]/g, '') + ' — please refresh, or contact the MIS team.</p></div>';
+    });
+})();

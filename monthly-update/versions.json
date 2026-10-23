@@ -1,0 +1,52 @@
+[
+ {
+  "id": "2026-10-v1",
+  "month": "October 2026",
+  "version": "1",
+  "start": "2026-10-06",
+  "end": "2026-10-31",
+  "source": "source/From_6th_To_31st_Oct_PAYOUT_Grid_2026.xlsx",
+  "corrections": "monthly-update/corrections_Oct2026_v1.json",
+  "changes": "October GRID with revisions: ICICI TN Auto Diesel 46% (listed RC locations, Chennai Code IM-2358692 only), New India TN School Bus 66%, Reliance School Bus (TN 68.5%, KL/KA/AP-TS 71%); Royal Sundaram TN Private Car SATP rates added from RSA_Missing_GRID_-_Oct_26.xlsx (13 Oct 2026); Kshema Kerala Two-Wheeler rates (first issued with the October Version 2 changes) included as the earlier rates, 23 Oct 2026",
+  "supplements": [
+   "source/RSA_Missing_GRID_-_Oct_26.xlsx",
+   {
+    "file": "source/GRID_Oct_V2_Changes_-_Effective_22-10-2026.xlsx",
+    "only": [
+     {
+      "company": "Kshema",
+      "block": "TW"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "2026-10-v2",
+  "month": "October 2026",
+  "version": "2",
+  "start": "2026-10-22",
+  "end": "2026-10-31",
+  "source": "source/From_6th_To_31st_Oct_PAYOUT_Grid_2026.xlsx",
+  "corrections": "monthly-update/corrections_Oct2026_v2.json",
+  "changes": "October Version 2 from 22-10-2026: TATA AIG TN School Bus 61% above 12 seats, all TN RTOs; National complete GRID revised (TN, KL, KA, AP-TS) from GRID_Oct_V2_Changes_-_Effective_22-10-2026.xlsx; Kshema Two-Wheeler for Kerala (from EG_GRID_Kshema_Kerala.xlsx, 23 Oct 2026) (CPA/TPPD remark on Bundle only, as in the sheet)",
+  "supplements": [
+   "source/RSA_Missing_GRID_-_Oct_26.xlsx",
+   {
+    "file": "source/GRID_Oct_V2_Changes_-_Effective_22-10-2026.xlsx",
+    "replaces": [
+     "National"
+    ]
+   },
+   {
+    "file": "source/EG_GRID_Kshema_Kerala.xlsx",
+    "replaces": [
+     {
+      "company": "Kshema",
+      "block": "TW"
+     }
+    ]
+   }
+  ]
+ }
+]

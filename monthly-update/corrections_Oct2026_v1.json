@@ -1,0 +1,114 @@
+[
+ {
+  "sheet": "TN PO",
+  "row": 885,
+  "note": "New India TN School Bus revised 06 Oct 2026: 56/56 ALL RTO -> 66/66, branch-restricted",
+  "expect": {
+   "company": "New India",
+   "cat": "SCHOOL BUS",
+   "pkg": 56,
+   "tp": 56,
+   "rto": "ALL RTO"
+  },
+  "set": {
+   "pkg": 66,
+   "tp": 66,
+   "rto": "Policy Issuance allowed only in below mentioned Branches Vadavalli (Br ID – 721502), Coimbatore (Br ID – 721600), Pollachi (Br ID – 722200)"
+  }
+ },
+ {
+  "sheet": "TN PO",
+  "row": 775,
+  "note": "ICICI TN PCV Auto (Diesel) revised 08 Oct 2026: 11/11 ROTN RTO codes -> 46/46, only for the listed Tamil Nadu RTO RC locations (per attachment); 12 Oct 2026: remark added - Commission applicable only if the business sourced from Chennai Code: IM-2358692",
+  "expect": {
+   "company": "ICICI",
+   "cat": "Auto",
+   "pkg": 11,
+   "tp": 11,
+   "remark": "Fuel Type: Diesel",
+   "rto": "TAMILNADU RTO's - TN11, TN12, TN15, TN16, TN18, TN19, TN20, TN21, TN22, TN23, TN24, TN25, TN27, TN28, TN29, TN30, TN31, TN32, TN33, TN34, TN36, TN39, TN40, TN41, TN42, TN43, TN45, TN46, TN47, TN48, TN49, TN50, TN51, TN52, TN54, TN55, TN56, TN57, TN58, TN59, TN60, TN61, TN63, TN64, TN65, TN67, TN68, TN69, TN70, TN72, TN73, TN74, TN75, TN76, TN77, TN78, TN79, TN81, TN82, TN83, TN84, TN86, TN87, TN88, TN90, TN91, TN92, TN93, TN94, TN95, TN96, TN97"
+  },
+  "set": {
+   "pkg": 46,
+   "tp": 46,
+   "rto": "Only for the Tamil Nadu RTO RC locations: Madurai, Vellore, Nilgiri, Tenkasi, Mettupalayam, Dharmapuri, Tiruppur, Villupuram, Salem, Chengalpattu, Tirunelveli, Dindigul, Tiruvannamalai, Thanjavur, Gudalur, Chidambaram, Ramanathpuram, Kallakurichi, Cuddalore, Pollachi, Virudhunagar, Sivagangai, Vaniyambadi, Kumbakonam, Karur, Periakulam, Ranipettai, Kancheepuram, Tuticorin, Pudukkottai, Ooty, Nagercoil, Marthandam, Srirangam, Udumalpet, Tiruvallur, Tiruvarur, Tindivanam, Tiruchirappalli, Thiruchendur, Thiruverumbur, Theni",
+   "remark": "Fuel Type: Diesel; Commission applicable only if the business sourced from Chennai Code: IM-2358692"
+  }
+ },
+ {
+  "sheet": "TN PO",
+  "row": 886,
+  "note": "Reliance TN School Bus revised 09 Oct 2026 (Special School Bus GRID for South): 66/66 -> 68.5/68.5 normal slab; POSP volume offer +3.0% on ₹5L volume (71.5%)",
+  "expect": {
+   "company": "Reliance",
+   "cat": "SCHOOL BUS",
+   "pkg": 66,
+   "tp": 66
+  },
+  "set": {
+   "pkg": 68.5,
+   "tp": 68.5,
+   "offer": {
+    "title": "POSP Special Offer!",
+    "text": "Hit ₹5L volume to unlock an additional 3.0% payout (68.5% → 71.5%). No seating capacity restrictions."
+   }
+  }
+ },
+ {
+  "sheet": "KL PO",
+  "row": 586,
+  "note": "Reliance KL School Bus revised 09 Oct 2026 (Special School Bus GRID for South): 70/70 -> 71/71 normal slab; POSP volume offer +3.0% on ₹5L volume (74%)",
+  "expect": {
+   "company": "Reliance",
+   "cat": "SCHOOL BUS",
+   "pkg": 70,
+   "tp": 70
+  },
+  "set": {
+   "pkg": 71,
+   "tp": 71,
+   "offer": {
+    "title": "POSP Special Offer!",
+    "text": "Hit ₹5L volume to unlock an additional 3.0% payout (71% → 74%). No seating capacity restrictions."
+   }
+  }
+ },
+ {
+  "sheet": "KA PO",
+  "row": 666,
+  "note": "Reliance KA School Bus revised 09 Oct 2026 (Special School Bus GRID for South): 70/70 -> 71/71 normal slab; POSP volume offer +3.0% on ₹5L volume (74%)",
+  "expect": {
+   "company": "Reliance",
+   "cat": "SCHOOL BUS",
+   "pkg": 70,
+   "tp": 70
+  },
+  "set": {
+   "pkg": 71,
+   "tp": 71,
+   "offer": {
+    "title": "POSP Special Offer!",
+    "text": "Hit ₹5L volume to unlock an additional 3.0% payout (71% → 74%). No seating capacity restrictions."
+   }
+  }
+ },
+ {
+  "sheet": "AP-TS PO",
+  "row": 1324,
+  "note": "Reliance AP-TS School Bus revised 09 Oct 2026 (Special School Bus GRID for South): 70/70 -> 71/71 normal slab; POSP volume offer +3.0% on ₹5L volume (74%)",
+  "expect": {
+   "company": "Reliance",
+   "cat": "SCHOOL BUS",
+   "pkg": 70,
+   "tp": 70
+  },
+  "set": {
+   "pkg": 71,
+   "tp": 71,
+   "offer": {
+    "title": "POSP Special Offer!",
+    "text": "Hit ₹5L volume to unlock an additional 3.0% payout (71% → 74%). No seating capacity restrictions."
+   }
+  }
+ }
+]

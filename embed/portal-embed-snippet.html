@@ -1,0 +1,19 @@
+<!--
+  Motor Smart GRID - embed inside an existing portal page.
+  Use this when the GRID must sit inside the portal's own header/menu.
+  Change SRC to wherever you hosted the GRID (same domain recommended).
+  The page opens today's GRID version; its version bar switches to any other version inside the frame.
+-->
+<div class="smart-grid-frame-wrap" style="width:100%;max-width:1240px;margin:0 auto;">
+  <iframe
+    src="/smart-grid/index.html"
+    title="Motor Smart GRID"
+    loading="lazy"
+    style="width:100%;height:calc(100vh - 120px);min-height:640px;border:0;display:block;"
+    referrerpolicy="strict-origin-when-cross-origin">
+  </iframe>
+</div>
+<!--
+  Alternative: a simple menu link (opens the GRID full-page, best on mobile)
+  <a href="/smart-grid/index.html" target="_blank" rel="noopener">Motor Smart GRID</a>
+-->

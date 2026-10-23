@@ -1,0 +1,27 @@
+# Motor Smart GRID - Apache .htaccess (place in the smart-grid folder)
+DirectoryIndex index.html motor-smart-grid.html
+AddDefaultCharset UTF-8
+AddType application/json .json
+
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css application/javascript application/json
+</IfModule>
+
+<IfModule mod_headers.c>
+  <FilesMatch "\.(json|html)$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+  <FilesMatch "\.(css|js)$">
+    Header set Cache-Control "public, max-age=3600"
+  </FilesMatch>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  # smart-grid/ folder. For single-file/motor-smart-grid.html change script-src to: 'self' 'unsafe-inline'
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; frame-ancestors 'self'"
+</IfModule>
+
+# Visitor counter: keep the count file private
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteRule ^counter-data(/|$) - [F,L]
+</IfModule>

@@ -1,0 +1,171 @@
+{
+  "product": "Motor Smart GRID",
+  "builtAt": "2026-10-23T10:43:37+00:00",
+  "opensFirstOnBuildDay": "2026-10-v2",
+  "versions": [
+    {
+      "id": "2026-10-v1",
+      "name": "Smart Grid October 2026 - Version 1",
+      "label": "Smart Grid October 2026 - Version 1 - 06-10-2026 to 21-10-2026",
+      "dates": "06-10-2026 to 21-10-2026",
+      "month": "October 2026",
+      "version": "1",
+      "start": "2026-10-06",
+      "end": "2026-10-21",
+      "period": "06 – 21 October 2026",
+      "note": "",
+      "source": "source/From_6th_To_31st_Oct_PAYOUT_Grid_2026.xlsx",
+      "supplements": [
+        "source/RSA_Missing_GRID_-_Oct_26.xlsx",
+        {
+          "file": "source/GRID_Oct_V2_Changes_-_Effective_22-10-2026.xlsx",
+          "only": [
+            {
+              "company": "Kshema",
+              "block": "TW"
+            }
+          ]
+        }
+      ],
+      "corrections": "monthly-update/corrections_Oct2026_v1.json",
+      "changes": "October GRID with revisions: ICICI TN Auto Diesel 46% (listed RC locations, Chennai Code IM-2358692 only), New India TN School Bus 66%, Reliance School Bus (TN 68.5%, KL/KA/AP-TS 71%); Royal Sundaram TN Private Car SATP rates added from RSA_Missing_GRID_-_Oct_26.xlsx (13 Oct 2026); Kshema Kerala Two-Wheeler rates (first issued with the October Version 2 changes) included as the earlier rates, 23 Oct 2026",
+      "totalRates": 3677,
+      "ratesByState": {
+        "TN": 928,
+        "KL": 566,
+        "KA": 855,
+        "AP-TS": 1328
+      },
+      "correctionsApplied": [
+        {
+          "sheet": "TN PO",
+          "row": 885,
+          "note": "New India TN School Bus revised 06 Oct 2026: 56/56 ALL RTO -> 66/66, branch-restricted"
+        },
+        {
+          "sheet": "TN PO",
+          "row": 775,
+          "note": "ICICI TN PCV Auto (Diesel) revised 08 Oct 2026: 11/11 ROTN RTO codes -> 46/46, only for the listed Tamil Nadu RTO RC locations (per attachment); 12 Oct 2026: remark added - Commission applicable only if the business sourced from Chennai Code: IM-2358692"
+        },
+        {
+          "sheet": "TN PO",
+          "row": 886,
+          "note": "Reliance TN School Bus revised 09 Oct 2026 (Special School Bus GRID for South): 66/66 -> 68.5/68.5 normal slab; POSP volume offer +3.0% on ₹5L volume (71.5%)"
+        },
+        {
+          "sheet": "KL PO",
+          "row": 586,
+          "note": "Reliance KL School Bus revised 09 Oct 2026 (Special School Bus GRID for South): 70/70 -> 71/71 normal slab; POSP volume offer +3.0% on ₹5L volume (74%)"
+        },
+        {
+          "sheet": "KA PO",
+          "row": 666,
+          "note": "Reliance KA School Bus revised 09 Oct 2026 (Special School Bus GRID for South): 70/70 -> 71/71 normal slab; POSP volume offer +3.0% on ₹5L volume (74%)"
+        },
+        {
+          "sheet": "AP-TS PO",
+          "row": 1324,
+          "note": "Reliance AP-TS School Bus revised 09 Oct 2026 (Special School Bus GRID for South): 70/70 -> 71/71 normal slab; POSP volume offer +3.0% on ₹5L volume (74%)"
+        }
+      ],
+      "remarkAdded": [],
+      "ratesLabelled": {
+        "increased": 6,
+        "new": 26
+      }
+    },
+    {
+      "id": "2026-10-v2",
+      "name": "Smart Grid October 2026 - Version 2",
+      "label": "Smart Grid October 2026 - Version 2 - 22-10-2026 to 31-10-2026",
+      "dates": "22-10-2026 to 31-10-2026",
+      "month": "October 2026",
+      "version": "2",
+      "start": "2026-10-22",
+      "end": "2026-10-31",
+      "period": "22 – 31 October 2026",
+      "note": "",
+      "source": "source/From_6th_To_31st_Oct_PAYOUT_Grid_2026.xlsx",
+      "supplements": [
+        "source/RSA_Missing_GRID_-_Oct_26.xlsx",
+        {
+          "file": "source/GRID_Oct_V2_Changes_-_Effective_22-10-2026.xlsx",
+          "replaces": [
+            "National"
+          ]
+        },
+        {
+          "file": "source/EG_GRID_Kshema_Kerala.xlsx",
+          "replaces": [
+            {
+              "company": "Kshema",
+              "block": "TW"
+            }
+          ]
+        }
+      ],
+      "corrections": "monthly-update/corrections_Oct2026_v2.json",
+      "changes": "October Version 2 from 22-10-2026: TATA AIG TN School Bus 61% above 12 seats, all TN RTOs; National complete GRID revised (TN, KL, KA, AP-TS) from GRID_Oct_V2_Changes_-_Effective_22-10-2026.xlsx; Kshema Two-Wheeler for Kerala (from EG_GRID_Kshema_Kerala.xlsx, 23 Oct 2026) (CPA/TPPD remark on Bundle only, as in the sheet)",
+      "totalRates": 3736,
+      "ratesByState": {
+        "TN": 943,
+        "KL": 577,
+        "KA": 872,
+        "AP-TS": 1344
+      },
+      "correctionsApplied": [
+        {
+          "sheet": "TN PO",
+          "row": 885,
+          "note": "New India TN School Bus revised 06 Oct 2026: 56/56 ALL RTO -> 66/66, branch-restricted"
+        },
+        {
+          "sheet": "TN PO",
+          "row": 775,
+          "note": "ICICI TN PCV Auto (Diesel) revised 08 Oct 2026: 11/11 ROTN RTO codes -> 46/46, only for the listed Tamil Nadu RTO RC locations (per attachment); 12 Oct 2026: remark added - Commission applicable only if the business sourced from Chennai Code: IM-2358692"
+        },
+        {
+          "sheet": "TN PO",
+          "row": 886,
+          "note": "Reliance TN School Bus revised 09 Oct 2026 (Special School Bus GRID for South): 66/66 -> 68.5/68.5 normal slab; POSP volume offer +3.0% on ₹5L volume (71.5%)"
+        },
+        {
+          "sheet": "KL PO",
+          "row": 586,
+          "note": "Reliance KL School Bus revised 09 Oct 2026 (Special School Bus GRID for South): 70/70 -> 71/71 normal slab; POSP volume offer +3.0% on ₹5L volume (74%)"
+        },
+        {
+          "sheet": "KA PO",
+          "row": 666,
+          "note": "Reliance KA School Bus revised 09 Oct 2026 (Special School Bus GRID for South): 70/70 -> 71/71 normal slab; POSP volume offer +3.0% on ₹5L volume (74%)"
+        },
+        {
+          "sheet": "AP-TS PO",
+          "row": 1324,
+          "note": "Reliance AP-TS School Bus revised 09 Oct 2026 (Special School Bus GRID for South): 70/70 -> 71/71 normal slab; POSP volume offer +3.0% on ₹5L volume (74%)"
+        },
+        {
+          "sheet": "TN PO",
+          "row": 889,
+          "note": "TATA AIG TN School Bus revised 22 Oct 2026 (October Version 2): 61/61 for above 12 seats, all TN RTOs (was 58/58 Chennai & Coimbatore)"
+        },
+        {
+          "sheet": "TN PO",
+          "row": 890,
+          "note": "TATA AIG TN School Bus 16 To 30 seats ROTN 53/53 withdrawn 22 Oct 2026 - covered by 61% above 12 seats, all TN RTOs"
+        },
+        {
+          "sheet": "TN PO",
+          "row": 891,
+          "note": "TATA AIG TN School Bus Above 31 seats ROTN 56/56 withdrawn 22 Oct 2026 - covered by 61% above 12 seats, all TN RTOs"
+        }
+      ],
+      "remarkAdded": [],
+      "ratesLabelled": {
+        "increased": 122,
+        "decreased": 40,
+        "new": 63
+      }
+    }
+  ]
+}
