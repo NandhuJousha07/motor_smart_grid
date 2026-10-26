@@ -9,7 +9,7 @@
 | `parse.py` | Reads the state sheets (`TN PO`, `KL PO`, `KA PO`, `AP-TS PO`, `MH PO`) and finds the CV / Private Car / Two-Wheeler blocks by their header rows |
 | `template.html` | Page design and logic (filters, version bar, search with keys — age / cc / fuel / make / rto / gvw / seats — and GVW lookup); the data is injected into it |
 | `corrections_Oct2026_v1.json` | Manual rate/remark corrections for October Version 1, applied on top of the workbook |
-| `corrections_Oct2026_v3.json` | October Version 3: the Version 2 corrections plus 48 United India rows from the circular of 23.10.2026 (Taxi, Goods 7501–10000 / 20001–25000, Private Car CC bands and SAOD; "Except OEMs and Diesel" 35% rows dropped) |
+| `corrections_Oct2026_v3.json` | October Version 3: the Version 2 corrections plus 42 United India rows from the circular of 23.10.2026 (Taxi, Goods 7501–10000 / 20001–25000, Private Car CC bands and SAOD — 35% commission pays 30 for every policy type; "Except OEMs and Diesel" 35% rows dropped) |
 | `corrections_Oct2026_v2.json` | October Version 2: the Version 1 corrections plus TATA AIG TN School Bus (61% above 12 seats, all TN RTOs; the two older TATA TN school-bus rows dropped) |
 | `requirements.txt` | Python dependency (`openpyxl`) |
 

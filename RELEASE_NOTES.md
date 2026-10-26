@@ -5,7 +5,7 @@
 **To deploy:** replace `index.html`, `assets/` and `data/` in `/smart-grid/` (or upload the new `single-file/motor-smart-grid.html`). `data/2026-10-v3.json` is new; `2026-10-v2.json` changes (Version 2 now ends 25-10-2026). Keep `counter-data/`. All file names are unchanged.
 
 ### October 2026 — Version 3 (26-10-2026 to 31-10-2026)
-Version 2 plus the **United India** revised commission — circular HO:MKTG:CIR:12:26-27 dated 23.10.2026, Motor w.e.f. 26.10.2026 (copy in `source/`). 3,722 rates (TN 939 · KL 574 · KA 868 · AP-TS 1,341). Corrections: `monthly-update/corrections_Oct2026_v3.json` (48 United India rows). New payouts keep the existing deduction from United India's commission.
+Version 2 plus the **United India** revised commission — circular HO:MKTG:CIR:12:26-27 dated 23.10.2026, Motor w.e.f. 26.10.2026 (copy in `source/`). 3,726 rates (TN 939 · KL 576 · KA 868 · AP-TS 1,343). Corrections: `monthly-update/corrections_Oct2026_v3.json` (42 United India rows). New payouts keep the existing deduction from United India's commission; at a 35% commission every Private Car policy type (Bundle, Package, SATP) pays 30.00 (corrected 26 Oct 2026 — Package / SATP had been set to 25.00).
 
 | Segment | State | United India commission | GRID payout |
 |---|---|---|---|
@@ -15,9 +15,9 @@ Version 2 plus the **United India** revised commission — circular HO:MKTG:CIR:
 | Goods 20,001–25,000 kg | AP-TS | 15% → 25% | 11.00 → **21.00** |
 | Private Car up to 1000 CC | all | 20% → 17.5% | 15.00 → **12.50** |
 | Private Car 1001–1200 CC | TN, KA | 20% → 17.5% | 15.00 → **12.50** |
-| Private Car 1001–1200 CC | KL, AP-TS | 40% → 35% | Bundle 35.00 → **30.00**; Package / SATP 30.00 → **25.00** |
+| Private Car 1001–1200 CC | KL, AP-TS | 40% → 35% | Bundle 35.00 → **30.00**; Package / SATP **30.00** (unchanged) |
 | Private Car 1201–1500 CC | all | 20% → 15% | 15.00 → **10.00** |
-| Private Car 1501–2000 CC | all | 40% → 35% | Bundle 35.00 → **30.00**; Package / SATP 30.00 → **25.00** |
+| Private Car 1501–2000 CC | all | 40% → 35% | Bundle 35.00 → **30.00**; Package / SATP **30.00** (unchanged) |
 | Private Car SAOD (Except Electric) | all | 15% → 25% | 10.00(OD) → **20.00(OD)** |
 | Private Car "Except OEMs and Diesel upto 1500CC" (listed RTOs) | all | — | 35.00 **not continued** (kept in Versions 1 and 2) |
 

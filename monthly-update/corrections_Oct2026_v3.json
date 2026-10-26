@@ -279,21 +279,6 @@
  },
  {
   "sheet": "TN PO",
-  "row": 1086,
-  "note": "United India Private Car PACKAGE & SATP 1501-2000CC (40% -> 35%) TN: payout 30 -> 25 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026",
-  "expect": {
-   "company": "UNITED INDIA",
-   "cat": "PACKAGE & SATP",
-   "pkg": 30,
-   "tp": 30
-  },
-  "set": {
-   "pkg": 25,
-   "tp": 25
-  }
- },
- {
-  "sheet": "TN PO",
   "row": 1088,
   "note": "United India Private Car SAOD TN: commission 15% -> 25%, payout 10(OD) -> 20(OD) — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026",
   "expect": {
@@ -416,21 +401,6 @@
  },
  {
   "sheet": "KL PO",
-  "row": 708,
-  "note": "United India Private Car PACKAGE & SATP 1001-1200CC (40% -> 35%) KL: payout 30 -> 25 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026",
-  "expect": {
-   "company": "UNITED INDIA",
-   "cat": "PACKAGE & SATP",
-   "pkg": 30,
-   "tp": 30
-  },
-  "set": {
-   "pkg": 25,
-   "tp": 25
-  }
- },
- {
-  "sheet": "KL PO",
   "row": 709,
   "note": "United India Private Car PACKAGE & SATP 1201-1500CC (20% -> 15%) KL: payout 15 -> 10 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026",
   "expect": {
@@ -442,21 +412,6 @@
   "set": {
    "pkg": 10,
    "tp": 10
-  }
- },
- {
-  "sheet": "KL PO",
-  "row": 710,
-  "note": "United India Private Car PACKAGE & SATP 1501-2000CC (40% -> 35%) KL: payout 30 -> 25 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026",
-  "expect": {
-   "company": "UNITED INDIA",
-   "cat": "PACKAGE & SATP",
-   "pkg": 30,
-   "tp": 30
-  },
-  "set": {
-   "pkg": 25,
-   "tp": 25
   }
  },
  {
@@ -613,21 +568,6 @@
  },
  {
   "sheet": "KA PO",
-  "row": 897,
-  "note": "United India Private Car PACKAGE & SATP 1501-2000CC (40% -> 35%) KA: payout 30 -> 25 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026",
-  "expect": {
-   "company": "UNITED INDIA",
-   "cat": "PACKAGE & SATP",
-   "pkg": 30,
-   "tp": 30
-  },
-  "set": {
-   "pkg": 25,
-   "tp": 25
-  }
- },
- {
-  "sheet": "KA PO",
   "row": 899,
   "note": "United India Private Car SAOD KA: commission 15% -> 25%, payout 10(OD) -> 20(OD) — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026",
   "expect": {
@@ -765,21 +705,6 @@
  },
  {
   "sheet": "AP-TS PO",
-  "row": 1558,
-  "note": "United India Private Car PACKAGE & SATP 1001-1200CC (40% -> 35%) AP-TS: payout 30 -> 25 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026",
-  "expect": {
-   "company": "UNITED INDIA",
-   "cat": "PACKAGE & SATP",
-   "pkg": 30,
-   "tp": 30
-  },
-  "set": {
-   "pkg": 25,
-   "tp": 25
-  }
- },
- {
-  "sheet": "AP-TS PO",
   "row": 1559,
   "note": "United India Private Car PACKAGE & SATP 1201-1500CC (20% -> 15%) AP-TS: payout 15 -> 10 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026",
   "expect": {
@@ -791,21 +716,6 @@
   "set": {
    "pkg": 10,
    "tp": 10
-  }
- },
- {
-  "sheet": "AP-TS PO",
-  "row": 1560,
-  "note": "United India Private Car PACKAGE & SATP 1501-2000CC (40% -> 35%) AP-TS: payout 30 -> 25 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026",
-  "expect": {
-   "company": "UNITED INDIA",
-   "cat": "PACKAGE & SATP",
-   "pkg": 30,
-   "tp": 30
-  },
-  "set": {
-   "pkg": 25,
-   "tp": 25
   }
  },
  {

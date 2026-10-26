@@ -6,7 +6,7 @@ Tick each item on the **portal URL** (not the claude.ai UAT link) on desktop and
 - [ ] Below the filters: **GRID month [October 2026 ▼]** then **Version 1 · 06-Oct to 21-Oct · Earlier**, **Version 2 · 22-Oct to 25-Oct** and **Version 3 · 26-Oct to 31-Oct** (on 25-10-2026 Version 2 is *Applies today* and Version 3 *Upcoming*; from 26-10-2026 Version 3 *Applies today*)
 - [ ] From 26-10-2026 Version 3 opens first; heading reads **▾ Smart Grid October 2026 - Version 3 - 26-10-2026 to 31-10-2026**
 - [ ] Version 3, United India: TN Taxi Upto 7 **6.00 ▼ −5.00**; KL Taxi Upto 7 **31.00 / 31.00 ▲ +10.00**; KL Goods 7501–10000 **23.50 ▲ +5.00**; AP-TS Goods 20001–25000 **21.00 ▲ +10.00**; TN Private Car Package upto 1000CC **12.50 ▼ −2.50**; Private Car SAOD **20.00(OD) ▲ +10.00**; no "Except OEMs and DIESEL" 35.00 rate
-- [ ] Version 3 still shows the Version 2 labels (e.g. TATA AIG School Bus 61.00 ▲ +3.00, Kshema KL Scooter Bundle 32.50 ▼ −2.50); Version 3 counts TN 939 · KL 574 · KA 868 · AP-TS 1,341
+- [ ] Version 3 still shows the Version 2 labels (e.g. TATA AIG School Bus 61.00 ▲ +3.00, Kshema KL Scooter Bundle 32.50 ▼ −2.50); Version 3 counts TN 939 · KL 576 · KA 868 · AP-TS 1,343
 - [ ] (Once there are 2+ months) choosing a month in the dropdown shows its versions and opens the one that applied last in that month
 - [ ] A version whose start date is still ahead is listed as **Upcoming** and opens when clicked
 - [ ] (When there are 2+ versions) clicking another version keeps the chosen state, segment, insurers and search, and shows that version's rates
