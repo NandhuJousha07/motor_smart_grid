@@ -48,5 +48,33 @@
     ]
    }
   ]
+ },
+ {
+  "id": "2026-10-v3",
+  "month": "October 2026",
+  "version": "3",
+  "start": "2026-10-26",
+  "end": "2026-10-31",
+  "source": "source/From_6th_To_31st_Oct_PAYOUT_Grid_2026.xlsx",
+  "corrections": "monthly-update/corrections_Oct2026_v3.json",
+  "changes": "October Version 3 from 26-10-2026: United India revised commission (circular HO:MKTG:CIR:12:26-27 dated 23.10.2026) — Taxi (TN/KA 6, KL/AP-TS 31/31), GCV 7501-10000 (KL/KA/AP-TS 23.5), GCV 20001-25000 (AP-TS 21), Private Car upto 2000CC lowered and SAOD 20(OD); \"Except OEMs and Diesel upto 1500CC\" 35% not continued. Everything else as Version 2.",
+  "supplements": [
+   "source/RSA_Missing_GRID_-_Oct_26.xlsx",
+   {
+    "file": "source/GRID_Oct_V2_Changes_-_Effective_22-10-2026.xlsx",
+    "replaces": [
+     "National"
+    ]
+   },
+   {
+    "file": "source/EG_GRID_Kshema_Kerala.xlsx",
+    "replaces": [
+     {
+      "company": "Kshema",
+      "block": "TW"
+     }
+    ]
+   }
+  ]
  }
 ]

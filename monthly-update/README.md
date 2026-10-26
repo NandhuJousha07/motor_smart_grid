@@ -7,8 +7,9 @@
 | `compare.py` | Increased / Decreased / New labels: pairs each changed rate with its earlier rate |
 | `build.py` | Business rules: segment classification (GVW bands, PCV, Misc-D, Private Car, Two-Wheeler), insurer-name cleanup, merging identical offers, ranking |
 | `parse.py` | Reads the state sheets (`TN PO`, `KL PO`, `KA PO`, `AP-TS PO`, `MH PO`) and finds the CV / Private Car / Two-Wheeler blocks by their header rows |
-| `template.html` | Page design and logic (filters, version bar, search, GVW lookup); the data is injected into it |
+| `template.html` | Page design and logic (filters, version bar, search with keys — age / cc / fuel / make / rto / gvw / seats — and GVW lookup); the data is injected into it |
 | `corrections_Oct2026_v1.json` | Manual rate/remark corrections for October Version 1, applied on top of the workbook |
+| `corrections_Oct2026_v3.json` | October Version 3: the Version 2 corrections plus 48 United India rows from the circular of 23.10.2026 (Taxi, Goods 7501–10000 / 20001–25000, Private Car CC bands and SAOD; "Except OEMs and Diesel" 35% rows dropped) |
 | `corrections_Oct2026_v2.json` | October Version 2: the Version 1 corrections plus TATA AIG TN School Bus (61% above 12 seats, all TN RTOs; the two older TATA TN school-bus rows dropped) |
 | `requirements.txt` | Python dependency (`openpyxl`) |
 
@@ -61,7 +62,7 @@ If an insurer introduces a new category wording, check the printed counts and th
 
 `make_site.py` labels each changed rate **▲ Increased** (green), **▼ Decreased** (red) or **New**:
 - first version of a month — a rate a correction changed is compared with the workbook value it replaced; rates from supplement workbooks are New;
-- a later version of the same month — every rate that is new or different from the version before it is paired with the earlier rate (same state, segment and insurer; same vehicle-type keywords; restricted-RTO with restricted-RTO; overlapping weight band, seats and vehicle age — closest overlap wins) and compared part by part (OD with OD, TP with TP; a flat rate counts for both). Package decides; TP when Package is NA or unchanged. No earlier rate → New; same value → no label.
+- a later version of the same month — every rate that is new or different from the month's **first** version is paired with the rate there (so Version 3 keeps the Version 2 labels) (same state, segment and insurer; same vehicle-type keywords; restricted-RTO with restricted-RTO; overlapping weight band, seats and vehicle age — closest overlap wins) and compared part by part (OD with OD, TP with TP; a flat rate counts for both). Package decides; TP when Package is NA or unchanged. No earlier rate → New; same value → no label.
 
 Each label also shows the change: `+3.00` (same change on both parts, or a one-part section like SAOD / SATP), `−5.00(OD)`, `+5.00(OD) +10.00(TP)`, `TP +5.00` (TP column) or a range such as `+15.00 to +20.00` when one rate replaces several earlier rates.
 

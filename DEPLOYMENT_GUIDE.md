@@ -3,7 +3,7 @@
 ## 1. Before you start
 
 1. Verify the files: `sha256sum -c checksums.sha256` (Linux/macOS) or `Get-FileHash` in PowerShell — all lines must say OK.
-2. Read `manifest.json` and confirm the versions listed (now: **October 2026 Version 1, 06-10-2026 to 21-10-2026** and **October 2026 Version 2, 22-10-2026 to 31-10-2026**).
+2. Read `manifest.json` and confirm the versions listed (now: **October 2026 Version 1, 06-10-2026 to 21-10-2026** and **October 2026 Version 2, 22-10-2026 to 25-10-2026** and **October 2026 Version 3, 26-10-2026 to 31-10-2026**).
 3. Pick a URL, e.g. `https://<your-portal>/smart-grid/`.
 
 ## 2. Website folder `smart-grid/` (recommended)
@@ -17,6 +17,7 @@
      data/versions.json          list of versions
      data/2026-10-v1.json        rates of each version (one file per version)
      data/2026-10-v2.json
+     data/2026-10-v3.json
      visitor-counter.php
      counter-data/.htaccess
    ```

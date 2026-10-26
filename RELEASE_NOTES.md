@@ -1,5 +1,30 @@
 # Release Notes — Motor Smart GRID
 
+## Release 3 — 25 Oct 2026 (October 2026 Version 3, from 26-10-2026)
+
+**To deploy:** replace `index.html`, `assets/` and `data/` in `/smart-grid/` (or upload the new `single-file/motor-smart-grid.html`). `data/2026-10-v3.json` is new; `2026-10-v2.json` changes (Version 2 now ends 25-10-2026). Keep `counter-data/`. All file names are unchanged.
+
+### October 2026 — Version 3 (26-10-2026 to 31-10-2026)
+Version 2 plus the **United India** revised commission — circular HO:MKTG:CIR:12:26-27 dated 23.10.2026, Motor w.e.f. 26.10.2026 (copy in `source/`). 3,722 rates (TN 939 · KL 574 · KA 868 · AP-TS 1,341). Corrections: `monthly-update/corrections_Oct2026_v3.json` (48 United India rows). New payouts keep the existing deduction from United India's commission.
+
+| Segment | State | United India commission | GRID payout |
+|---|---|---|---|
+| Taxi (up to 6 seats, all CC incl. Electric) | TN, KA | 15% → 10% | 11.00 → **6.00** |
+| Taxi (up to 6 seats) | KL, AP-TS | 25% → 35% | 21.00 / TP 26.00 → **31.00 / 31.00** |
+| Goods 7,501–10,000 kg | KL, KA, AP-TS | 22.5% → 27.5% | 18.50 → **23.50** |
+| Goods 20,001–25,000 kg | AP-TS | 15% → 25% | 11.00 → **21.00** |
+| Private Car up to 1000 CC | all | 20% → 17.5% | 15.00 → **12.50** |
+| Private Car 1001–1200 CC | TN, KA | 20% → 17.5% | 15.00 → **12.50** |
+| Private Car 1001–1200 CC | KL, AP-TS | 40% → 35% | Bundle 35.00 → **30.00**; Package / SATP 30.00 → **25.00** |
+| Private Car 1201–1500 CC | all | 20% → 15% | 15.00 → **10.00** |
+| Private Car 1501–2000 CC | all | 40% → 35% | Bundle 35.00 → **30.00**; Package / SATP 30.00 → **25.00** |
+| Private Car SAOD (Except Electric) | all | 15% → 25% | 10.00(OD) → **20.00(OD)** |
+| Private Car "Except OEMs and Diesel upto 1500CC" (listed RTOs) | all | — | 35.00 **not continued** (kept in Versions 1 and 2) |
+
+Unchanged: Private Car above 2000 CC and Electric, Two-Wheeler, other PCV, 3-wheeler, School / Staff Bus, other goods bands, Misc-D. **Pending:** TN Goods 2,001–3,500 — RTOs in United India's Sub Annexure 2 get 56.5% (list not yet received).
+
+**Labels in Version 3:** compared with Version 1 (the month's first version), so the Version 2 changes (National, TATA AIG, Kshema) keep their Increased / Decreased labels and the United India changes are added — e.g. United India TN Taxi ▼ −5.00, KL Taxi ▲ +10.00, Private Car upto 1000CC ▼ −2.50, SAOD ▲ +10.00. Version 2 keeps its own labels exactly as before. Comparison now also matches Private Car CC bands and Electric only / Except Electric.
+
 ## Release 2 — 22 Oct 2026 (October 2026 Version 2)
 
 **To deploy:** replace `index.html`, `assets/` and `data/` in `/smart-grid/` with the ones from this kit (or upload the new `single-file/motor-smart-grid.html`). Keep `counter-data/` — it holds the visitor totals. `visitor-counter.php` is unchanged. All file and folder names are the same as Release 1; `data/2026-10-v2.json` is new and `data/2026-10-v1.json` is updated (labels and the earlier Kshema Kerala Two-Wheeler rates) — replace both.
@@ -14,6 +39,12 @@ Source: `From_6th_To_31st_Oct_PAYOUT_Grid_2026.xlsx` + `RSA_Missing_GRID_-_Oct_2
 - Build rule fix: *Taxi (5+1)* now goes only to PCV – Taxi (Upto 6-Seater) (it was also listed under Taxi & Stage Bus). Version 1 is not affected.
 
 ### The page
+- **Multi-key search** in the search box — keys can be combined with each other and with ordinary words:
+  `age<12` · `age 5-10` · `age>=15` · `age new` · `age rollover` (vehicle age in years) · `cc<=150` · `cc 1200` (engine CC, Private Car / Two-Wheeler) · `fuel:diesel` · `fuel petrol / cng / ev` · `make:tata` · `make honda` · `rto:TN07` · `rto KL 07` · `gvw:7500` · `gvw<12000` (LCV / MCV / HCV) · `seats:20` · `seats>30` (PCV). Operators: `<` `<=` `>` `>=` `=`, a range `5-10`, or words (below, upto, above, more than). Example: `age<12 fuel:diesel rto:TN07`, `school bus age 8 seats 40`.
+  - **Vehicle age in whole years:** `age 10` = a 10-year-old vehicle — "Up to 10", "6 – 10", "Above 5 to 10" apply; "Above 10", "More than 10", "Above 10 to 15", "10 years above" start at **11** (`age>10` = 11 and above). "10 & above" / "10 onwards" include 10. New = 0; Rollover / Renewal = 1 year and above.
+  - A rate is shown when **one of its conditions** (the parts joined by OR) meets every key together. With keys in the search, each rate shows only the conditions that met them (e.g. `age 10` shows the "Up to 10 Years" line, not the "Above 10 to 15" line of the same rate). A condition that says nothing about a key applies to all values of it (no age wording = every age).
+  - Declined parts are taken out: "Declined: All TW above 350cc" is not shown for `cc 500`, "Except Electric" not for `fuel ev`, "Other than TATA" not for `make tata`, an RTO declined or "except Chennai" not for that RTO; "All TN & PY RTO" counts as covering TN07. A declined *model* list does not exclude the whole make.
+  - The recognised keys appear as small tags next to the rate count. A plain `GVW 1547` still shows the ranked GVW list.
 - Versions that haven't started yet are now **listed as UPCOMING** in the version bar (previously hidden), so a new version can be checked before its start date. The version that applies today still opens first.
 - **Declined remarks are static red** — no more blinking.
 - **Rate change labels** next to the insurer name, in both versions: **▲ Increased** (green), **▼ Decreased** (red), **New** (no earlier rate). Hovering a label shows the earlier rate.

@@ -78,9 +78,11 @@ for v in VERS:
                 period=period(v['_s'], v['_e']), note=v.get('note', ''))
     # Increased / Decreased labels (see compare.py). The first version of a month: rates a
     # correction changed (against the workbook value) and rates from supplement workbooks (New).
-    # A later version of the same month: every rate that is new or different from the version
-    # before it, compared with the matching earlier rate.
-    prev = manifest_versions[-1] if manifest_versions and manifest_versions[-1]['month'] == v['month'] else None
+    # A later version of the same month: every rate that is new or different from the month's
+    # first version, compared with the matching rate there.
+    # later versions of a month are compared with the month's FIRST version, so every change
+    # made during the month keeps its label (Version 3 still shows what changed in Version 2)
+    prev = next((mv for mv in manifest_versions if mv['month'] == v['month']), None)
     if prev:
         RK = lambda r: (r['state'], r['sec'], r['company'], r['segment'], r['package'], r['tp'], r['remarks'])
         before = {RK(r) for r in payloads[prev['id']]['records']}

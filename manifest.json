@@ -1,6 +1,6 @@
 {
   "product": "Motor Smart GRID",
-  "builtAt": "2026-10-23T10:43:37+00:00",
+  "builtAt": "2026-10-25T18:12:34+00:00",
   "opensFirstOnBuildDay": "2026-10-v2",
   "versions": [
     {
@@ -77,13 +77,13 @@
     {
       "id": "2026-10-v2",
       "name": "Smart Grid October 2026 - Version 2",
-      "label": "Smart Grid October 2026 - Version 2 - 22-10-2026 to 31-10-2026",
-      "dates": "22-10-2026 to 31-10-2026",
+      "label": "Smart Grid October 2026 - Version 2 - 22-10-2026 to 25-10-2026",
+      "dates": "22-10-2026 to 25-10-2026",
       "month": "October 2026",
       "version": "2",
       "start": "2026-10-22",
-      "end": "2026-10-31",
-      "period": "22 – 31 October 2026",
+      "end": "2026-10-25",
+      "period": "22 – 25 October 2026",
       "note": "",
       "source": "source/From_6th_To_31st_Oct_PAYOUT_Grid_2026.xlsx",
       "supplements": [
@@ -164,6 +164,339 @@
       "ratesLabelled": {
         "increased": 122,
         "decreased": 40,
+        "new": 63
+      }
+    },
+    {
+      "id": "2026-10-v3",
+      "name": "Smart Grid October 2026 - Version 3",
+      "label": "Smart Grid October 2026 - Version 3 - 26-10-2026 to 31-10-2026",
+      "dates": "26-10-2026 to 31-10-2026",
+      "month": "October 2026",
+      "version": "3",
+      "start": "2026-10-26",
+      "end": "2026-10-31",
+      "period": "26 – 31 October 2026",
+      "note": "",
+      "source": "source/From_6th_To_31st_Oct_PAYOUT_Grid_2026.xlsx",
+      "supplements": [
+        "source/RSA_Missing_GRID_-_Oct_26.xlsx",
+        {
+          "file": "source/GRID_Oct_V2_Changes_-_Effective_22-10-2026.xlsx",
+          "replaces": [
+            "National"
+          ]
+        },
+        {
+          "file": "source/EG_GRID_Kshema_Kerala.xlsx",
+          "replaces": [
+            {
+              "company": "Kshema",
+              "block": "TW"
+            }
+          ]
+        }
+      ],
+      "corrections": "monthly-update/corrections_Oct2026_v3.json",
+      "changes": "October Version 3 from 26-10-2026: United India revised commission (circular HO:MKTG:CIR:12:26-27 dated 23.10.2026) — Taxi (TN/KA 6, KL/AP-TS 31/31), GCV 7501-10000 (KL/KA/AP-TS 23.5), GCV 20001-25000 (AP-TS 21), Private Car upto 2000CC lowered and SAOD 20(OD); \"Except OEMs and Diesel upto 1500CC\" 35% not continued. Everything else as Version 2.",
+      "totalRates": 3722,
+      "ratesByState": {
+        "TN": 939,
+        "KL": 574,
+        "KA": 868,
+        "AP-TS": 1341
+      },
+      "correctionsApplied": [
+        {
+          "sheet": "TN PO",
+          "row": 885,
+          "note": "New India TN School Bus revised 06 Oct 2026: 56/56 ALL RTO -> 66/66, branch-restricted"
+        },
+        {
+          "sheet": "TN PO",
+          "row": 775,
+          "note": "ICICI TN PCV Auto (Diesel) revised 08 Oct 2026: 11/11 ROTN RTO codes -> 46/46, only for the listed Tamil Nadu RTO RC locations (per attachment); 12 Oct 2026: remark added - Commission applicable only if the business sourced from Chennai Code: IM-2358692"
+        },
+        {
+          "sheet": "TN PO",
+          "row": 886,
+          "note": "Reliance TN School Bus revised 09 Oct 2026 (Special School Bus GRID for South): 66/66 -> 68.5/68.5 normal slab; POSP volume offer +3.0% on ₹5L volume (71.5%)"
+        },
+        {
+          "sheet": "KL PO",
+          "row": 586,
+          "note": "Reliance KL School Bus revised 09 Oct 2026 (Special School Bus GRID for South): 70/70 -> 71/71 normal slab; POSP volume offer +3.0% on ₹5L volume (74%)"
+        },
+        {
+          "sheet": "KA PO",
+          "row": 666,
+          "note": "Reliance KA School Bus revised 09 Oct 2026 (Special School Bus GRID for South): 70/70 -> 71/71 normal slab; POSP volume offer +3.0% on ₹5L volume (74%)"
+        },
+        {
+          "sheet": "AP-TS PO",
+          "row": 1324,
+          "note": "Reliance AP-TS School Bus revised 09 Oct 2026 (Special School Bus GRID for South): 70/70 -> 71/71 normal slab; POSP volume offer +3.0% on ₹5L volume (74%)"
+        },
+        {
+          "sheet": "TN PO",
+          "row": 889,
+          "note": "TATA AIG TN School Bus revised 22 Oct 2026 (October Version 2): 61/61 for above 12 seats, all TN RTOs (was 58/58 Chennai & Coimbatore)"
+        },
+        {
+          "sheet": "TN PO",
+          "row": 890,
+          "note": "TATA AIG TN School Bus 16 To 30 seats ROTN 53/53 withdrawn 22 Oct 2026 - covered by 61% above 12 seats, all TN RTOs"
+        },
+        {
+          "sheet": "TN PO",
+          "row": 891,
+          "note": "TATA AIG TN School Bus Above 31 seats ROTN 56/56 withdrawn 22 Oct 2026 - covered by 61% above 12 seats, all TN RTOs"
+        },
+        {
+          "sheet": "TN PO",
+          "row": 836,
+          "note": "United India Taxi TN: commission 15% -> 10%, payout 11 -> 6 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026"
+        },
+        {
+          "sheet": "TN PO",
+          "row": 1077,
+          "note": "United India Private Car \"Except OEMs and Diesel upto 1500CC\" 35% (listed RTOs) not continued from 26.10.2026 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026"
+        },
+        {
+          "sheet": "TN PO",
+          "row": 1078,
+          "note": "United India Private Car BUNDLED(NEW) upto 1000CC (20% -> 17.5%) TN: payout 15 -> 12.5 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026"
+        },
+        {
+          "sheet": "TN PO",
+          "row": 1079,
+          "note": "United India Private Car BUNDLED(NEW) 1001-1200CC (20% -> 17.5%) TN: payout 15 -> 12.5 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026"
+        },
+        {
+          "sheet": "TN PO",
+          "row": 1080,
+          "note": "United India Private Car BUNDLED(NEW) 1201-1500CC (20% -> 15%) TN: payout 15 -> 10 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026"
+        },
+        {
+          "sheet": "TN PO",
+          "row": 1081,
+          "note": "United India Private Car BUNDLED(NEW) 1501-2000CC (40% -> 35%) TN: payout 35 -> 30 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026"
+        },
+        {
+          "sheet": "TN PO",
+          "row": 1083,
+          "note": "United India Private Car PACKAGE & SATP upto 1000CC (20% -> 17.5%) TN: payout 15 -> 12.5 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026"
+        },
+        {
+          "sheet": "TN PO",
+          "row": 1084,
+          "note": "United India Private Car PACKAGE & SATP 1001-1200CC (20% -> 17.5%) TN: payout 15 -> 12.5 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026"
+        },
+        {
+          "sheet": "TN PO",
+          "row": 1085,
+          "note": "United India Private Car PACKAGE & SATP 1201-1500CC (20% -> 15%) TN: payout 15 -> 10 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026"
+        },
+        {
+          "sheet": "TN PO",
+          "row": 1086,
+          "note": "United India Private Car PACKAGE & SATP 1501-2000CC (40% -> 35%) TN: payout 30 -> 25 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026"
+        },
+        {
+          "sheet": "TN PO",
+          "row": 1088,
+          "note": "United India Private Car SAOD TN: commission 15% -> 25%, payout 10(OD) -> 20(OD) — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026"
+        },
+        {
+          "sheet": "KL PO",
+          "row": 149,
+          "note": "United India GCV 7501-10000 KL: commission 22.5% -> 27.5%, payout 18.5 -> 23.5 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026"
+        },
+        {
+          "sheet": "KL PO",
+          "row": 546,
+          "note": "United India Taxi KL: commission 25% -> 35%, payout 21 / TP 26 -> 31 / 31 (one rate for Package and SATP) — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026"
+        },
+        {
+          "sheet": "KL PO",
+          "row": 701,
+          "note": "United India Private Car \"Except OEMs and Diesel upto 1500CC\" 35% (listed RTOs) not continued from 26.10.2026 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026"
+        },
+        {
+          "sheet": "KL PO",
+          "row": 702,
+          "note": "United India Private Car BUNDLED(NEW) upto 1000CC (20% -> 17.5%) KL: payout 15 -> 12.5 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026"
+        },
+        {
+          "sheet": "KL PO",
+          "row": 703,
+          "note": "United India Private Car BUNDLED(NEW) 1001-1200CC (40% -> 35%) KL: payout 35 -> 30 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026"
+        },
+        {
+          "sheet": "KL PO",
+          "row": 704,
+          "note": "United India Private Car BUNDLED(NEW) 1201-1500CC (20% -> 15%) KL: payout 15 -> 10 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026"
+        },
+        {
+          "sheet": "KL PO",
+          "row": 705,
+          "note": "United India Private Car BUNDLED(NEW) 1501-2000CC (40% -> 35%) KL: payout 35 -> 30 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026"
+        },
+        {
+          "sheet": "KL PO",
+          "row": 707,
+          "note": "United India Private Car PACKAGE & SATP upto 1000CC (20% -> 17.5%) KL: payout 15 -> 12.5 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026"
+        },
+        {
+          "sheet": "KL PO",
+          "row": 708,
+          "note": "United India Private Car PACKAGE & SATP 1001-1200CC (40% -> 35%) KL: payout 30 -> 25 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026"
+        },
+        {
+          "sheet": "KL PO",
+          "row": 709,
+          "note": "United India Private Car PACKAGE & SATP 1201-1500CC (20% -> 15%) KL: payout 15 -> 10 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026"
+        },
+        {
+          "sheet": "KL PO",
+          "row": 710,
+          "note": "United India Private Car PACKAGE & SATP 1501-2000CC (40% -> 35%) KL: payout 30 -> 25 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026"
+        },
+        {
+          "sheet": "KL PO",
+          "row": 712,
+          "note": "United India Private Car SAOD KL: commission 15% -> 25%, payout 10(OD) -> 20(OD) — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026"
+        },
+        {
+          "sheet": "KA PO",
+          "row": 302,
+          "note": "United India GCV 7501-10000 KA: commission 22.5% -> 27.5%, payout 18.5 -> 23.5 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026"
+        },
+        {
+          "sheet": "KA PO",
+          "row": 600,
+          "note": "United India Taxi KA: commission 15% -> 10%, payout 11 -> 6 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026"
+        },
+        {
+          "sheet": "KA PO",
+          "row": 888,
+          "note": "United India Private Car \"Except OEMs and Diesel upto 1500CC\" 35% (listed RTOs) not continued from 26.10.2026 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026"
+        },
+        {
+          "sheet": "KA PO",
+          "row": 889,
+          "note": "United India Private Car BUNDLED(NEW) upto 1000CC (20% -> 17.5%) KA: payout 15 -> 12.5 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026"
+        },
+        {
+          "sheet": "KA PO",
+          "row": 890,
+          "note": "United India Private Car BUNDLED(NEW) 1001-1200CC (20% -> 17.5%) KA: payout 15 -> 12.5 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026"
+        },
+        {
+          "sheet": "KA PO",
+          "row": 891,
+          "note": "United India Private Car BUNDLED(NEW) 1201-1500CC (20% -> 15%) KA: payout 15 -> 10 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026"
+        },
+        {
+          "sheet": "KA PO",
+          "row": 892,
+          "note": "United India Private Car BUNDLED(NEW) 1501-2000CC (40% -> 35%) KA: payout 35 -> 30 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026"
+        },
+        {
+          "sheet": "KA PO",
+          "row": 894,
+          "note": "United India Private Car PACKAGE & SATP upto 1000CC (20% -> 17.5%) KA: payout 15 -> 12.5 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026"
+        },
+        {
+          "sheet": "KA PO",
+          "row": 895,
+          "note": "United India Private Car PACKAGE & SATP 1001-1200CC (20% -> 17.5%) KA: payout 15 -> 12.5 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026"
+        },
+        {
+          "sheet": "KA PO",
+          "row": 896,
+          "note": "United India Private Car PACKAGE & SATP 1201-1500CC (20% -> 15%) KA: payout 15 -> 10 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026"
+        },
+        {
+          "sheet": "KA PO",
+          "row": 897,
+          "note": "United India Private Car PACKAGE & SATP 1501-2000CC (40% -> 35%) KA: payout 30 -> 25 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026"
+        },
+        {
+          "sheet": "KA PO",
+          "row": 899,
+          "note": "United India Private Car SAOD KA: commission 15% -> 25%, payout 10(OD) -> 20(OD) — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026"
+        },
+        {
+          "sheet": "AP-TS PO",
+          "row": 457,
+          "note": "United India GCV 7501-10000 AP-TS: commission 22.5% -> 27.5%, payout 18.5 -> 23.5 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026"
+        },
+        {
+          "sheet": "AP-TS PO",
+          "row": 460,
+          "note": "United India GCV 20001-25000 AP-TS: commission 15% -> 25%, payout 11 -> 21 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026"
+        },
+        {
+          "sheet": "AP-TS PO",
+          "row": 1243,
+          "note": "United India Taxi AP-TS: commission 25% -> 35%, payout 21 / TP 26 -> 31 / 31 (one rate for Package and SATP) — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026"
+        },
+        {
+          "sheet": "AP-TS PO",
+          "row": 1551,
+          "note": "United India Private Car \"Except OEMs and Diesel upto 1500CC\" 35% (listed RTOs) not continued from 26.10.2026 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026"
+        },
+        {
+          "sheet": "AP-TS PO",
+          "row": 1552,
+          "note": "United India Private Car BUNDLED(NEW) upto 1000CC (20% -> 17.5%) AP-TS: payout 15 -> 12.5 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026"
+        },
+        {
+          "sheet": "AP-TS PO",
+          "row": 1553,
+          "note": "United India Private Car BUNDLED(NEW) 1001-1200CC (40% -> 35%) AP-TS: payout 35 -> 30 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026"
+        },
+        {
+          "sheet": "AP-TS PO",
+          "row": 1554,
+          "note": "United India Private Car BUNDLED(NEW) 1201-1500CC (20% -> 15%) AP-TS: payout 15 -> 10 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026"
+        },
+        {
+          "sheet": "AP-TS PO",
+          "row": 1555,
+          "note": "United India Private Car BUNDLED(NEW) 1501-2000CC (40% -> 35%) AP-TS: payout 35 -> 30 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026"
+        },
+        {
+          "sheet": "AP-TS PO",
+          "row": 1557,
+          "note": "United India Private Car PACKAGE & SATP upto 1000CC (20% -> 17.5%) AP-TS: payout 15 -> 12.5 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026"
+        },
+        {
+          "sheet": "AP-TS PO",
+          "row": 1558,
+          "note": "United India Private Car PACKAGE & SATP 1001-1200CC (40% -> 35%) AP-TS: payout 30 -> 25 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026"
+        },
+        {
+          "sheet": "AP-TS PO",
+          "row": 1559,
+          "note": "United India Private Car PACKAGE & SATP 1201-1500CC (20% -> 15%) AP-TS: payout 15 -> 10 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026"
+        },
+        {
+          "sheet": "AP-TS PO",
+          "row": 1560,
+          "note": "United India Private Car PACKAGE & SATP 1501-2000CC (40% -> 35%) AP-TS: payout 30 -> 25 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026"
+        },
+        {
+          "sheet": "AP-TS PO",
+          "row": 1562,
+          "note": "United India Private Car SAOD AP-TS: commission 15% -> 25%, payout 10(OD) -> 20(OD) — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026"
+        }
+      ],
+      "remarkAdded": [],
+      "ratesLabelled": {
+        "increased": 132,
+        "decreased": 78,
         "new": 63
       }
     }

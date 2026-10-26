@@ -372,6 +372,9 @@
   .visitor-count[hidden]{ display:none; }
   .visitor-count b{ color:var(--navy-deep); font-variant-numeric:tabular-nums; font-size:13.5px; }
 
+  /* keyed-search filters shown in the result count line */
+  .key-chip{ display:inline-block; font-size:11.5px; font-weight:700; color:var(--navy); border:1px solid var(--navy);
+    border-radius:10px; padding:0 7px; margin:0 2px; white-space:nowrap; }
   /* ---------- Rate change label: Increased (green) / Decreased (red) / New ---------- */
   .chg-badge{
     display:inline-block; font-size:9.5px; font-weight:700; letter-spacing:.05em; text-transform:uppercase;
@@ -511,7 +514,7 @@
     </div>
     <div class="search-box">
       <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-      <input type="text" id="search" placeholder="Search insurer, segment, RTO, remark — or GVW: 1547 for weight-band lookup" autocomplete="off">
+      <input type="text" id="search" placeholder="Search insurer, segment, RTO, remark — or combine: age&lt;12 fuel:diesel rto:TN07 cc&lt;=150 gvw:7500 seats&gt;30" autocomplete="off">
     </div>
     <div class="result-count-row">
       <div class="result-count" id="result-count"></div>
@@ -1314,8 +1317,8 @@ function __gridDecode(src){
     var was = r.was ? 'Earlier rate: ' + r.was : '';
     var first = String(r.rev) === '1';
     var tip = function(k){
-      if (k === 'new') return first ? 'New rate added in Version 1 (not in the original GRID workbook)' : 'New rate in Version ' + r.rev + ' – no earlier rate to compare';
-      return (k === 'up' ? 'Increased' : 'Decreased') + ' in Version ' + r.rev + (first ? ' (against the original GRID workbook)' : ' (against Version ' + (Number(r.rev) - 1) + ')') + (was ? ' – ' + was : '');
+      if (k === 'new') return first ? 'New rate added in Version 1 (not in the original GRID workbook)' : 'New since Version 1 – no Version 1 rate to compare';
+      return (k === 'up' ? 'Increased' : 'Decreased') + (first ? ' in Version 1' : ' since Version 1') + (first ? ' (against the original GRID workbook)' : ' (against Version 1)') + (was ? ' – ' + was : '');
     };
     var b = function(k, txt){ return '<span class="chg-badge ' + k + '" title="' + escapeHtml(tip(k)) + '">' + txt + '</span>'; };
     // the change itself, e.g. "▲ Increased +3.00", "▼ Decreased −5.00(OD)", "▲ Increased TP +5.00"
@@ -1649,8 +1652,279 @@ function __gridDecode(src){
     return html;
   }
 
+  // ======================= Multi-key search =======================
+  // The search box also understands keyed filters, alone or together with ordinary words:
+  //   age 10   age<12   age>10 (= 11 and above)   age 5-10   age new   vehicle age in whole years (New = 0).
+  //   In the rates "Up to 10" includes 10; "Above 10" / "More than 10" / "10 years above" start at 11.
+  //   cc<=150  cc 1200    cc>1500                  engine CC (Private Car / Two-Wheeler rates)
+  //   fuel:diesel  fuel petrol / cng / lpg / ev    fuel the rate can be used for
+  //   make:tata    make honda                      make the rate can be used for
+  //   rto:TN07     rto KL 07                       RTO covered (not declined; "All TN & PY RTO" counts)
+  //   gvw:7500     gvw<12000                       goods-vehicle weight band (LCV / MCV / HCV rates)
+  //   seats:20     seats>30                        seating capacity (PCV rates)
+  // e.g. "age<12 fuel:diesel rto:TN07"  or  "school bus age 8 seats 40".
+  // A rate is shown when ONE of its conditions (the parts joined by OR) meets every key, and
+  // then shows only the conditions that met them.
+  // A condition that says nothing about a key applies to all values of it (a rate with no
+  // age wording is open to every age); a declined part ("Declined: TW above 350cc",
+  // "Except Electric", "Other than TATA") is taken out.
+  var KEY_NAMES = 'age|cc|fuel|make|rto|gvw|gcw|seats?';
+  var OP_RE = '(<=|>=|=<|=>|<|>|=|below|under|less\\s+than|upto|up\\s*to|above|over|more\\s+than|min(?:imum)?|max(?:imum)?)?';
+  var FUELS = { diesel:'DIESEL', petrol:'PETROL', cng:'CNG', lpg:'CNG', 'bi-fuel':'CNG', ev:'EV', electric:'EV', battery:'EV' };
+  var FUEL_RE = { DIESEL:/\bDIESEL\b/, PETROL:/\bPETROL\b/, CNG:/\bCNG\b|\bLPG\b|BI-?FUEL/, EV:/ELECTRIC|\bEV\b|E-?RICK|E-?CART|E-?KART|BATTERY/ };
+  var MAKES = [
+    ['Tata',/\bTATA\b(?!\s*AIG)/], ['Ashok Leyland',/\bASHOK\s*LEYLAND\b/], ['Eicher',/\bEICHER\b/], ['Mahindra',/\bMAHINDRA\b/],
+    ['Maruti',/\bMARUTI\b/], ['Bharat Benz',/\bBHARAT\s*-?\s*BENZ\b/], ['Force',/\bFORCE\b/], ['Volvo',/\bVOLVO\b/], ['Toyota',/\bTOYOTA\b/],
+    ['Hyundai',/\bHYUNDAI\b/], ['Kia',/\bKIA\b/], ['Piaggio',/\bPIAGGIO\b/], ['Honda',/\bHONDA\b/], ['TVS',/\bTVS\b/], ['Hero',/\bHERO\b/],
+    ['Yamaha',/\bYAMAHA\b|\bYEMAHA\b/], ['Bajaj',/\bBAJAJ\b/], ['Suzuki',/\bSUZUKI\b/], ['Royal Enfield',/\bROYAL\s*ENFIELD\b/],
+    ['Ather',/\bATHER\b/], ['KTM',/\bKTM\b/]
+  ];
+
+  function opRange(op, a, b, bareUpto){
+    var INF = 1e9, STEP = (a % 1 === 0) ? 1 : 1e-6;   // whole numbers: "above 10" starts at 11, "below 12" ends at 11
+    op = (op || '').toLowerCase().replace(/\s+/g, ' ');
+    if (b !== undefined && b !== null && !isNaN(b)) return [Math.min(a, b), Math.max(a, b)];
+    if (op === '<' || op === 'below' || op === 'under' || op === 'less than') return [0, a - STEP];
+    if (op === '<=' || op === '=<' || op === 'upto' || op === 'up to' || op === 'max' || op === 'maximum') return [0, a];
+    if (op === '>' || op === 'above' || op === 'over' || op === 'more than') return [a + STEP, INF];
+    if (op === '>=' || op === '=>' || op === 'min' || op === 'minimum') return [a, INF];
+    return [a, a];
+  }
+  function opLabel(op, a, b, bareUpto){
+    if (b !== undefined && b !== null && !isNaN(b)) return a + '–' + b;
+    var o = (op || '').toLowerCase().replace(/\s+/g, ' ');
+    var map = { '<':'< ', 'below':'< ', 'under':'< ', 'less than':'< ', '<=':'≤ ', '=<':'≤ ', 'upto':'≤ ', 'up to':'≤ ', 'max':'≤ ', 'maximum':'≤ ',
+                '>':'> ', 'above':'> ', 'over':'> ', 'more than':'> ', '>=':'≥ ', '=>':'≥ ', 'min':'≥ ', 'minimum':'≥ ' };
+    return (map[o] || '') + a;
+  }
+
+  // Parse the search text into keyed filters + the free text left over.
+  function parseKeyedSearch(raw){
+    var keys = [], rest = ' ' + raw + ' ';
+    function take(re, fn){
+      rest = rest.replace(re, function(){ var k = fn.apply(null, arguments); if (k){ keys.push(k); return ' '; } return arguments[0]; });
+    }
+    var NUM = '(\\d+(?:\\.\\d+)?)';
+    var RANGE = NUM + '(?:\\s*(?:-|to)\\s*' + NUM + ')?';
+    // age
+    take(new RegExp('\\b(?:vehicle\\s+)?age\\s*[:=]?\\s*(new|rollover|renewal|roll\\s*over)\\b', 'gi'), function(m, w){
+      return /new/i.test(w) ? { k:'age', r:[0, 0], label:'Age: New' } : { k:'age', r:[1, 1e9], label:'Age: Rollover / Renewal' };
+    });
+    take(new RegExp('\\b(?:vehicle\\s+)?age\\s*[:=]?\\s*' + OP_RE + '\\s*' + RANGE + '\\s*(?:years?|yrs?)?', 'gi'), function(m, op, a, b){
+      return { k:'age', r:opRange(op, +a, b === undefined ? null : +b, true), label:'Age ' + opLabel(op, +a, b, true) + ' yrs' };
+    });
+    // cc  ("cc<150", "cc 1200", "<=150cc", "150 cc")
+    take(new RegExp('\\bcc\\s*[:=]?\\s*' + OP_RE + '\\s*' + RANGE + '\\b', 'gi'), function(m, op, a, b){
+      return { k:'cc', r:opRange(op, +a, b === undefined ? null : +b), label:'CC ' + opLabel(op, +a, b) };
+    });
+    take(new RegExp('(?:^|\\s)(<=|>=|<|>)?\\s*' + NUM + '\\s*cc\\b', 'gi'), function(m, op, a){
+      return { k:'cc', r:opRange(op, +a), label:'CC ' + opLabel(op, +a) };
+    });
+    // seats
+    take(new RegExp('\\bseats?\\s*[:=]?\\s*' + OP_RE + '\\s*' + RANGE + '\\b', 'gi'), function(m, op, a, b){
+      return { k:'seats', r:opRange(op, +a, b === undefined ? null : +b), label:'Seats ' + opLabel(op, +a, b) };
+    });
+    // gvw / gcw
+    take(new RegExp('\\b(?:gvw|gcw)\\s*[:=]?\\s*' + OP_RE + '\\s*(\\d[\\d,]*)(?:\\s*(?:-|to)\\s*(\\d[\\d,]*))?\\s*(?:kg)?', 'gi'), function(m, op, a, b){
+      a = +String(a).replace(/,/g, ''); b = b ? +String(b).replace(/,/g, '') : null;
+      return { k:'gvw', r:opRange(op, a, b), label:'GVW ' + opLabel(op, a, b) + ' kg' };
+    });
+    // fuel (one or more: "fuel diesel/cng")
+    take(/\bfuel\s*[:=]?\s*((?:diesel|petrol|cng|lpg|bi-fuel|ev|electric|battery)(?:\s*(?:\/|,|or|&)\s*(?:diesel|petrol|cng|lpg|bi-fuel|ev|electric|battery))*)\b/gi, function(m, list){
+      var fs = list.toLowerCase().split(/\s*(?:\/|,|or|&)\s*/).map(function(x){ return FUELS[x]; }).filter(Boolean);
+      return fs.length ? { k:'fuel', v:fs, label:'Fuel: ' + list } : null;
+    });
+    // make
+    take(/\bmake\s*[:=]?\s*([a-z][a-z\s-]*?)(?=\s+(?:age|cc|fuel|make|rto|gvw|gcw|seats?)\b|[,;]|\s*$)/gi, function(m, name){
+      var n = name.trim().toUpperCase();
+      var hit = MAKES.filter(function(mk){ return mk[1].test(n) || mk[0].toUpperCase().indexOf(n) === 0; })[0];
+      return hit ? { k:'make', v:hit, label:'Make: ' + hit[0] } : null;
+    });
+    // rto
+    take(/\brto\s*[:=]?\s*([a-z]{2})\s*-?\s*(\d{1,2})\b/gi, function(m, st, n){
+      var code = st.toUpperCase() + (n.length === 1 ? '0' + n : n);
+      return { k:'rto', v:code, label:'RTO ' + code };
+    });
+    var free = rest.replace(/(^|\s)(?:and|&|,|;)(?=\s|$)/gi, ' ').replace(/\s+/g, ' ').trim();
+    return { keys:keys, free:free };
+  }
+
+  // ---- reading one condition ----
+  function kCondList(rem){
+    rem = rem || '';
+    if (/^\(.*\)$/.test(rem) && rem.indexOf(') OR (') !== -1) return rem.slice(1, -1).split(') OR (');
+    return [rem];
+  }
+  function kField(c, name){
+    var m = new RegExp(name + ':\\s*(.*?)(?:\\s\\|\\s|$)').exec(c);
+    return m ? m[1] : '';
+  }
+  // Split a text into the part it allows and the part it declines.
+  var K_NEG_LEAD = /(?:\bdeclin\w*|\bexcept\b|\bexpect\b|\bexcluding\b|\bexclude\w*|\bother\s+than\b|\bnot\s+(?:allowed|applicable|doable)\b)[^;|.]*/gi;
+  var K_NEG_TAIL = /[A-Za-z0-9][^;|,.(:]*?\s+(?:declin\w*|not\s+allowed|not\s+doable)\b/gi;
+  function kParts(c){
+    var cut = [];
+    [K_NEG_LEAD, K_NEG_TAIL].forEach(function(re){
+      re.lastIndex = 0; var m;
+      while ((m = re.exec(c)) !== null){ cut.push([m.index, m.index + m[0].length]); if (!m[0].length) re.lastIndex++; }
+    });
+    cut.sort(function(a, b){ return a[0] - b[0]; });
+    var pos = '', neg = [], negModel = [], last = 0;
+    cut.forEach(function(s){
+      if (s[1] <= last) return;
+      var from = Math.max(s[0], last), span = c.slice(from, s[1]);
+      pos += c.slice(last, from) + ' ';
+      // "Declined Model - Tata Motors-207 ..." declines models, not the whole make
+      (/declin\w*\s*(?:vehicle\s*&\s*)?model|model\w*\s*declin/i.test(span) ? negModel : neg).push(span);
+      last = s[1];
+    });
+    pos += c.slice(last);
+    return { pos:pos.toUpperCase(), neg:neg.join(' ; ').toUpperCase() };
+  }
+  function union(rs){
+    if (!rs.length) return null;
+    return [Math.min.apply(null, rs.map(function(x){ return x[0]; })), Math.max.apply(null, rs.map(function(x){ return x[1]; }))];
+  }
+  function overlaps(a, b){ return !a || (a[0] <= b[1] + 1e-9 && b[0] <= a[1] + 1e-9); }
+  // ranges of a number followed by a unit word, e.g. "151CC TO 350CC", "Upto 150CC", "Above 2001CC"
+  function unitRanges(T, unit, bareOk){
+    var U = '\\s*(?:' + unit + ')', out = [], m;
+    var N = '(\\d+(?:\\.\\d+)?)';
+    var step = function(n){ return n % 1 === 0 ? 1 : 1e-6; };   // "Above 10 years" starts at 11
+    var res = [
+      [new RegExp('(?:ABOVE|MORE\\s+THAN)\\s*' + N + '(?:' + U + ')?\\s*(?:-|TO)\\s*' + N + (bareOk ? '(?:' + U + ')?' : U), 'g'), function(m){ return [+m[1] + step(+m[1]), +m[2]]; }],
+      [new RegExp(N + '(?:' + U + ')?\\s*(?:-|TO)\\s*' + N + (bareOk ? '(?:' + U + ')?' : U), 'g'), function(m){ return [+m[1], +m[2]]; }],
+      [new RegExp('(?:UP\\s*-?\\s*TO|UPTO|UTPO|TILL|BELOW)\\s*' + N + (bareOk ? '(?:' + U + ')?' : U), 'g'), function(m){ return [0, +m[1]]; }],
+      [new RegExp('(?:LESS\\s+THAN|<)\\s*' + N + (bareOk ? '(?:' + U + ')?' : U), 'g'), function(m){ return [0, +m[1] - step(+m[1])]; }],
+      [new RegExp('(?:ABOVE|MORE\\s+THAN|OVER|>)\\s*' + N + (bareOk ? '(?:' + U + ')?' : U), 'g'), function(m){ return [+m[1] + step(+m[1]), 1e9]; }],
+      [new RegExp(N + U + '\\s*(?:&\\s*ABOVE|AND\\s+ABOVE|ONWARDS|\\+)', 'g'), function(m){ return [+m[1], 1e9]; }],   // "10 & above", "10 onwards": from 10
+      [new RegExp(N + U + '\\s*ABOVE', 'g'), function(m){ return [+m[1] + step(+m[1]), 1e9]; }]                                   // "10 years above": from 11
+    ];
+    var used = [];
+    res.forEach(function(p){
+      p[0].lastIndex = 0;
+      while ((m = p[0].exec(T)) !== null){
+        var s = m.index, e = s + m[0].length;
+        if (used.some(function(u){ return s < u[1] && e > u[0]; })) continue;   // already read as part of a range
+        used.push([s, e]); out.push(p[1](m));
+      }
+    });
+    return out;
+  }
+  // allowed range = what the text allows, minus what it declines
+  function allowedRange(posT, negT, unit, bareOk){
+    var r = union(unitRanges(posT, unit, bareOk));
+    unitRanges(negT, unit, bareOk).forEach(function(n){
+      var cur = r || [0, 1e9];
+      if (n[1] >= 1e9 - 1) cur = [cur[0], Math.min(cur[1], n[0] - (n[0] % 1 === 0 ? 1 : 1e-6))];
+      else if (n[0] <= 0) cur = [Math.max(cur[0], n[1] + (n[1] % 1 === 0 ? 1 : 1e-6)), cur[1]];
+      r = cur;
+    });
+    return r;
+  }
+  var kCache = (typeof WeakMap === 'function') ? new WeakMap() : null;
+  function kConds(r){
+    var got = kCache && kCache.get(r);
+    if (got) return got;
+    got = kCondList(r.remarks).map(function(c){
+      var age = kField(c, 'Age \\(Com\\/TP\\)'), rem = kField(c, 'Remark'), disc = kField(c, 'Discount');
+      var ageText = (age + ' ; ' + rem).toUpperCase();
+      var all = (r.segment + ' | ' + c);
+      var p = kParts(all), pa = kParts(age + ' ; ' + rem);
+      // vehicle age
+      var ageR = null;
+      if (/ALL\s*AGES?|TILL\s+THE\s+VALIDITY/.test(ageText)) ageR = [0, 1e9];
+      else {
+        var yr = allowedRange(pa.pos.replace(/\d+\s*(?:CC|SEATS?|KG|TONS?)\b/g, ' '), pa.neg, 'YEARS?|YRS?|Y\\b', false);
+        var bare = /\d/.test(age) && !/CC|SEAT|KG/i.test(age) ? union(unitRanges(age.toUpperCase(), 'YEARS?|YRS?', true)) : null;
+        ageR = union([yr, bare].filter(Boolean));
+        var isNew = /\bNEW\b/.test(pa.pos) && !/OTHER\s+THAN\s+NEW|NON[\s-]*NEW/.test(ageText);
+        var isOld = /ROLL\s*OVER|RENEWAL|2ND\s+YEAR\s+ONWARDS|OTHER\s+THAN\s+NEW/.test(ageText);
+        if (isNew && ageR) ageR = [0, ageR[1]];
+        else if (isNew && !isOld) ageR = [0, 0];
+        if (isOld && !isNew){ ageR = ageR ? [Math.max(ageR[0], 1), ageR[1]] : [1, 1e9]; }
+        if (isOld && isNew && !ageR) ageR = [0, 1e9];
+      }
+      // engine CC, seats
+      var ccR = allowedRange(p.pos, p.neg, 'CC', false);
+      var seatR = allowedRange(p.pos, p.neg, 'SEATS?|SEATER|SEATING', false);
+      var plus = /(\d+)\s*\+\s*1\b/.exec(r.segment);
+      if (!seatR && plus) seatR = [1, +plus[1] + 1];
+      // fuel / make the condition can be used for
+      function usable(list, test){
+        var named = list.filter(function(x){ return test(x).test(p.pos); });
+        var out = {};
+        list.forEach(function(x){ if ((named.length === 0 || named.indexOf(x) !== -1) && !test(x).test(p.neg)) out[Array.isArray(x) ? x[0] : x] = true; });
+        return out;
+      }
+      var fuelOk = usable(['DIESEL', 'PETROL', 'CNG', 'EV'], function(f){ return FUEL_RE[f]; });
+      var makeOk = usable(MAKES, function(mk){ return mk[1]; });
+      return { age:ageR, cc:ccR, seats:seatR, fuelOk:fuelOk, makeOk:makeOk, text:c };
+    });
+    if (kCache) kCache.set(r, got);
+    return got;
+  }
+  function rtoCovered(r, code){
+    var st = code.slice(0, 2), num = code.slice(2), n = String(+num);
+    var codeRe = new RegExp('\\b' + st + '\\s*-?\\s*0?' + n + '\\b', 'i');
+    if (isRtoDeclined(r.remarks, code) || isRtoDeclined(r.remarks, st + n)) return false;
+    var rtoText = kCondList(r.remarks).map(function(c){ return kField(c, 'RTO') + ' ' + kField(c, 'Remark'); }).join(' ');
+    // "except Chennai" / "except Coimbatore" written as a city, not as codes
+    var CITY = { CHENNAI:['TN01','TN02','TN03','TN04','TN05','TN06','TN07','TN09','TN10','TN11','TN12','TN13','TN14','TN18','TN22','TN85'],
+                 COIMBATORE:['TN37','TN38','TN40','TN41','TN66','TN99'] };
+    for (var city in CITY){
+      if (CITY[city].indexOf(code) !== -1 && new RegExp('(?:except|excluding|other\\s+than)[^|;]*' + city, 'i').test(rtoText)) return false;
+    }
+    if (codeRe.test(rtoText)) return true;
+    var stateOf = { TN:'TN', PY:'TN', KL:'KL', KA:'KA', AP:'AP-TS', TS:'AP-TS', TG:'AP-TS', MH:'MH' }[st];
+    if (stateOf && r.state !== stateOf) return false;
+    // blanket coverage: "All RTO(s)", "All TN RTOs", "All TN & PY RTO", "All South State RTOs" ...
+    return ALL_RTO_PATTERN.test(rtoText) || /\bALL\b[^|;]*\bRTO/i.test(rtoText);
+  }
+  // Does rate r meet every keyed filter (all in one of its conditions)?
+  function keyedPass(r, keys){
+    if (!keys.length) return true;
+    for (var i = 0; i < keys.length; i++){
+      var k = keys[i];
+      if (k.k === 'rto' && !rtoCovered(r, k.v)) return false;
+      if (k.k === 'gvw'){
+        if (!WEIGHT_SECTIONS.has(r.sec)) return false;
+        var w = weightRangeOf(r.segment);
+        if (!w || !overlaps([w.min, w.max], k.r)) return false;
+      }
+    }
+    return keyedConds(r, keys).length > 0;
+  }
+  // indexes of the conditions of rate r that meet the condition-level keys (age, cc, seats, fuel, make)
+  function keyedConds(r, keys){
+    var condKeys = keys.filter(function(k){ return k.k !== 'rto' && k.k !== 'gvw'; });
+    var cs = kConds(r), out = [];
+    cs.forEach(function(c, i){ if (!condKeys.length || condKeys.every(function(k){
+        if (k.k === 'age') return overlaps(c.age, k.r);
+        if (k.k === 'cc') return r.single && overlaps(c.cc, k.r);                       // engine CC: Private Car / Two-Wheeler
+        if (k.k === 'seats') return /^PCV /.test(r.sec) && overlaps(c.seats, k.r);      // seats: passenger vehicles
+        if (k.k === 'fuel') return k.v.some(function(f){ return c.fuelOk[f]; });
+        if (k.k === 'make') return !!c.makeOk[k.v[0]];
+        return true;
+      })) out.push(i); });
+    return out;
+  }
+  // With keys in the search, a rate shows only the conditions that met them.
+  function keyedView(r, keys){
+    var idx = keyedConds(r, keys), all = kCondList(r.remarks);
+    if (!idx.length || idx.length === all.length) return r;
+    var copy = {}; for (var f in r) copy[f] = r[f];
+    var kept = idx.map(function(i){ return all[i]; });
+    copy.remarks = kept.length === 1 ? kept[0] : '(' + kept.join(') OR (') + ')';
+    return copy;
+  }
+
   function render(){
-    var qRaw = searchEl.value.trim();
+    // keyed filters (age<12 fuel:diesel rto:TN07 ...) come out first; the rest is the usual search
+    var parsedSearch = parseKeyedSearch(searchEl.value.trim());
+    var keyed = parsedSearch.keys;
+    if (keyed.length === 1 && keyed[0].k === 'gvw' && !parsedSearch.free && keyed[0].r[0] === keyed[0].r[1]) keyed = [];   // "GVW 1547" alone keeps the ranked GVW view
+    var qRaw = keyed.length ? parsedSearch.free : searchEl.value.trim();
     var q = qRaw.toLowerCase();
     var stateFilter = stateSel.value;
     var segFilter = selectedSegment;
@@ -1675,6 +1949,7 @@ function __gridDecode(src){
       if (stateFilter && r.state !== stateFilter) return false;
       if (segFilter && r.sec !== segFilter) return false;
       if (compFilter.length && compFilter.indexOf(r.company) === -1) return false;
+      if (keyed.length && !keyedPass(r, keyed)) return false;
       if (weightQuery !== null){
         if (!WEIGHT_SECTIONS.has(r.sec)) return false;
         var range = weightRangeOf(r.segment);
@@ -1708,6 +1983,8 @@ function __gridDecode(src){
       return true;
     });
 
+    if (keyed.length) filtered = filtered.map(function(r){ return keyedView(r, keyed); });
+
     // A rate written for a wide weight range (e.g. IFFCO "0 To 40000") is filed under
     // every LCV/MCV/HCV band it overlaps, which is right when browsing by band. A GVW
     // search pulls all bands together, so keep each distinct rate (same state, insurer,
@@ -1727,13 +2004,14 @@ function __gridDecode(src){
     } else {
       var allInState = stateFilter ? records.filter(function(r){ return r.state === stateFilter; }).length : records.length;
       countEl.innerHTML = '<b>' + filtered.length + '</b> of ' + allInState + ' rates shown' +
-        ((showNew && showOld) ? '' : (showNew ? ' \u00B7 New vehicles' : ' \u00B7 Rollover / Renewal'));
+        ((showNew && showOld) ? '' : (showNew ? ' \u00B7 New vehicles' : ' \u00B7 Rollover / Renewal')) +
+        (keyed.length ? ' \u00B7 ' + keyed.map(function(k){ return '<span class="key-chip">' + escapeHtml(k.label) + '</span>'; }).join(' ') : '');
     }
 
     if (filtered.length === 0){
       var emptyMsg = weightQuery !== null
         ? 'No LCV/MCV/HCV segment covers a GVW of ' + weightQuery.toLocaleString() + ' kg.'
-        : 'Try a different insurer, segment, or search term.';
+        : (keyed.length ? 'No rate meets ' + keyed.map(function(k){ return k.label; }).join(' + ') + (parsedSearch.free ? ' + "' + escapeHtml(parsedSearch.free) + '"' : '') + ' — try a wider value or fewer keys.' : 'Try a different insurer, segment, or search term.');
       resultsEl.innerHTML = '<div class="empty"><h3>No matching rates</h3><div>' + emptyMsg + '</div></div>';
       return;
     }

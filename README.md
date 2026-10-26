@@ -6,7 +6,8 @@ Everything needed to put the Motor Smart GRID on the website and keep it updated
 
 **Versions in this kit:**
 - Smart Grid October 2026 - Version 1 - 06-10-2026 to 21-10-2026 (3,677 rates: TN 928 · KL 566 · KA 855 · AP-TS 1,328)
-- Smart Grid October 2026 - Version 2 - 22-10-2026 to 31-10-2026 (3,736 rates: TN 943 · KL 577 · KA 872 · AP-TS 1,344) — TATA AIG TN School Bus 61%, National GRID revised (all states), Kshema Two-Wheeler added for Kerala
+- Smart Grid October 2026 - Version 3 - 26-10-2026 to 31-10-2026 (3,722 rates: TN 939 · KL 574 · KA 868 · AP-TS 1,341) — United India revised commission (circular 23.10.2026)
+- Smart Grid October 2026 - Version 2 - 22-10-2026 to 25-10-2026 (3,736 rates: TN 943 · KL 577 · KA 872 · AP-TS 1,344) — TATA AIG TN School Bus 61%, National GRID revised (all states), Kshema Two-Wheeler added for Kerala
 
 **States:** Tamil Nadu, Kerala, Karnataka, Andhra Pradesh & Telangana
 **UAT copy:** the claude.ai Smart GRID link (same page and versions as this kit)

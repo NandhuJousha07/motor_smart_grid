@@ -8,6 +8,8 @@ How a rate is paired with its earlier rate (same state, segment and insurer, and
   - each condition of the rate (the parts joined by OR) is matched separately;
   - vehicle type keywords must agree (Ambulance, E-rickshaw, E-cart, Auto, Tractor,
     Long Term Package ...);
+  - Private Car / Two-Wheeler: the same CC band (Upto 1000CC with Upto 1000CC ...), Electric only
+    with Electric only, Except Electric with Except Electric;
   - two-wheelers: Bike with Bike, Scooter with Scooter, and the same make group
     (Honda / TVS / Suzuki, Bajaj, Hero / Yamaha, other makes, electric) - closest wins;
   - restricted-RTO rates ("Doable RTOs - ...", "Restricted RTOs", "TN/PY RTO's - ...")
@@ -78,6 +80,25 @@ def vehicle(text):
     t = text.upper()
     return {k for k, p in (('BIKE', r'\bBIKE'), ('SCOOTER', r'SCOOTER')) if re.search(p, t)}
 
+def cc_range(text):
+    """engine CC band in the wording: 'Upto 1000CC' -> (0,1000), '1001 to 1200CC' -> (1001,1200),
+    'Above 2001CC' -> (2002, inf), '151CC TO 350CC' -> (151,350); None when no CC is named"""
+    t = text.upper()
+    t = re.sub(r'(?:DECLIN\w*|EXCEPT|EXCLUD\w*|OTHER THAN)[^;|]*', ' ', t)   # "Declined: All TW above 350cc" is not the rate's band
+    m = re.search(r'(\d+)\s*(?:CC)?\s*(?:TO|-)\s*(\d+)\s*CC', t)
+    if m: return (int(m.group(1)), int(m.group(2)))
+    m = re.search(r'(?:UP\s*TO|UPTO|BELOW|LESS THAN)\s*(\d+)\s*CC', t)
+    if m: return (0, int(m.group(1)))
+    m = re.search(r'(?:ABOVE|MORE THAN)\s*(\d+)\s*CC', t)
+    if m: return (int(m.group(1)) + 1, 10**6)
+    return None
+
+def ev_kind(text):
+    t = text.upper()
+    if re.search(r'EXCEPT\s+(?:ALL\s+)?(?:ELECTRIC|EV)|EV\s+DECLIN', t): return 'no'
+    if re.search(r'ELECTRIC\s+ONLY|EV\s+ONLY|ONLY\s+ELECTRIC', t): return 'only'
+    return None
+
 def restricted(c):
     t = (field(c, 'RTO') + ' ' + field(c, 'Remark')).upper()
     return bool(re.search(r'\bDOABLE\b|RESTRICTED|^\s*[A-Z/]{2,6}\s+RTO\W*S?\s*-', t))
@@ -132,7 +153,9 @@ def overlap(a, b):
 
 def profile(rec, c):
     text = rec['segment'] + ' | ' + c
-    return dict(veh=vehicle(rec['segment']) if rec['single'] else set(),
+    return dict(cc=cc_range(rec['segment'] + ' ' + field(c, 'Remark')) if rec['single'] else None,
+                ev=ev_kind(field(c, 'Remark')) if rec['single'] else None,
+                veh=vehicle(rec['segment']) if rec['single'] else set(),
                 mk=makes(field(c, 'Remark')) if rec['single'] else set(),
                 fam=families(rec['segment'] + ' ' + field(c, 'Remark') + ' ' + field(c, 'Age (Com/TP)')),
                 rto=restricted(c), age=years(field(c, 'Age (Com/TP)') + ' ' + field(c, 'Remark')),
@@ -144,12 +167,13 @@ def score(a, b):
         if not (a['fam'] & b['fam']): return 0.0
         if ('LT' in a['fam']) != ('LT' in b['fam']): return 0.0
     if a['veh'] and b['veh'] and not (a['veh'] & b['veh']): return 0.0          # Bike vs Scooter
+    if a['ev'] and b['ev'] and a['ev'] != b['ev']: return 0.0                    # Electric only vs Except Electric
     mk = 1.0
     if a['mk'] and b['mk']:                                                      # same make group, closest wins
         inter = a['mk'] & b['mk']
         if not inter: return 0.0
         mk = len(inter) / len(a['mk'] | b['mk'])
-    return mk * overlap(a['w'], b['w']) * overlap(a['seats'], b['seats']) * overlap(a['age'], b['age'])
+    return mk * overlap(a['w'], b['w']) * overlap(a['seats'], b['seats']) * overlap(a['age'], b['age']) * overlap(a['cc'], b['cc'])
 
 def direction(cur, olds):
     """Compare OD with OD and TP with TP: all parts higher or equal (one higher) -> up,

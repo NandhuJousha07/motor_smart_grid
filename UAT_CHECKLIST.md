@@ -3,8 +3,10 @@
 Tick each item on the **portal URL** (not the claude.ai UAT link) on desktop and on one Android/iOS phone.
 
 ## Version bar
-- [ ] Below the filters: **GRID month [October 2026 ▼]** then **Version 1 · 06-Oct to 21-Oct · Earlier** and **Version 2 · 22-Oct to 31-Oct · Applies today** (from 22-10-2026; before that Version 1 is *Applies today* and Version 2 *Upcoming*)
-- [ ] Version 2 opens first; heading reads **▾ Smart Grid October 2026 - Version 2 - 22-10-2026 to 31-10-2026**; the filter bar shows "October 2026 · Version 2"
+- [ ] Below the filters: **GRID month [October 2026 ▼]** then **Version 1 · 06-Oct to 21-Oct · Earlier**, **Version 2 · 22-Oct to 25-Oct** and **Version 3 · 26-Oct to 31-Oct** (on 25-10-2026 Version 2 is *Applies today* and Version 3 *Upcoming*; from 26-10-2026 Version 3 *Applies today*)
+- [ ] From 26-10-2026 Version 3 opens first; heading reads **▾ Smart Grid October 2026 - Version 3 - 26-10-2026 to 31-10-2026**
+- [ ] Version 3, United India: TN Taxi Upto 7 **6.00 ▼ −5.00**; KL Taxi Upto 7 **31.00 / 31.00 ▲ +10.00**; KL Goods 7501–10000 **23.50 ▲ +5.00**; AP-TS Goods 20001–25000 **21.00 ▲ +10.00**; TN Private Car Package upto 1000CC **12.50 ▼ −2.50**; Private Car SAOD **20.00(OD) ▲ +10.00**; no "Except OEMs and DIESEL" 35.00 rate
+- [ ] Version 3 still shows the Version 2 labels (e.g. TATA AIG School Bus 61.00 ▲ +3.00, Kshema KL Scooter Bundle 32.50 ▼ −2.50); Version 3 counts TN 939 · KL 574 · KA 868 · AP-TS 1,341
 - [ ] (Once there are 2+ months) choosing a month in the dropdown shows its versions and opens the one that applied last in that month
 - [ ] A version whose start date is still ahead is listed as **Upcoming** and opens when clicked
 - [ ] (When there are 2+ versions) clicking another version keeps the chosen state, segment, insurers and search, and shows that version's rates
@@ -40,6 +42,10 @@ Version 1: TN 928 · KL **566** · KA 855 · AP-TS 1,328
 - [ ] Two-Wheeler – Package: top row **HDFC ERGO 50.00**
 
 ## Functions
+- [ ] Search `age<12 fuel:diesel rto:TN07` (TN): tags "Age < 12 yrs · Fuel: diesel · RTO TN07" show next to the count; no rate declining TN07, "Except Diesel" or only for vehicles above 12 years appears
+- [ ] `national age 10` (TN): "Up to 10 Years" rates shown, "Above 10 Years to 15 Years" not; `national age 11` shows "Above 10 Years to 15 Years" and not "Up to 10 Years"
+- [ ] `cc 500` (TN): no Two-Wheeler rate with "Declined: All TW above 350cc"; `fuel ev`: no "Except Electric" / "EV decline" rate; `age new`: no Rollover / Renewal-only rate
+- [ ] `school bus age 8 seats 40` lists only School Bus rates usable for an 8-year-old 40-seat bus; plain `GVW 1547` still shows the ranked GVW list
 - [ ] Segment filter shows one segment; Insurer filter narrows to selected insurers; Clear filters resets
 - [ ] Search "TN37" returns rates whose RTO list includes TN37
 - [ ] Search `GVW 19920` (TN) shows 30 segments, Magma 21.00 first, IFFCO "0 To 40000" listed once
