@@ -1,6 +1,6 @@
 {
   "product": "Motor Smart GRID",
-  "builtAt": "2026-10-26T05:40:01+00:00",
+  "builtAt": "2026-10-27T11:46:05+00:00",
   "opensFirstOnBuildDay": "2026-10-v3",
   "versions": [
     {
@@ -28,13 +28,13 @@
         }
       ],
       "corrections": "monthly-update/corrections_Oct2026_v1.json",
-      "changes": "October GRID with revisions: ICICI TN Auto Diesel 46% (listed RC locations, Chennai Code IM-2358692 only), New India TN School Bus 66%, Reliance School Bus (TN 68.5%, KL/KA/AP-TS 71%); Royal Sundaram TN Private Car SATP rates added from RSA_Missing_GRID_-_Oct_26.xlsx (13 Oct 2026); Kshema Kerala Two-Wheeler rates (first issued with the October Version 2 changes) included as the earlier rates, 23 Oct 2026",
-      "totalRates": 3677,
+      "changes": "October GRID with revisions: ICICI TN Auto Diesel 46% (listed RC locations, Chennai Code IM-2358692 only), New India TN School Bus 66%, Reliance School Bus (TN 68.5%, KL/KA/AP-TS 71%); Royal Sundaram TN Private Car SATP rates added from RSA_Missing_GRID_-_Oct_26.xlsx (13 Oct 2026); Kshema Kerala Two-Wheeler rates (first issued with the October Version 2 changes) included as the earlier rates, 23 Oct 2026; ICICI commercial-vehicle TP payouts removed (TP grid had been added from the \"CV AOTP Grid / CV Overall\" note in error) - Package only, except the TP rates in ICICI_Grid_changes_Oct26.xlsx (TN/KA council-call Truck 16, KA MHCV Truck 16, KA SCV old 51, Hyderabad Taxi 26), 27 Oct 2026",
+      "totalRates": 3675,
       "ratesByState": {
         "TN": 928,
-        "KL": 566,
+        "KL": 565,
         "KA": 855,
-        "AP-TS": 1328
+        "AP-TS": 1327
       },
       "correctionsApplied": [
         {
@@ -45,7 +45,7 @@
         {
           "sheet": "TN PO",
           "row": 775,
-          "note": "ICICI TN PCV Auto (Diesel) revised 08 Oct 2026: 11/11 ROTN RTO codes -> 46/46, only for the listed Tamil Nadu RTO RC locations (per attachment); 12 Oct 2026: remark added - Commission applicable only if the business sourced from Chennai Code: IM-2358692"
+          "note": "ICICI TN PCV Auto (Diesel) revised 08 Oct 2026: 11/11 ROTN RTO codes -> 46/46, only for the listed Tamil Nadu RTO RC locations (per attachment); 12 Oct 2026: remark added - Commission applicable only if the business sourced from Chennai Code: IM-2358692; 27 Oct 2026: TP payout removed (Package 46 only)"
         },
         {
           "sheet": "TN PO",
@@ -66,9 +66,60 @@
           "sheet": "AP-TS PO",
           "row": 1324,
           "note": "Reliance AP-TS School Bus revised 09 Oct 2026 (Special School Bus GRID for South): 70/70 -> 71/71 normal slab; POSP volume offer +3.0% on ₹5L volume (74%)"
+        },
+        {
+          "sheet": "TN PO",
+          "row": 774,
+          "note": "ICICI TN PCV Auto Petrol/CNG Renewal/Rollover ROTN 46/46: TP payout removed 27 Oct 2026 (Package 46 only)"
         }
       ],
       "remarkAdded": [],
+      "tpRemoved": [
+        {
+          "company": "ICICI",
+          "block": "CV",
+          "keep": [
+            {
+              "sheet": "TN PO",
+              "rows": [
+                56,
+                57,
+                58,
+                59,
+                60,
+                61,
+                62,
+                63
+              ]
+            },
+            {
+              "sheet": "KA PO",
+              "rows": [
+                128,
+                132,
+                133,
+                134,
+                135,
+                136,
+                137,
+                138,
+                139,
+                140,
+                141
+              ]
+            },
+            {
+              "sheet": "AP-TS PO",
+              "rows": [
+                1317,
+                1318,
+                1319
+              ]
+            }
+          ],
+          "note": "TP kept only where ICICI_Grid_changes_Oct26.xlsx gives a TP (AOTP / ALL / council-call Comp-TP All) rate: TN Truck 12-20T & 20-40T council call (20% -> 16), KA Bengaluru Truck council call (16), KA MHCV 12-20T Truck old (16), KA SCV <2450 old Tata/M&M/Maruti (55% -> 51), Hyderabad Taxi >1000CC council call (30% -> 26)"
+        }
+      ],
       "ratesLabelled": {
         "increased": 6,
         "new": 26
@@ -105,13 +156,13 @@
         }
       ],
       "corrections": "monthly-update/corrections_Oct2026_v2.json",
-      "changes": "October Version 2 from 22-10-2026: TATA AIG TN School Bus 61% above 12 seats, all TN RTOs; National complete GRID revised (TN, KL, KA, AP-TS) from GRID_Oct_V2_Changes_-_Effective_22-10-2026.xlsx; Kshema Two-Wheeler for Kerala (from EG_GRID_Kshema_Kerala.xlsx, 23 Oct 2026) (CPA/TPPD remark on Bundle only, as in the sheet)",
-      "totalRates": 3736,
+      "changes": "October Version 2 from 22-10-2026: TATA AIG TN School Bus 61% above 12 seats, all TN RTOs; National complete GRID revised (TN, KL, KA, AP-TS) from GRID_Oct_V2_Changes_-_Effective_22-10-2026.xlsx; Kshema Two-Wheeler for Kerala (from EG_GRID_Kshema_Kerala.xlsx, 23 Oct 2026) (CPA/TPPD remark on Bundle only, as in the sheet); ICICI commercial-vehicle TP payouts removed (TP grid had been added from the \"CV AOTP Grid / CV Overall\" note in error) - Package only, except the TP rates in ICICI_Grid_changes_Oct26.xlsx (TN/KA council-call Truck 16, KA MHCV Truck 16, KA SCV old 51, Hyderabad Taxi 26), 27 Oct 2026",
+      "totalRates": 3734,
       "ratesByState": {
         "TN": 943,
-        "KL": 577,
+        "KL": 576,
         "KA": 872,
-        "AP-TS": 1344
+        "AP-TS": 1343
       },
       "correctionsApplied": [
         {
@@ -122,7 +173,7 @@
         {
           "sheet": "TN PO",
           "row": 775,
-          "note": "ICICI TN PCV Auto (Diesel) revised 08 Oct 2026: 11/11 ROTN RTO codes -> 46/46, only for the listed Tamil Nadu RTO RC locations (per attachment); 12 Oct 2026: remark added - Commission applicable only if the business sourced from Chennai Code: IM-2358692"
+          "note": "ICICI TN PCV Auto (Diesel) revised 08 Oct 2026: 11/11 ROTN RTO codes -> 46/46, only for the listed Tamil Nadu RTO RC locations (per attachment); 12 Oct 2026: remark added - Commission applicable only if the business sourced from Chennai Code: IM-2358692; 27 Oct 2026: TP payout removed (Package 46 only)"
         },
         {
           "sheet": "TN PO",
@@ -158,9 +209,60 @@
           "sheet": "TN PO",
           "row": 891,
           "note": "TATA AIG TN School Bus Above 31 seats ROTN 56/56 withdrawn 22 Oct 2026 - covered by 61% above 12 seats, all TN RTOs"
+        },
+        {
+          "sheet": "TN PO",
+          "row": 774,
+          "note": "ICICI TN PCV Auto Petrol/CNG Renewal/Rollover ROTN 46/46: TP payout removed 27 Oct 2026 (Package 46 only)"
         }
       ],
       "remarkAdded": [],
+      "tpRemoved": [
+        {
+          "company": "ICICI",
+          "block": "CV",
+          "keep": [
+            {
+              "sheet": "TN PO",
+              "rows": [
+                56,
+                57,
+                58,
+                59,
+                60,
+                61,
+                62,
+                63
+              ]
+            },
+            {
+              "sheet": "KA PO",
+              "rows": [
+                128,
+                132,
+                133,
+                134,
+                135,
+                136,
+                137,
+                138,
+                139,
+                140,
+                141
+              ]
+            },
+            {
+              "sheet": "AP-TS PO",
+              "rows": [
+                1317,
+                1318,
+                1319
+              ]
+            }
+          ],
+          "note": "TP kept only where ICICI_Grid_changes_Oct26.xlsx gives a TP (AOTP / ALL / council-call Comp-TP All) rate: TN Truck 12-20T & 20-40T council call (20% -> 16), KA Bengaluru Truck council call (16), KA MHCV 12-20T Truck old (16), KA SCV <2450 old Tata/M&M/Maruti (55% -> 51), Hyderabad Taxi >1000CC council call (30% -> 26)"
+        }
+      ],
       "ratesLabelled": {
         "increased": 122,
         "decreased": 40,
@@ -195,16 +297,17 @@
               "block": "TW"
             }
           ]
-        }
+        },
+        "source/United_India_Sub_Annexure_3_Preferred_RTOs_26-10-2026.xlsx"
       ],
       "corrections": "monthly-update/corrections_Oct2026_v3.json",
-      "changes": "October Version 3 from 26-10-2026: United India revised commission (circular HO:MKTG:CIR:12:26-27 dated 23.10.2026) — Taxi (TN/KA 6, KL/AP-TS 31/31), GCV 7501-10000 (KL/KA/AP-TS 23.5), GCV 20001-25000 (AP-TS 21), Private Car: upto 1000CC 12.5, 1001-1200CC TN/KA 12.5, 1201-1500CC 10, 35%-commission bands (1501-2000CC, KL/AP-TS 1001-1200CC) 30 for Bundle, Package and SATP, SAOD 20(OD); \"Except OEMs and Diesel upto 1500CC\" 35% not continued. Everything else as Version 2.",
-      "totalRates": 3726,
+      "changes": "October Version 3 from 26-10-2026: United India revised commission (circular HO:MKTG:CIR:12:26-27 dated 23.10.2026) — Taxi (TN/KA 6, KL/AP-TS 31/31), GCV 7501-10000 (KL/KA/AP-TS 23.5), GCV 20001-25000 (AP-TS 21), Private Car: upto 1000CC 12.5, 1001-1200CC TN/KA 12.5 (Sub Annexure 3 preferred RTOs TN13/14/23/33/49/50/60/63/70/77/82/83/85/86/99, PY01/03, KA23/27/30/35/36/37/57/58/62/65/69: 30), 1201-1500CC 10, 35%-commission bands (1501-2000CC, KL/AP-TS 1001-1200CC) 30 for Bundle, Package and SATP, SAOD 20(OD); \"Except OEMs and Diesel upto 1500CC\" 35% not continued. Everything else as Version 2.; ICICI commercial-vehicle TP payouts removed (TP grid had been added from the \"CV AOTP Grid / CV Overall\" note in error) - Package only, except the TP rates in ICICI_Grid_changes_Oct26.xlsx (TN/KA council-call Truck 16, KA MHCV Truck 16, KA SCV old 51, Hyderabad Taxi 26), 27 Oct 2026",
+      "totalRates": 3724,
       "ratesByState": {
         "TN": 939,
-        "KL": 576,
+        "KL": 575,
         "KA": 868,
-        "AP-TS": 1343
+        "AP-TS": 1342
       },
       "correctionsApplied": [
         {
@@ -215,7 +318,7 @@
         {
           "sheet": "TN PO",
           "row": 775,
-          "note": "ICICI TN PCV Auto (Diesel) revised 08 Oct 2026: 11/11 ROTN RTO codes -> 46/46, only for the listed Tamil Nadu RTO RC locations (per attachment); 12 Oct 2026: remark added - Commission applicable only if the business sourced from Chennai Code: IM-2358692"
+          "note": "ICICI TN PCV Auto (Diesel) revised 08 Oct 2026: 11/11 ROTN RTO codes -> 46/46, only for the listed Tamil Nadu RTO RC locations (per attachment); 12 Oct 2026: remark added - Commission applicable only if the business sourced from Chennai Code: IM-2358692; 27 Oct 2026: TP payout removed (Package 46 only)"
         },
         {
           "sheet": "TN PO",
@@ -270,7 +373,7 @@
         {
           "sheet": "TN PO",
           "row": 1079,
-          "note": "United India Private Car BUNDLED(NEW) 1001-1200CC (20% -> 17.5%) TN: payout 15 -> 12.5 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026"
+          "note": "United India Private Car BUNDLED(NEW) 1001-1200CC (20% -> 17.5%) TN: payout 15 -> 12.5 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026; Sub Annexure 3 preferred RTOs paid 30 (35% commission) via United_India_Sub_Annexure_3_Preferred_RTOs_26-10-2026.xlsx"
         },
         {
           "sheet": "TN PO",
@@ -290,7 +393,7 @@
         {
           "sheet": "TN PO",
           "row": 1084,
-          "note": "United India Private Car PACKAGE & SATP 1001-1200CC (20% -> 17.5%) TN: payout 15 -> 12.5 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026"
+          "note": "United India Private Car PACKAGE & SATP 1001-1200CC (20% -> 17.5%) TN: payout 15 -> 12.5 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026; Sub Annexure 3 preferred RTOs paid 30 (35% commission) via United_India_Sub_Annexure_3_Preferred_RTOs_26-10-2026.xlsx"
         },
         {
           "sheet": "TN PO",
@@ -375,7 +478,7 @@
         {
           "sheet": "KA PO",
           "row": 890,
-          "note": "United India Private Car BUNDLED(NEW) 1001-1200CC (20% -> 17.5%) KA: payout 15 -> 12.5 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026"
+          "note": "United India Private Car BUNDLED(NEW) 1001-1200CC (20% -> 17.5%) KA: payout 15 -> 12.5 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026; Sub Annexure 3 preferred RTOs paid 30 (35% commission) via United_India_Sub_Annexure_3_Preferred_RTOs_26-10-2026.xlsx"
         },
         {
           "sheet": "KA PO",
@@ -395,7 +498,7 @@
         {
           "sheet": "KA PO",
           "row": 895,
-          "note": "United India Private Car PACKAGE & SATP 1001-1200CC (20% -> 17.5%) KA: payout 15 -> 12.5 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026"
+          "note": "United India Private Car PACKAGE & SATP 1001-1200CC (20% -> 17.5%) KA: payout 15 -> 12.5 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026; Sub Annexure 3 preferred RTOs paid 30 (35% commission) via United_India_Sub_Annexure_3_Preferred_RTOs_26-10-2026.xlsx"
         },
         {
           "sheet": "KA PO",
@@ -461,13 +564,65 @@
           "sheet": "AP-TS PO",
           "row": 1562,
           "note": "United India Private Car SAOD AP-TS: commission 15% -> 25%, payout 10(OD) -> 20(OD) — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026"
+        },
+        {
+          "sheet": "TN PO",
+          "row": 774,
+          "note": "ICICI TN PCV Auto Petrol/CNG Renewal/Rollover ROTN 46/46: TP payout removed 27 Oct 2026 (Package 46 only)"
         }
       ],
       "remarkAdded": [],
+      "tpRemoved": [
+        {
+          "company": "ICICI",
+          "block": "CV",
+          "keep": [
+            {
+              "sheet": "TN PO",
+              "rows": [
+                56,
+                57,
+                58,
+                59,
+                60,
+                61,
+                62,
+                63
+              ]
+            },
+            {
+              "sheet": "KA PO",
+              "rows": [
+                128,
+                132,
+                133,
+                134,
+                135,
+                136,
+                137,
+                138,
+                139,
+                140,
+                141
+              ]
+            },
+            {
+              "sheet": "AP-TS PO",
+              "rows": [
+                1317,
+                1318,
+                1319
+              ]
+            }
+          ],
+          "note": "TP kept only where ICICI_Grid_changes_Oct26.xlsx gives a TP (AOTP / ALL / council-call Comp-TP All) rate: TN Truck 12-20T & 20-40T council call (20% -> 16), KA Bengaluru Truck council call (16), KA MHCV 12-20T Truck old (16), KA SCV <2450 old Tata/M&M/Maruti (55% -> 51), Hyderabad Taxi >1000CC council call (30% -> 26)"
+        }
+      ],
       "ratesLabelled": {
-        "increased": 132,
-        "decreased": 70,
-        "new": 63
+        "increased": 136,
+        "decreased": 68,
+        "new": 63,
+        "increased & decreased": 2
       }
     }
   ]

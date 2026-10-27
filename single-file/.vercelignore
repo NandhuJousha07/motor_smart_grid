@@ -1,0 +1,4 @@
+# PHP counter is for PHP hosting only - Vercel uses api/visitor-counter.js
+visitor-counter.php
+counter-data
+*.md

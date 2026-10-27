@@ -6,7 +6,10 @@ Tick each item on the **portal URL** (not the claude.ai UAT link) on desktop and
 - [ ] Below the filters: **GRID month [October 2026 ▼]** then **Version 1 · 06-Oct to 21-Oct · Earlier**, **Version 2 · 22-Oct to 25-Oct** and **Version 3 · 26-Oct to 31-Oct** (on 25-10-2026 Version 2 is *Applies today* and Version 3 *Upcoming*; from 26-10-2026 Version 3 *Applies today*)
 - [ ] From 26-10-2026 Version 3 opens first; heading reads **▾ Smart Grid October 2026 - Version 3 - 26-10-2026 to 31-10-2026**
 - [ ] Version 3, United India: TN Taxi Upto 7 **6.00 ▼ −5.00**; KL Taxi Upto 7 **31.00 / 31.00 ▲ +10.00**; KL Goods 7501–10000 **23.50 ▲ +5.00**; AP-TS Goods 20001–25000 **21.00 ▲ +10.00**; TN Private Car Package upto 1000CC **12.50 ▼ −2.50**; Private Car SAOD **20.00(OD) ▲ +10.00**; no "Except OEMs and DIESEL" 35.00 rate
-- [ ] Version 3 still shows the Version 2 labels (e.g. TATA AIG School Bus 61.00 ▲ +3.00, Kshema KL Scooter Bundle 32.50 ▼ −2.50); Version 3 counts TN 939 · KL 576 · KA 868 · AP-TS 1,343
+- [ ] Version 3, United India Sub Annexure 3: search `rto TN13 cc 1100` (Tamil Nadu) → Private Car Bundle / Package / SATP **30.00 ▲ +15.00**; `rto TN01 cc 1100` → **12.50 ▼ −2.50**; `rto PY03 cc 1100` → 30.00; `rto KA23 cc 1100` (Karnataka) → 30.00; `rto KA01 cc 1100` → 12.50
+- [ ] Search `seats<=15`: only Taxi, Taxi & Stage Bus, School Bus and Staff Bus sections — **no PCV – Auto**
+- [ ] ICICI commercial-vehicle rates show TP **NA** in every version (e.g. TN LCV Upto 2000 39.00 / NA)
+- [ ] Version 3 still shows the Version 2 labels (e.g. TATA AIG School Bus 61.00 ▲ +3.00, Kshema KL Scooter Bundle 32.50 ▼ −2.50); Version 3 counts TN 939 · KL 575 · KA 868 · AP-TS 1,342
 - [ ] (Once there are 2+ months) choosing a month in the dropdown shows its versions and opens the one that applied last in that month
 - [ ] A version whose start date is still ahead is listed as **Upcoming** and opens when clicked
 - [ ] (When there are 2+ versions) clicking another version keeps the chosen state, segment, insurers and search, and shows that version's rates
@@ -62,10 +65,10 @@ Version 1: TN 928 · KL **566** · KA 855 · AP-TS 1,328
 - [ ] The page opens only for logged-in portal users
 
 ## Visitor counter
-- [ ] `/smart-grid/visitor-counter.php?check=1` shows `"result": "OK - the counter can work"`
+- [ ] Vercel: `/api/visitor-counter?check=1` shows `"result": "OK - the counter can work"` (PHP hosting: `/smart-grid/visitor-counter.php?check=1`)
 - [ ] The bottom of the page shows "Today's visitors: N · Total visitors: N"
 - [ ] First visit from a new browser adds 1 to both; reloading or switching versions the same day does not; opening it again the next day adds 1 to the total and to that day's count
-- [ ] `/smart-grid/counter-data/count.json` does NOT open from a browser (403 / 404)
+- [ ] PHP hosting only: `/smart-grid/counter-data/count.json` does NOT open from a browser (403 / 404). Vercel: `/visitor-counter.php` gives 404 (kept out by `.vercelignore`)
 
 ## Go-live
 - [ ] `no-cache` headers active on `.json` / `.html` (DevTools → Network → Response headers)

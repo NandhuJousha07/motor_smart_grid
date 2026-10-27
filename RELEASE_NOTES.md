@@ -1,5 +1,47 @@
 # Release Notes — Motor Smart GRID
 
+## Release 3.2 — 27 Oct 2026 (visitor counter on Vercel)
+
+**To deploy on Vercel:** deploy the whole `smart-grid/` folder (it now contains `api/visitor-counter.js`, `vercel.json` and `.vercelignore`), connect an **Upstash for Redis** database to the project (Storage tab, free plan) and redeploy. Check `/api/visitor-counter?check=1` → `"OK - the counter can work"`. Steps: `DEPLOYMENT_GUIDE.md` section 2a.
+
+- New `api/visitor-counter.js`: Vercel serverless function, same rules as the PHP counter (one browser per India-time day, cookie `sg_day`, returns today's and total visitors). No npm packages.
+- `index.html` / `motor-smart-grid.html` now try `/api/visitor-counter` first and `visitor-counter.php` second, so the same files work on Vercel and on PHP hosting.
+- New `vercel.json`: no-cache for the page and `data/`, security headers (same Content-Security-Policy as `server-config/`); in `single-file/` it also opens `motor-smart-grid.html` at `/`.
+- Rates unchanged from Release 3.1. All existing file names unchanged.
+
+## Release 3.1 — 27 Oct 2026 (October 2026 Version 3 — United India Sub Annexure 3)
+
+**To deploy:** replace `index.html`, `assets/` and `data/` in `/smart-grid/` (or upload the new `single-file/motor-smart-grid.html`). `data/2026-10-v3.json` changes; `2026-10-v1.json` and `2026-10-v2.json` are rebuilt with the same rates. Keep `counter-data/`. All file names are unchanged.
+
+United India's revised circular with Sub Annexures (w.e.f. 26-10-2026, copy in `source/United_India_Sub_Annexures_w.e.f._26-10-2026.pdf`):
+
+| Sub Annexure | Segment | Preferred RTOs (our states) | Commission | GRID payout (Version 3) |
+|---|---|---|---|---|
+| 3 | Private Car 1001–1200 CC (Bundle, Package, SATP) | **TN:** TN13, TN14, TN23, TN33, TN49, TN50, TN60, TN63, TN70, TN77, TN82, TN83, TN85, TN86, TN99 · **PY:** PY01, PY03 | 35% | **30.00** (▲ +15.00 since Version 1) |
+| 3 | Private Car 1001–1200 CC (Bundle, Package, SATP) | **KA:** KA23, KA27, KA30, KA35, KA36, KA37, KA57, KA58, KA62, KA65, KA69 | 35% | **30.00** (▲ +15.00 since Version 1) |
+| 3 | Private Car 1001–1200 CC — all other TN, PY and KA RTOs | — | 17.5% | **12.50** (unchanged from Release 3) |
+| 2 | Goods 2,000–3,500 kg — preferred RTOs from excluded states | Rajasthan, Uttar Pradesh, Haryana only — **none in TN, KL, KA, AP-TS** | 56.5% | no change |
+
+The preferred-RTO rates come from `source/United_India_Sub_Annexure_3_Preferred_RTOs_26-10-2026.xlsx` (4 rows, added to Version 3 in `versions.json`). On the page, the 30.00 rows read *Remark: 1001 to 1200CC Except Electric | RTO: Preferred RTOs only – …* and the 12.50 rows read *All TN, PY RTOs except preferred RTOs – …* / *All KA RTOs except preferred RTOs – …*. No commission % or circular / annexure reference is shown to partners (27 Oct 2026) (`corrections_Oct2026_v3.json`). Kerala and AP-TS are not in Sub Annexure 3 — their 1001–1200 CC rate stays 30.00 for all RTOs. The earlier "Pending: TN Goods 2,001–3,500" note is closed.
+
+**ICICI – TP GRID reverted (all states, Versions 1, 2 and 3):** the ICICI commercial-vehicle TP payouts had been added from the note *"For Payout applicable for AOTP policies, please refer to sheet 'CV AOTP Grid'. For Segments not mentioned in CV AOTP Grid refer to CV Overall for PO"* — this was incorrect, so ICICI commercial-vehicle rates now show the Package payout only (TP = NA), **except** where ICICI's October change sheet (`source/ICICI_Grid_changes_Oct26.xlsx`) gives a TP rate (Policy type AOTP / ALL, or council call with Comp/TP = All). Those keep TP:
+
+| Segment (ICICI change sheet) | Our rows | Receivable | Payout (Package / TP) |
+|---|---|---|---|
+| TN MHCV 12-20T & 20-40T Truck — council call 2026_TN_212 (all TN except Chennai & Coimbatore; LPG/CNG gas cylinder; New, 1-3, 4-5, >10 yrs) | TN PO 56–63 | 20% | 16.00 / 16.00 |
+| KA Bengaluru Central, Koramangala, Electronic City MHCV 12-20T & 20-40T Truck — council call 2026_TN_212 | KA PO 134–141 | 20% | 16.00 / 16.00 |
+| KA MHCV 12-20T Truck (COMP & AOTP) — old Tata ≥6 yrs; old 1-3 & ≥6 yrs | KA PO 132, 133 | 20% | 16.00 / 16.00 |
+| KA SCV <2450 GVW Old (ALL) — Tata, M&M, Maruti | KA PO 128 | 55% | 51.00 / 51.00 |
+| Hyderabad PCV Taxi >1000CC — council call 2026_TG_210 (old 4-5, 6-10, 10+ yrs; not Toyota / premium; not electric) | AP-TS PO 1317–1319 | 30% | 26.00 / 26.00 |
+
+Set in `versions.json` with `"remove_tp": [{"company": "ICICI", "block": "CV", "keep": [...]}]`. Rates that had only a TP payout outside this list are removed: KL Goods 12001–20000 (more than 5 years old, Tanker / Tipper / Truck, TP 26) and AP-TS Goods 12001–20000 Truck (Package 0, TP 8). ICICI Two-Wheeler SATP and Private Car rates are not affected. Rates: V1 3,675 · V2 3,734 · V3 3,724 (TN 939 · KL 575 · KA 868 · AP-TS 1,342). The other rows of the change sheet are for states not in this GRID.
+
+**ICICI, TN, PCV – Auto, Tamil Nadu RTOs (ROTN):** TP payout removed in Versions 1, 2 and 3 — the rate now shows **46.00 / NA** (Package only) for Petrol/CNG Renewal/Rollover and Diesel (listed RC locations). The Diesel 46.00 is from ICICI's separate approval for ROTN Auto Diesel, not from the change sheet. `corrections_Oct2026_v1/v2/v3.json` use the new `"remove": ["tp"]` key; Chennai, Coimbatore and Electric Auto rates are unchanged.
+
+**Search fix (seats):** a seats search (e.g. `seats<=15`) no longer lists PCV – Auto — Auto is its own segment; Taxi (Upto 6-Seater) rates with no seat wording count as up to 6+1.
+
+**Search fix:** a keyed RTO search (e.g. `rto TN13 cc 1100`) now checks each condition of a rate on its own, so TN13 shows United India 30.00 and TN01 shows 12.50, without mixing the two RTO lists.
+
 ## Release 3 — 25 Oct 2026 (October 2026 Version 3, from 26-10-2026)
 
 **To deploy:** replace `index.html`, `assets/` and `data/` in `/smart-grid/` (or upload the new `single-file/motor-smart-grid.html`). `data/2026-10-v3.json` is new; `2026-10-v2.json` changes (Version 2 now ends 25-10-2026). Keep `counter-data/`. All file names are unchanged.
@@ -21,7 +63,7 @@ Version 2 plus the **United India** revised commission — circular HO:MKTG:CIR:
 | Private Car SAOD (Except Electric) | all | 15% → 25% | 10.00(OD) → **20.00(OD)** |
 | Private Car "Except OEMs and Diesel upto 1500CC" (listed RTOs) | all | — | 35.00 **not continued** (kept in Versions 1 and 2) |
 
-Unchanged: Private Car above 2000 CC and Electric, Two-Wheeler, other PCV, 3-wheeler, School / Staff Bus, other goods bands, Misc-D. **Pending:** TN Goods 2,001–3,500 — RTOs in United India's Sub Annexure 2 get 56.5% (list not yet received).
+Unchanged: Private Car above 2000 CC and Electric, Two-Wheeler, other PCV, 3-wheeler, School / Staff Bus, other goods bands, Misc-D. TN Goods 2,001–3,500: Sub Annexure 2 lists no RTOs in our states (see Release 3.1).
 
 **Labels in Version 3:** compared with Version 1 (the month's first version), so the Version 2 changes (National, TATA AIG, Kshema) keep their Increased / Decreased labels and the United India changes are added — e.g. United India TN Taxi ▼ −5.00, KL Taxi ▲ +10.00, Private Car upto 1000CC ▼ −2.50, SAOD ▲ +10.00. Version 2 keeps its own labels exactly as before. Comparison now also matches Private Car CC bands and Electric only / Except Electric.
 

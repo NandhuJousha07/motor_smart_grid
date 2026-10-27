@@ -82,3 +82,6 @@ A rate the business has withdrawn: `{"sheet", "row", "expect": {...}, "drop": tr
 
 Fields: `cat`, `company`, `age`, `disc`, `pkg`, `tp`, `remark`, `rto`, plus `offer` — `{"title": "POSP Special Offer!", "text": "Hit ₹5L volume …"}` — which the page shows as a highlighted offer badge under that rate. The build stops with a message if that row no longer holds the `expect` values, so a correction never lands on the wrong row. Corrections are version-specific: each version in `versions.json` names its own file. Start a new file (or none) for the next month's workbook.
 
+
+- To blank one value the insurer has withdrawn (e.g. TP not given), add `"remove": ["tp"]` to a correction (with `expect` as usual). The value shows as NA and gets no Increased / Decreased label.
+- To withdraw an insurer's whole TP payout, add `"remove_tp": [{"company": "ICICI", "block": "CV"}]` to the version in `versions.json` (block CV / PC / TW and state optional). Rows left with no payout are dropped.

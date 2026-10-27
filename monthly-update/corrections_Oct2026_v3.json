@@ -19,7 +19,7 @@
  {
   "sheet": "TN PO",
   "row": 775,
-  "note": "ICICI TN PCV Auto (Diesel) revised 08 Oct 2026: 11/11 ROTN RTO codes -> 46/46, only for the listed Tamil Nadu RTO RC locations (per attachment); 12 Oct 2026: remark added - Commission applicable only if the business sourced from Chennai Code: IM-2358692",
+  "note": "ICICI TN PCV Auto (Diesel) revised 08 Oct 2026: 11/11 ROTN RTO codes -> 46/46, only for the listed Tamil Nadu RTO RC locations (per attachment); 12 Oct 2026: remark added - Commission applicable only if the business sourced from Chennai Code: IM-2358692; 27 Oct 2026: TP payout removed (Package 46 only)",
   "expect": {
    "company": "ICICI",
    "cat": "Auto",
@@ -33,7 +33,10 @@
    "tp": 46,
    "rto": "Only for the Tamil Nadu RTO RC locations: Madurai, Vellore, Nilgiri, Tenkasi, Mettupalayam, Dharmapuri, Tiruppur, Villupuram, Salem, Chengalpattu, Tirunelveli, Dindigul, Tiruvannamalai, Thanjavur, Gudalur, Chidambaram, Ramanathpuram, Kallakurichi, Cuddalore, Pollachi, Virudhunagar, Sivagangai, Vaniyambadi, Kumbakonam, Karur, Periakulam, Ranipettai, Kancheepuram, Tuticorin, Pudukkottai, Ooty, Nagercoil, Marthandam, Srirangam, Udumalpet, Tiruvallur, Tiruvarur, Tindivanam, Tiruchirappalli, Thiruchendur, Thiruverumbur, Theni",
    "remark": "Fuel Type: Diesel; Commission applicable only if the business sourced from Chennai Code: IM-2358692"
-  }
+  },
+  "remove": [
+   "tp"
+  ]
  },
  {
   "sheet": "TN PO",
@@ -196,14 +199,15 @@
  {
   "sheet": "TN PO",
   "row": 1079,
-  "note": "United India Private Car BUNDLED(NEW) 1001-1200CC (20% -> 17.5%) TN: payout 15 -> 12.5 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026",
+  "note": "United India Private Car BUNDLED(NEW) 1001-1200CC (20% -> 17.5%) TN: payout 15 -> 12.5 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026; Sub Annexure 3 preferred RTOs paid 30 (35% commission) via United_India_Sub_Annexure_3_Preferred_RTOs_26-10-2026.xlsx",
   "expect": {
    "company": "UNITED INDIA",
    "cat": "BUNDLED(NEW)",
    "pkg": 15
   },
   "set": {
-   "pkg": 12.5
+   "pkg": 12.5,
+   "rto": "All TN, PY RTOs except preferred RTOs - TN13, TN14, TN23, TN33, TN49, TN50, TN60, TN63, TN70, TN77, TN82, TN83, TN85, TN86, TN99, PY01, PY03"
   }
  },
  {
@@ -250,7 +254,7 @@
  {
   "sheet": "TN PO",
   "row": 1084,
-  "note": "United India Private Car PACKAGE & SATP 1001-1200CC (20% -> 17.5%) TN: payout 15 -> 12.5 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026",
+  "note": "United India Private Car PACKAGE & SATP 1001-1200CC (20% -> 17.5%) TN: payout 15 -> 12.5 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026; Sub Annexure 3 preferred RTOs paid 30 (35% commission) via United_India_Sub_Annexure_3_Preferred_RTOs_26-10-2026.xlsx",
   "expect": {
    "company": "UNITED INDIA",
    "cat": "PACKAGE & SATP",
@@ -259,7 +263,8 @@
   },
   "set": {
    "pkg": 12.5,
-   "tp": 12.5
+   "tp": 12.5,
+   "rto": "All TN, PY RTOs except preferred RTOs - TN13, TN14, TN23, TN33, TN49, TN50, TN60, TN63, TN70, TN77, TN82, TN83, TN85, TN86, TN99, PY01, PY03"
   }
  },
  {
@@ -485,14 +490,15 @@
  {
   "sheet": "KA PO",
   "row": 890,
-  "note": "United India Private Car BUNDLED(NEW) 1001-1200CC (20% -> 17.5%) KA: payout 15 -> 12.5 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026",
+  "note": "United India Private Car BUNDLED(NEW) 1001-1200CC (20% -> 17.5%) KA: payout 15 -> 12.5 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026; Sub Annexure 3 preferred RTOs paid 30 (35% commission) via United_India_Sub_Annexure_3_Preferred_RTOs_26-10-2026.xlsx",
   "expect": {
    "company": "UNITED INDIA",
    "cat": "BUNDLED(NEW)",
    "pkg": 15
   },
   "set": {
-   "pkg": 12.5
+   "pkg": 12.5,
+   "rto": "All KA RTOs except preferred RTOs - KA23, KA27, KA30, KA35, KA36, KA37, KA57, KA58, KA62, KA65, KA69"
   }
  },
  {
@@ -539,7 +545,7 @@
  {
   "sheet": "KA PO",
   "row": 895,
-  "note": "United India Private Car PACKAGE & SATP 1001-1200CC (20% -> 17.5%) KA: payout 15 -> 12.5 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026",
+  "note": "United India Private Car PACKAGE & SATP 1001-1200CC (20% -> 17.5%) KA: payout 15 -> 12.5 — United India circular HO:MKTG:CIR:12:26-27 (23.10.2026), Motor w.e.f. 26.10.2026; Sub Annexure 3 preferred RTOs paid 30 (35% commission) via United_India_Sub_Annexure_3_Preferred_RTOs_26-10-2026.xlsx",
   "expect": {
    "company": "UNITED INDIA",
    "cat": "PACKAGE & SATP",
@@ -548,7 +554,8 @@
   },
   "set": {
    "pkg": 12.5,
-   "tp": 12.5
+   "tp": 12.5,
+   "rto": "All KA RTOs except preferred RTOs - KA23, KA27, KA30, KA35, KA36, KA37, KA57, KA58, KA62, KA65, KA69"
   }
  },
  {
@@ -730,5 +737,20 @@
   "set": {
    "pkg": "20(OD)"
   }
+ },
+ {
+  "sheet": "TN PO",
+  "row": 774,
+  "note": "ICICI TN PCV Auto Petrol/CNG Renewal/Rollover ROTN 46/46: TP payout removed 27 Oct 2026 (Package 46 only)",
+  "expect": {
+   "company": "ICICI",
+   "cat": "Auto",
+   "pkg": 46,
+   "tp": 46,
+   "remark": "Fuel Type: Petrol/CNG"
+  },
+  "remove": [
+   "tp"
+  ]
  }
 ]

@@ -5,8 +5,9 @@
 <meta name="grid-data-url" content="data/versions.json">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow, noarchive">
-<!-- URL of visitor-counter.php on your website. Where it is missing (e.g. claude.ai) the page falls back to its own counter. -->
-<meta name="grid-visitor-counter" content="visitor-counter.php">
+<!-- Visitor counter URLs, tried in order: the Vercel function, then visitor-counter.php (PHP hosting).
+     Where neither answers (e.g. claude.ai) the page falls back to its own counter. -->
+<meta name="grid-visitor-counter" content="/api/visitor-counter visitor-counter.php">
 <title>Motor Smart GRID</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

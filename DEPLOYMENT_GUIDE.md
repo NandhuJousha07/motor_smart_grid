@@ -18,7 +18,10 @@
      data/2026-10-v1.json        rates of each version (one file per version)
      data/2026-10-v2.json
      data/2026-10-v3.json
-     visitor-counter.php
+     api/visitor-counter.js      visitor counter on Vercel
+     vercel.json                 Vercel headers (no-cache for rates, security headers)
+     .vercelignore               keeps the PHP counter out of Vercel deployments
+     visitor-counter.php         visitor counter on PHP hosting
      counter-data/.htaccess
    ```
 2. Apply the matching server config from `server-config/` (nginx block, `.htaccess`, or `web.config`). The important parts:
@@ -29,6 +32,28 @@
 
 **Data in a different location?** Edit one line in `index.html`:
 `<meta name="grid-data-url" content="data/versions.json">`. The version files are read from the same folder as `versions.json`. A cross-domain URL needs CORS on that server.
+
+## 2a. Deploying on Vercel
+
+Vercel serves static files and runs JavaScript functions, but not PHP — so on Vercel the visitor counter runs as the function `api/visitor-counter.js`, with its counts kept in a free Redis database from the Vercel Marketplace.
+
+**One-time setup (about 5 minutes):**
+1. Deploy the **`smart-grid/`** folder as the Vercel project (set it as the project's *Root Directory* if it sits inside a Git repository; framework preset **Other**, no build command, no output directory). `vercel.json`, `api/` and `.vercelignore` must be in that folder — they already are.
+2. In the Vercel project open **Storage → Create Database → Upstash for Redis** (Marketplace, free plan) and **connect it to this project** for Production (and Preview if you test there). This adds the environment variables `KV_REST_API_URL` and `KV_REST_API_TOKEN` automatically.
+3. **Redeploy** the project (environment variables are read only by new deployments).
+4. Open **`https://<your-site>/api/visitor-counter?check=1`** — it must show `"result": "OK - the counter can work"`. Then open the GRID: the bottom line shows *Today's visitors: 1 · Total visitors: 1*.
+
+**Optional environment variables** (Project → Settings → Environment Variables):
+| Name | Use |
+|---|---|
+| `SG_START_TOTAL` | A number added to the total — e.g. the visits counted earlier on another server |
+| `SG_COUNTER_PREFIX` | Key prefix in Redis (default `motor-smart-grid`) — set a different one if two sites share the database |
+
+**Monthly updates on Vercel:** replace `index.html`, `assets/` and `data/` as usual (or the whole folder) and redeploy. The counts live in Redis, so redeploying never resets them.
+
+**Single file on Vercel:** deploy `single-file/` instead — it has its own `api/`, `vercel.json` (opens `motor-smart-grid.html` at `/`) and `.vercelignore`. Connect the database the same way.
+
+**Vercel checks:** `vercel.json` sends `no-cache` for the page and `data/`, 1 hour cache for `assets/`, and the same security headers as `server-config/` (Content-Security-Policy, nosniff, noindex). Vercel compresses responses automatically. For access control use Vercel Deployment Protection (Password / Vercel Authentication) or put the site behind your portal login.
 
 ## 3. Single file (fallback)
 
@@ -50,7 +75,7 @@
 The encoding key is `GRID_KEY` in `monthly-update/make_site.py` and `__GRID_KEY` in `monthly-update/template.html`. If you change it, change it in both places.
 
 
-- Static, read-only page: no forms, no login, no data sent anywhere except the visitor counter (`visitor-counter.php`, one cookie `sg_day`). It does not call any external API.
+- Static, read-only page: no forms, no login, no data sent anywhere except the visitor counter (`/api/visitor-counter` on Vercel or `visitor-counter.php` on PHP hosting; one cookie `sg_day`). It does not call any external API.
 - It stores nothing in the viewer's browser: every open or refresh starts with cleared filters.
 - the website folder works under a strict CSP: `default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'`.
   (`'unsafe-inline'` in style-src is needed for small inline table/highlight styles.)
@@ -124,14 +149,28 @@ The page shows **"Today's visitors: N · Total visitors: N"** at the bottom.
 
 **What counts as a visit:** one browser on one day (India time). Opening or reloading the GRID again the same day doesn't add; opening it again on a later day counts as a new visit. "Today's visitors" resets at midnight India time; "Total visitors" adds up every day's visits. Nothing else about visitors is recorded: no names, no activity, no reports.
 
-**On your website:** `visitor-counter.php` and the `counter-data/` folder are already in `smart-grid/`, and `index.html` points to them.
-- Needs PHP 7.4+ (any standard host). Make `counter-data/` writable by the web server (Linux: `chown www-data counter-data && chmod 750 counter-data`).
+**Where the counter runs:** the page asks `/api/visitor-counter` first (Vercel) and then `visitor-counter.php` (PHP hosting) — `<meta name="grid-visitor-counter" content="/api/visitor-counter visitor-counter.php">` in `index.html`. Whichever answers is used; if neither does, the line is hidden and everything else works.
 - A cookie (`sg_day`) remembers the day a browser was last counted and expires at midnight India time. The same person on a phone and a PC counts twice that day.
-- Totals are stored in `counter-data/count.json` as `{"total": N, "days": {"2026-10-13": n, ...}}`, so the file also holds a day-by-day history. A total from the earlier counter (`{"visitors": N}`) is kept as the starting total. To start again from zero, delete the file. The folder is blocked from the web (`.htaccess`, `server-config/iis-web.config`, nginx block).
-- No PHP? The counter line simply doesn't appear; everything else works.
-- Single file: `single-file/` already contains `visitor-counter.php` and `counter-data/`; upload them next to `motor-smart-grid.html`.
+
+**On Vercel (`api/visitor-counter.js`):** set up as in section 2a. Counts are kept in the connected Upstash Redis database: `motor-smart-grid:total` and `motor-smart-grid:day:YYYY-MM-DD` (each day kept 400 days). To start again from zero, delete those keys in the Upstash console (Data Browser).
+
+**On PHP hosting (`visitor-counter.php`):** `visitor-counter.php` and the `counter-data/` folder are already in `smart-grid/`.
+- Needs PHP 7.4+. Make `counter-data/` writable by the web server (Linux: `chown www-data counter-data && chmod 750 counter-data`).
+- Totals are stored in `counter-data/count.json` as `{"total": N, "days": {"2026-10-13": n, ...}}`. A total from the earlier counter (`{"visitors": N}`) is kept as the starting total. To start again from zero, delete the file. The folder is blocked from the web (`.htaccess`, `server-config/iis-web.config`, nginx block).
+- Single file: `single-file/` already contains both counters; upload them next to `motor-smart-grid.html`.
 
 ### Visitor count not showing on the website
+
+**On Vercel:** open **`https://<your-site>/api/visitor-counter?check=1`**:
+
+   | What you see | Meaning | Fix |
+   |---|---|---|
+   | `"result": "OK - the counter can work"` | Counter is fine | Clear the browser cache and reload the GRID |
+   | `"result": "FIX - connect an Upstash for Redis database…"` | No database connected, or not redeployed after connecting | Storage → connect Upstash for Redis to the project → Redeploy |
+   | `"result": "FIX - the Redis database did not answer…"` | Wrong / old `KV_REST_API_URL` or `KV_REST_API_TOKEN` | Reconnect the database (Storage tab) and redeploy |
+   | 404 Not Found | `api/visitor-counter.js` is not in the deployed folder, or the project's Root Directory is not `smart-grid/` | Deploy the whole `smart-grid/` folder including `api/` |
+
+**On PHP hosting:**
 
 1. Open **`https://<your-portal>/smart-grid/visitor-counter.php?check=1`** in a browser:
 
@@ -141,9 +180,9 @@ The page shows **"Today's visitors: N · Total visitors: N"** at the bottom.
    | JSON with `"result": "FIX - make counter-data/ writable…"` | PHP runs but can't save the count | `chown www-data smart-grid/counter-data && chmod 750 smart-grid/counter-data` (use the web server's user) |
    | The PHP code itself, or the file downloads | PHP isn't running for this folder | Enable PHP for `/smart-grid/` (nginx: add the `visitor-counter.php` block from `server-config/nginx.conf`; IIS: install PHP via FastCGI) |
    | 404 Not Found | `visitor-counter.php` wasn't uploaded next to the page | Upload it (and `counter-data/`) into the same folder as `index.html` |
-   | 405 / 501 | The server doesn't run scripts here (static hosting such as Vercel, Netlify, S3, GitHub Pages) | Host `/smart-grid/` on a server with PHP, or ask the MIS team for a version for that platform |
+   | 405 / 501 | The server doesn't run PHP (static hosting) | On Vercel use `api/visitor-counter.js` (section 2a); otherwise host `/smart-grid/` on a server with PHP |
 
 2. The page also explains the problem in the browser console (open developer tools from the browser menu; F12 is blocked on the page): look for a message starting **`[Smart GRID] Visitor counter:`**.
-3. Check that the deployed `index.html` contains `<meta name="grid-visitor-counter" content="visitor-counter.php">`.
+3. Check that the deployed `index.html` contains `<meta name="grid-visitor-counter" content="/api/visitor-counter visitor-counter.php">`.
 
 **On the claude.ai links:** each signed-in visitor keeps one record in the page's own database (last visit date and number of visit days), counted once per day the same way. View-only and signed-out visitors can't be counted there.

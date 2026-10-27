@@ -223,7 +223,7 @@ def apply_corrections(rows, corrections):
     """Manual corrections agreed with the business, applied on top of the source sheet.
     Each entry: {"sheet", "row", "expect": {...current values...}, "set": {...new values...},
     "note"}, or {"sheet", "row", "expect", "drop": true, "note"} to remove a row the
-    business has withdrawn. The row must still hold the expected values, or the build
+    business has withdrawn. "remove": ["tp"] blanks a value (e.g. TP withdrawn) without a label. The row must still hold the expected values, or the build
     stops, so a correction never lands on the wrong row when the sheet changes."""
     applied = []
     for c in corrections or []:
@@ -244,11 +244,13 @@ def apply_corrections(rows, corrections):
         for k, v in c.get('set', {}).items():
             r[k] = v
             if k == 'disc': r['disc_raw'] = v
+        for k in c.get('remove', []):  # value withdrawn by the business (e.g. "TP not given") - blanked, no label
+            r[k] = None
         applied.append(c)
     rows[:] = [r for r in rows if not r.get('_drop')]
     return applied
 
-def build(path, corrections=None, supplements=None, remark_add=None):
+def build(path, corrections=None, supplements=None, remark_add=None, remove_tp=None):
     """supplements: list of paths, or {"file": path, "replaces": ["National", ...]}.
     With "replaces", every row of those insurers in the states the supplement covers is
     removed first (workbook and earlier supplements), so the supplement becomes their
@@ -278,6 +280,20 @@ def build(path, corrections=None, supplements=None, remark_add=None):
             rows += new
         else:
             rows += parse_supplement(sp)
+    # remove_tp: [{"company", "block" (CV/PC/TW, optional), "state" (optional)}] - the TP payout of
+    # those insurers' rows is withdrawn (e.g. a TP grid added by mistake). A row left with no
+    # payout (or 0 Package) is dropped. "keep": [{"sheet", "rows": [...]}] - rows whose TP the
+    # insurer does pay (e.g. council-call / AOTP rates in its change sheet) keep their TP.
+    for rt in (remove_tp or []):
+        keep = []
+        for r in rows:
+            kept_tp = any(r['sheet'] == k['sheet'] and r['row'] in k['rows'] for k in rt.get('keep', []))
+            if (canon(r['company']) == canon(rt['company']) and (not rt.get('block') or (r['block'] or 'CV') == rt['block'])
+                    and (not rt.get('state') or r['state'] == rt['state']) and not kept_tp):
+                r['tp'] = None
+                if fmt_val(r['pkg']) in (None, '0.00'): continue
+            keep.append(r)
+        rows = keep
     for ra in (remark_add or []):
         for r in rows:
             if (canon(r['company']) == canon(ra['company']) and r['state'] == ra['state']

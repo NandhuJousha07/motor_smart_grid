@@ -11,6 +11,7 @@ Versions are listed in monthly-update/versions.json (paths relative to the kit f
     "supplements": ["source/<extra rows>.xlsx",    (optional: extra GRID rows sent separately)
                     {"file": "source/<insurer GRID>.xlsx", "replaces": ["National"]}],  (insurer's complete new GRID)
     "remark_add": [{"company": "Kshema", "state": "KL", "block": "TW", "text": "..."}],  (optional)
+    "remove_tp": [{"company": "ICICI", "block": "CV"}],  (optional - TP payout withdrawn for these rows)
     "note": "", "changes": "what changed (for the release notes / manifest)"}, ...]
 
 "end" is the last day the workbook covers. Each version ends the day before the next
@@ -20,7 +21,8 @@ usage:  python3 monthly-update/make_site.py <kit_dir>
 output: <kit>/single-file/motor-smart-grid.html   one file, every version inside
         <kit>/smart-grid/  index.html, assets/{styles.css,app.js},
                                data/versions.json + data/<id>.json (one per version, loaded when opened),
-                               visitor-counter.php, counter-data/
+                               visitor-counter.php, counter-data/ (PHP hosting)
+                               api/visitor-counter.js, vercel.json, .vercelignore (Vercel)
         <kit>/manifest.json
 """
 import base64, datetime, json, os, re, shutil, sys
@@ -68,7 +70,7 @@ for v in VERS:
     corr = json.load(open(os.path.join(KIT, v['corrections']), encoding='utf-8')) if v.get('corrections') else []
     sup = [dict(x, file=os.path.join(KIT, x['file'])) if isinstance(x, dict) else os.path.join(KIT, x)
            for x in v.get('supplements', [])]
-    data = build(os.path.join(KIT, v['source']), corr, sup, v.get('remark_add'))
+    data = build(os.path.join(KIT, v['source']), corr, sup, v.get('remark_add'), v.get('remove_tp'))
     if not data['records']:
         sys.exit('No records built for %s - check the workbook layout.' % v['id'])
     name = 'Smart Grid %s - Version %s' % (v['month'], v['version'])
@@ -104,7 +106,7 @@ for v in VERS:
                                   changes=v.get('changes', ''), totalRates=len(data['records']),
                                   ratesByState=dict(Counter(r['state'] for r in data['records'])),
                                   correctionsApplied=[dict(sheet=c['sheet'], row=c['row'], note=c.get('note', '')) for c in corr],
-                                  remarkAdded=v.get('remark_add', []),
+                                  remarkAdded=v.get('remark_add', []), tpRemoved=v.get('remove_tp', []),
                                   ratesLabelled=dict(Counter({'up': 'increased', 'down': 'decreased', 'mixed': 'increased & decreased', 'new': 'new'}[r['chg']]
                                                              for r in data['records'] if r.get('chg')))))
 
@@ -180,6 +182,30 @@ if os.path.exists(php):
         shutil.copy(php, d)
         os.makedirs(os.path.join(d, 'counter-data'), exist_ok=True)
         open(os.path.join(d, 'counter-data', '.htaccess'), 'w').write('Require all denied\nDeny from all\n')
+# Vercel: api/visitor-counter.js (serverless function + Upstash Redis), vercel.json, .vercelignore
+vfn = os.path.join(HERE, 'counter', 'vercel', 'api', 'visitor-counter.js')
+if os.path.exists(vfn):
+    for d, page in ((outA, 'motor-smart-grid.html'), (outB, 'index.html')):
+        os.makedirs(os.path.join(d, 'api'), exist_ok=True)
+        shutil.copy(vfn, os.path.join(d, 'api', 'visitor-counter.js'))
+        csp = ("default-src 'self'; script-src 'self'" + (" 'unsafe-inline'" if page != 'index.html' else '')
+               + "; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com;"
+               " img-src 'self' data:; connect-src 'self'; frame-ancestors 'self'")
+        vj = {"$schema": "https://openapi.vercel.sh/vercel.json", "cleanUrls": False, "trailingSlash": False,
+              "headers": [
+                  {"source": "/(.*)", "headers": [
+                      {"key": "X-Content-Type-Options", "value": "nosniff"},
+                      {"key": "Referrer-Policy", "value": "strict-origin-when-cross-origin"},
+                      {"key": "X-Robots-Tag", "value": "noindex, nofollow, noarchive"},
+                      {"key": "Content-Security-Policy", "value": csp}]},
+                  {"source": "/", "headers": [{"key": "Cache-Control", "value": "no-cache, must-revalidate"}]},
+                  {"source": "/" + page, "headers": [{"key": "Cache-Control", "value": "no-cache, must-revalidate"}]},
+                  {"source": "/data/(.*)", "headers": [{"key": "Cache-Control", "value": "no-cache, must-revalidate"}]},
+                  {"source": "/assets/(.*)", "headers": [{"key": "Cache-Control", "value": "public, max-age=3600"}]}]}
+        if page != 'index.html':
+            vj["rewrites"] = [{"source": "/", "destination": "/motor-smart-grid.html"}]
+        json.dump(vj, open(os.path.join(d, 'vercel.json'), 'w'), indent=2)
+        open(os.path.join(d, '.vercelignore'), 'w').write('# PHP counter is for PHP hosting only - Vercel uses api/visitor-counter.js\nvisitor-counter.php\ncounter-data\n*.md\n')
 
 man = dict(product='Motor Smart GRID', builtAt=datetime.datetime.now().astimezone().isoformat(timespec='seconds'),
            opensFirstOnBuildDay=first['id'], versions=manifest_versions)

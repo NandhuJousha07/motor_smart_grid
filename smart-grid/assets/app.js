@@ -109,21 +109,26 @@ function __gridDecode(src){
   }).catch(function(){});
   }
   var meta = document.querySelector('meta[name="grid-visitor-counter"]');
-  var url = meta && meta.content ? meta.content.trim() : '';
-  if (!url || location.protocol === 'file:'){ claudeCount(); return; }
+  var urls = meta && meta.content ? meta.content.trim().split(/\s+/).filter(Boolean) : [];
+  if (!urls.length || location.protocol === 'file:'){ claudeCount(); return; }
   // Problems are reported in the browser console (F12 is blocked on the page: use the browser menu),
   // so the deployment team can see why the line is hidden.
-  function warn(m){ try { console.warn('[Smart GRID] Visitor counter: ' + m + ' Check ' + url + '?check=1 and DEPLOYMENT_GUIDE.md section 9.'); } catch(e){} }
-  fetch(url, { method: 'POST', credentials: 'same-origin', cache: 'no-store' })
-    .then(function(r){
-      if (!r.ok){ warn(url + ' answered HTTP ' + r.status + ' (404: file not uploaded next to the page; 405 or 501: PHP not running for it; 500: counter-data/ not writable).'); return null; }
-      return r.text().then(function(t){
-        try { return JSON.parse(t); }
-        catch(e){ warn(url + ' did not return JSON: PHP is not running for this file (the server sent it as text).'); return null; }
-      });
-    })
-    .then(function(d){ if (!(d && show(Number(d.visitors), Number(d.today)))) claudeCount(); })
-    .catch(function(){ warn(url + ' could not be reached.'); claudeCount(); });
+  var notes = [];
+  function warn(){ try { console.warn('[Smart GRID] Visitor counter: ' + notes.join(' | ') + ' — on Vercel open /api/visitor-counter?check=1; on PHP hosting visitor-counter.php?check=1 (DEPLOYMENT_GUIDE.md section 9).'); } catch(e){} }
+  function tryUrl(i){
+    if (i >= urls.length){ warn(); claudeCount(); return; }
+    var url = urls[i];
+    fetch(url, { method: 'POST', credentials: 'same-origin', cache: 'no-store' })
+      .then(function(r){
+        if (!r.ok){ notes.push(url + ' answered HTTP ' + r.status); return null; }
+        return r.text().then(function(t){
+          try { return JSON.parse(t); } catch(e){ notes.push(url + ' did not return JSON'); return null; }
+        });
+      })
+      .then(function(d){ if (!(d && show(Number(d.visitors), Number(d.today)))) tryUrl(i + 1); })
+      .catch(function(){ notes.push(url + ' could not be reached'); tryUrl(i + 1); });
+  }
+  tryUrl(0);
 })();
 function startGrid(DATA){
   // ---- GRID versions, month-wise. DATA = {versions:[{id,name,label,month,version,start,end,period,note,data|file}]}
@@ -1321,11 +1326,13 @@ function startGrid(DATA){
     if (kCache) kCache.set(r, got);
     return got;
   }
-  function rtoCovered(r, code){
+  // Is RTO code covered by one condition c of rate r? (each condition has its own RTO field,
+  // e.g. "All KA RTOs except KA23..." at 12.50 and "Preferred RTOs only - KA23..." at 30.00)
+  function rtoCoveredCond(r, code, c){
     var st = code.slice(0, 2), num = code.slice(2), n = String(+num);
     var codeRe = new RegExp('\\b' + st + '\\s*-?\\s*0?' + n + '\\b', 'i');
-    if (isRtoDeclined(r.remarks, code) || isRtoDeclined(r.remarks, st + n)) return false;
-    var rtoText = kCondList(r.remarks).map(function(c){ return kField(c, 'RTO') + ' ' + kField(c, 'Remark'); }).join(' ');
+    if (isRtoDeclined(c, code) || isRtoDeclined(c, st + n)) return false;
+    var rtoText = kField(c, 'RTO') + ' ' + kField(c, 'Remark');
     // "except Chennai" / "except Coimbatore" written as a city, not as codes
     var CITY = { CHENNAI:['TN01','TN02','TN03','TN04','TN05','TN06','TN07','TN09','TN10','TN11','TN12','TN13','TN14','TN18','TN22','TN85'],
                  COIMBATORE:['TN37','TN38','TN40','TN41','TN66','TN99'] };
@@ -1337,6 +1344,9 @@ function startGrid(DATA){
     if (stateOf && r.state !== stateOf) return false;
     // blanket coverage: "All RTO(s)", "All TN RTOs", "All TN & PY RTO", "All South State RTOs" ...
     return ALL_RTO_PATTERN.test(rtoText) || /\bALL\b[^|;]*\bRTO/i.test(rtoText);
+  }
+  function rtoCovered(r, code){
+    return kCondList(r.remarks).some(function(c){ return rtoCoveredCond(r, code, c); });
   }
   // Does rate r meet every keyed filter (all in one of its conditions)?
   function keyedPass(r, keys){
@@ -1352,14 +1362,22 @@ function startGrid(DATA){
     }
     return keyedConds(r, keys).length > 0;
   }
+  // Seats search: only bus / taxi sections. Auto is its own segment and never matches a seats
+  // search; a Taxi (Upto 6-Seater) rate with no seat wording is taken as up to 6+1.
+  function seatsPass(r, c, want){
+    if (!/^PCV /.test(r.sec) || /^PCV Auto/.test(r.sec)) return false;
+    var range = c.seats || (/^PCV Taxi \(Upto 6/.test(r.sec) ? [1, 7] : null);
+    return overlaps(range, want);
+  }
   // indexes of the conditions of rate r that meet the condition-level keys (age, cc, seats, fuel, make)
   function keyedConds(r, keys){
-    var condKeys = keys.filter(function(k){ return k.k !== 'rto' && k.k !== 'gvw'; });
-    var cs = kConds(r), out = [];
+    var condKeys = keys.filter(function(k){ return k.k !== 'gvw'; });
+    var cs = kConds(r), cl = kCondList(r.remarks), out = [];
     cs.forEach(function(c, i){ if (!condKeys.length || condKeys.every(function(k){
+        if (k.k === 'rto') return rtoCoveredCond(r, k.v, cl[i]);
         if (k.k === 'age') return overlaps(c.age, k.r);
         if (k.k === 'cc') return r.single && overlaps(c.cc, k.r);                       // engine CC: Private Car / Two-Wheeler
-        if (k.k === 'seats') return /^PCV /.test(r.sec) && overlaps(c.seats, k.r);      // seats: passenger vehicles
+        if (k.k === 'seats') return seatsPass(r, c, k.r);                                  // seats: passenger vehicles (not Auto)
         if (k.k === 'fuel') return k.v.some(function(f){ return c.fuelOk[f]; });
         if (k.k === 'make') return !!c.makeOk[k.v[0]];
         return true;
@@ -1416,7 +1434,8 @@ function startGrid(DATA){
       if (q){
         // A row that explicitly declines the searched RTO pays nothing there — never
         // show it as a result for that RTO, no matter how else it might match.
-        if (isRtoCodeQuery && isRtoDeclined(r.remarks, normRtoCode)) return false;
+        // (a rate with several conditions stays when another of its conditions still covers it)
+        if (isRtoCodeQuery && kCondList(r.remarks).every(function(c){ return isRtoDeclined(c, normRtoCode); })) return false;
         var hay = normalizeHaystack(r.company + (r.chg ? ' revised' + ({up:' increased', down:' decreased', mixed:' increased decreased', 'new':' new rate'}[r.chg] || '') : '') + ' ' + r.title + ' ' + r.segment + ' ' + r.remarks + (r.offer ? ' ' + (r.offer.title || '') + ' ' + (r.offer.text || r.offer) : ''));
         var textMatch = hay.indexOf(normalizeQuery(q)) !== -1;
         // A specific RTO code search (e.g. "TN07") should also surface rows scoped to

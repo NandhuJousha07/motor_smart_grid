@@ -19,7 +19,7 @@
  {
   "sheet": "TN PO",
   "row": 775,
-  "note": "ICICI TN PCV Auto (Diesel) revised 08 Oct 2026: 11/11 ROTN RTO codes -> 46/46, only for the listed Tamil Nadu RTO RC locations (per attachment); 12 Oct 2026: remark added - Commission applicable only if the business sourced from Chennai Code: IM-2358692",
+  "note": "ICICI TN PCV Auto (Diesel) revised 08 Oct 2026: 11/11 ROTN RTO codes -> 46/46, only for the listed Tamil Nadu RTO RC locations (per attachment); 12 Oct 2026: remark added - Commission applicable only if the business sourced from Chennai Code: IM-2358692; 27 Oct 2026: TP payout removed (Package 46 only)",
   "expect": {
    "company": "ICICI",
    "cat": "Auto",
@@ -33,7 +33,10 @@
    "tp": 46,
    "rto": "Only for the Tamil Nadu RTO RC locations: Madurai, Vellore, Nilgiri, Tenkasi, Mettupalayam, Dharmapuri, Tiruppur, Villupuram, Salem, Chengalpattu, Tirunelveli, Dindigul, Tiruvannamalai, Thanjavur, Gudalur, Chidambaram, Ramanathpuram, Kallakurichi, Cuddalore, Pollachi, Virudhunagar, Sivagangai, Vaniyambadi, Kumbakonam, Karur, Periakulam, Ranipettai, Kancheepuram, Tuticorin, Pudukkottai, Ooty, Nagercoil, Marthandam, Srirangam, Udumalpet, Tiruvallur, Tiruvarur, Tindivanam, Tiruchirappalli, Thiruchendur, Thiruverumbur, Theni",
    "remark": "Fuel Type: Diesel; Commission applicable only if the business sourced from Chennai Code: IM-2358692"
-  }
+  },
+  "remove": [
+   "tp"
+  ]
  },
  {
   "sheet": "TN PO",
@@ -110,5 +113,20 @@
     "text": "Hit ₹5L volume to unlock an additional 3.0% payout (71% → 74%). No seating capacity restrictions."
    }
   }
+ },
+ {
+  "sheet": "TN PO",
+  "row": 774,
+  "note": "ICICI TN PCV Auto Petrol/CNG Renewal/Rollover ROTN 46/46: TP payout removed 27 Oct 2026 (Package 46 only)",
+  "expect": {
+   "company": "ICICI",
+   "cat": "Auto",
+   "pkg": 46,
+   "tp": 46,
+   "remark": "Fuel Type: Petrol/CNG"
+  },
+  "remove": [
+   "tp"
+  ]
  }
 ]
