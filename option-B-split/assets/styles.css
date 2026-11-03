@@ -404,5 +404,5 @@
   .protect-shield p{ margin:0; color:var(--ink-soft); font-size:14px; }
   @media print{
     body > *{ display:none !important; }
-    body::after{ content:"Printing is disabled for the Motor Smart GRID."; display:block; padding:40px; font:16px sans-serif; }
+    body::after{ content:"Printing is disabled for the EG Smart GRID."; display:block; padding:40px; font:16px sans-serif; }
   }

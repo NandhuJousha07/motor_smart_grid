@@ -41,7 +41,7 @@ function __gridDecode(src){
       shield = document.createElement('div');
       shield.className = 'protect-shield';
       shield.setAttribute('role', 'alert');
-      shield.innerHTML = '<div><h2>Protected content</h2><p>Close developer tools to view the Motor Smart GRID.</p></div>';
+      shield.innerHTML = '<div><h2>Protected content</h2><p>Close developer tools to view the EG Smart GRID.</p></div>';
       (document.body || document.documentElement).appendChild(shield);
     }
     shield.classList.toggle('on', on);
