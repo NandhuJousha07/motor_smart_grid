@@ -4,7 +4,7 @@ usage: python3 build.py <payout.xlsx> <out.json> [period_display] [published_mon
 """
 import sys, re, json, collections
 sys.path.insert(0, __file__.rsplit('/', 1)[0])
-from parse import parse, parse_supplement
+from parse import parse
 
 STATES = [("TN", "Tamil Nadu"), ("KL", "Kerala"), ("KA", "Karnataka"),
           ("AP-TS", "Andhra Pradesh & Telangana"), ("MH", "Maharashtra")]
@@ -60,16 +60,8 @@ def fmt_disc(v):
 
 AGE_JUNK = re.compile(r'\b(KW|CPA|TPPD)\b', re.I)
 
-def tidy(s):
-    """Small fixes for supplement sheets typed by hand: '( X)' -> '(X)', a repeated
-    bracket '(X) (X)' kept once, 'Yemaha' -> 'Yamaha'."""
-    s = re.sub(r'\(\s+', '(', s or ''); s = re.sub(r'\s+\)', ')', s)
-    s = re.sub(r'(\([^()]+\))(?:\s*\1)+', r'\1', s)
-    return re.sub(r'\bYemaha\b', 'Yamaha', s)
-
 def bundle(r):
     age = clean(r['age']); remark = clean(r['remark']); disc = fmt_disc(r['disc_raw'])
-    if r.get('supplement'): remark = tidy(remark)
     if age and AGE_JUNK.search(age) and not re.search(r'year|new|old|renew|roll', age, re.I):
         remark = (remark + ', ' + age) if remark else age; age = ''
     p = []
@@ -156,10 +148,6 @@ def classify_cv(prod, cat):
         k in C for k in ('HARVEST', 'EXCAVAT', 'EXAVAT', 'CRANE', 'BACKHOE', 'MISD', 'MISC-D', 'AMBULANCE'))
     if 'TRACTOR' in C and 'OTHER THAN' not in C and 'OTHERS' not in C:
         return ["Misc-D Agricultural Tractor"]
-    if misd and re.search(r'E-?RICK|RICKSHAW', C) and P != 'CV':
-        return ["PCV Auto"]
-    if misd and re.search(r'E-?CART|E-?KART', C) and P != 'CV' and 'EXCEPT' not in C:
-        return ["LCV Auto GCV & E-Kart"]
     if misd and not ('E-RICK' in C and P == 'CV'):
         return ["Misc-D Other than Agricultural Tractor"]
     out = []
@@ -172,7 +160,7 @@ def classify_cv(prod, cat):
         if 'SCHOOL' in C: out.append("PCV School Bus")
         if 'STAFF' in C: out.append("PCV Staff Bus")
         if 'TAXI' in C or 'BUS' in C and not ('SCHOOL' in C or 'STAFF' in C):
-            up6 = bool(re.search(r'[2-6]\s*\+\s*1\b|UPTO 6\b(?! TO)|BELOW 6|LESS THAN 6|UPTO 7\b|\(2 TO 6', C))
+            up6 = bool(re.search(r'6\s*\+\s*1|4\s*\+\s*1|UPTO 6\b(?! TO)|BELOW 6|LESS THAN 6|UPTO 7\b|\(2 TO 6', C))
             more = bool(re.search(r'7\s*(TO|-|\+)|8 TO|11 TO|21|30|31|36|ABOVE|6\s*-\s*1\d|6 TO 17|6-10|BUS', C))
             if 'TAXI' in C and not up6 and not more: up6 = more = True   # un-banded taxi rate -> both taxi sections
             if up6: out.append("PCV Taxi (Upto 6-Seater)")
@@ -194,7 +182,7 @@ def classify_single(block, cat, has_pkg, has_tp):
     C = cat.upper().replace('PACAKGE', 'PACKAGE').replace('SCCOTER', 'SCOOTER')
     pre = "Private Car - " if block == 'PC' else "Two-Wheeler - "
     out = []
-    if re.search(r'BUNDLE|LONG\s*TERM|1\s*\+\s*[35]\b', C) or re.search(r'-NEW\(1\+5', C):
+    if re.search(r'BUNDLE|1\s*\+\s*[35]\b', C) or re.search(r'-NEW\(1\+5', C):
         out.append('Bundle')
     if re.search(r'PACKAGE|1\s*\+\s*1\b', C) and 'Bundle' not in out:
         out.append('Package')
@@ -210,21 +198,11 @@ def classify_single(block, cat, has_pkg, has_tp):
 def seg_text(cat):
     return clean(cat)
 
-def prev_vals(r, satp):
-    """Workbook value a correction replaced, in the same columns as the record:
-    CV (satp None) -> (package, tp); Private Car / Two-Wheeler -> (value, None)."""
-    p = r.get('_prev')
-    if not p: return None
-    pk, tp = fmt_val(p.get('pkg')), fmt_val(p.get('tp'))
-    if satp is None: return [pk, tp]
-    return [tp if (satp and tp is not None) else pk, None]
-
 def apply_corrections(rows, corrections):
     """Manual corrections agreed with the business, applied on top of the source sheet.
     Each entry: {"sheet", "row", "expect": {...current values...}, "set": {...new values...},
-    "note"}, or {"sheet", "row", "expect", "drop": true, "note"} to remove a row the
-    business has withdrawn. "remove": ["tp"] blanks a value (e.g. TP withdrawn) without a label. The row must still hold the expected values, or the build
-    stops, so a correction never lands on the wrong row when the sheet changes."""
+    "note"}. The row must still hold the expected values, or the build stops, so a
+    correction never lands on the wrong row when the sheet changes."""
     applied = []
     for c in corrections or []:
         hit = [r for r in rows if r['sheet'] == c['sheet'] and r['row'] == c['row']]
@@ -236,72 +214,15 @@ def apply_corrections(rows, corrections):
             if str(cur).strip().upper() != str(v).strip().upper():
                 raise SystemExit('Correction not applied - %s row %s: %s is %r, expected %r (%s)'
                                  % (c['sheet'], c['row'], k, cur, v, c.get('note', '')))
-        if c.get('drop'):
-            r['_drop'] = True          # row superseded by the business (e.g. merged into another rate)
-        if any(k in c.get('set', {}) for k in ('pkg', 'tp')):
-            r['_rev'] = True           # rate value revised -> Increased / Decreased label on the page
-            r['_prev'] = dict(pkg=r.get('pkg'), tp=r.get('tp'))   # workbook value before the correction
-        for k, v in c.get('set', {}).items():
+        for k, v in c['set'].items():
             r[k] = v
             if k == 'disc': r['disc_raw'] = v
-        for k in c.get('remove', []):  # value withdrawn by the business (e.g. "TP not given") - blanked, no label
-            r[k] = None
         applied.append(c)
-    rows[:] = [r for r in rows if not r.get('_drop')]
     return applied
 
-def build(path, corrections=None, supplements=None, remark_add=None, remove_tp=None):
-    """supplements: list of paths, or {"file": path, "replaces": ["National", ...]}.
-    With "replaces", every row of those insurers in the states the supplement covers is
-    removed first (workbook and earlier supplements), so the supplement becomes their
-    complete GRID there. An entry can be limited to one product block:
-    {"company": "Kshema", "block": "TW"} replaces only that insurer's Two-Wheeler rows
-    (block: CV, PC or TW). "only": [same form] takes just those insurers' rows from the file.
-    remark_add: [{"company", "state", "block" (CV/PC/TW, optional), "text"}] - text added
-    at the end of the Remark of matching rows (wording the business asked for that is not
-    in the sheet)."""
+def build(path, corrections=None):
     rows = parse(path)
     apply_corrections(rows, corrections)
-    for sp in (supplements or []):
-        if isinstance(sp, dict):
-            new = parse_supplement(sp['file'])
-            if sp.get('only'):          # take just these insurers (optionally one block) from the file
-                only = [x if isinstance(x, dict) else {'company': x} for x in sp['only']]
-                new = [r for r in new if any(canon(r['company']) == canon(x['company'])
-                                             and (not x.get('block') or (r['block'] or 'CV') == x['block']) for x in only)]
-            reps = [x if isinstance(x, dict) else {'company': x} for x in sp.get('replaces', [])]
-            if reps:
-                cover = {r['state'] for r in new}
-                def replaced(r):
-                    return r['state'] in cover and any(
-                        canon(r['company']) == canon(x['company']) and (not x.get('block') or (r['block'] or 'CV') == x['block'])
-                        for x in reps)
-                rows = [r for r in rows if not replaced(r)]
-            rows += new
-        else:
-            rows += parse_supplement(sp)
-    # remove_tp: [{"company", "block" (CV/PC/TW, optional), "state" (optional)}] - the TP payout of
-    # those insurers' rows is withdrawn (e.g. a TP grid added by mistake). A row left with no
-    # payout (or 0 Package) is dropped. "keep": [{"sheet", "rows": [...]}] - rows whose TP the
-    # insurer does pay (e.g. council-call / AOTP rates in its change sheet) keep their TP.
-    for rt in (remove_tp or []):
-        keep = []
-        for r in rows:
-            kept_tp = any(r['sheet'] == k['sheet'] and r['row'] in k['rows'] for k in rt.get('keep', []))
-            if (canon(r['company']) == canon(rt['company']) and (not rt.get('block') or (r['block'] or 'CV') == rt['block'])
-                    and (not rt.get('state') or r['state'] == rt['state']) and not kept_tp):
-                r['tp'] = None
-                if fmt_val(r['pkg']) in (None, '0.00'): continue
-            keep.append(r)
-        rows = keep
-    for ra in (remark_add or []):
-        for r in rows:
-            if (canon(r['company']) == canon(ra['company']) and r['state'] == ra['state']
-                    and (not ra.get('block') or (r['block'] or 'CV') == ra['block'])):
-                rem = (r['remark'] or '').rstrip(' ;')
-                plain = lambda t: re.sub(r'\s+', ' ', re.sub(r'[\u2013\u2014]', '-', t)).lower()
-                if plain(ra['text']) in plain(rem): continue        # the sheet already says it
-                r['remark'] = (rem + '; ' if rem else '') + ra['text']
     recs = []
     for i, r in enumerate(rows):
         if not r['company'] or not r['cat']: continue
@@ -319,17 +240,13 @@ def build(path, corrections=None, supplements=None, remark_add=None, remove_tp=N
                 if s.endswith('SATP'): continue
                 if pkg is None: continue
                 recs.append(dict(state=r['state'], sec=s, company=co, segment=seg,
-                                 package=pkg, tp=None, b=b, src=i, single=True, offer=r.get('offer'),
-                                 rev=bool(r.get('_rev') or r.get('supplement')),
-                                 prev=prev_vals(r, False)))
+                                 package=pkg, tp=None, b=b, src=i, single=True))
             sv = tp if tp is not None else (pkg if satp else None)
             if sv is not None:
                 s = ("Private Car - SATP" if block == 'PC' else "Two-Wheeler - SATP")
                 sseg = seg if re.search(r'SATP|\bTP\b', seg, re.I) else 'SATP \u2013 ' + seg
                 recs.append(dict(state=r['state'], sec=s, company=co, segment=sseg,
-                                 package=sv, tp=None, b=b, src=i, single=True, offer=r.get('offer'),
-                                 rev=bool(r.get('_rev') or r.get('supplement')),
-                                 prev=prev_vals(r, True)))
+                                 package=sv, tp=None, b=b, src=i, single=True))
         else:
             C = r['cat'].upper()
             secs = classify_cv(r['product'], r['cat'])
@@ -338,19 +255,13 @@ def build(path, corrections=None, supplements=None, remark_add=None, remove_tp=N
                 if r['product'].upper() == 'CV' and ('E-RICK' in C and 'E-CART' in C):
                     seg = 'E-Rickshaw' if s == 'PCV Auto' else 'E-Cart'
                 recs.append(dict(state=r['state'], sec=s, company=co, segment=seg,
-                                 package=pkg, tp=tp, b=b, src=i, single=False, offer=r.get('offer'),
-                                 rev=bool(r.get('_rev') or r.get('supplement')),
-                                 prev=prev_vals(r, None)))
+                                 package=pkg, tp=tp, b=b, src=i, single=False))
     # merge identical offers
     groups = collections.OrderedDict()
     for x in recs:
-        # a promotional offer (manual correction) keeps its rate as a separate entry
-        k = (x['state'], x['sec'], x['company'], x['segment'], x['package'], x['tp'],
-             json.dumps(x.get('offer'), sort_keys=True, ensure_ascii=False))
+        k = (x['state'], x['sec'], x['company'], x['segment'], x['package'], x['tp'])
         g = groups.setdefault(k, dict(x, bs=[]))
         if x['b'] not in g['bs']: g['bs'].append(x['b'])
-        if x.get('rev'): g['rev'] = True
-        if x.get('prev') and x['prev'] not in g.setdefault('prevs', []): g['prevs'].append(x['prev'])
     out = []
     for g in groups.values():
         bs = [b for b in g['bs']]
@@ -359,7 +270,7 @@ def build(path, corrections=None, supplements=None, remark_add=None, remove_tp=N
         out.append(dict(state=g['state'], sec=g['sec'], title=TITLE[g['sec']], company=g['company'],
                         segment=g['segment'], package=g['package'] if g['package'] is not None else ('NA' if not g['single'] else None),
                         tp=(g['tp'] if g['tp'] is not None else 'NA') if not g['single'] else None,
-                        remarks=rem, single=g['single'], offer=g.get('offer'), rev=g.get('rev'), prevs=g.get('prevs'), _src=g['src']))
+                        remarks=rem, single=g['single'], _src=g['src']))
     # rank
     by = collections.defaultdict(list)
     for x in out: by[(x['state'], x['sec'])].append(x)
@@ -373,13 +284,9 @@ def build(path, corrections=None, supplements=None, remark_add=None, remove_tp=N
         v.sort(key=lambda x: (-kv(x), x['_src']))
         for n, x in enumerate(v):
             x['rank'] = n; del x['_src']
-            rec = dict(state=x['state'], sec=x['sec'], title=x['title'], company=x['company'],
-                       segment=x['segment'], package=x['package'], tp=x['tp'], remarks=x['remarks'],
-                       rank=n, single=x['single'])
-            if x.get('offer'): rec['offer'] = x['offer']
-            if x.get('rev'): rec['rev'] = True
-            if x.get('prevs'): rec['_prevs'] = x['prevs']
-            final.append(rec)
+            final.append(dict(state=x['state'], sec=x['sec'], title=x['title'], company=x['company'],
+                              segment=x['segment'], package=x['package'], tp=x['tp'], remarks=x['remarks'],
+                              rank=n, single=x['single']))
     present = sorted({x['state'] for x in final}, key=lambda s: so[s])
     return dict(states=[dict(code=c, name=n) for c, n in STATES if c in present],
                 order=[dict(key=k, title=t) for k, t in ORDER], records=final)

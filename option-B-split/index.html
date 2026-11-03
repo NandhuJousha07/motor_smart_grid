@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="grid-data-url" content="data/versions.json">
+<meta name="grid-data-url" content="data/grid-data.json">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow, noarchive">
 <!-- Visitor counter URLs, tried in order: the Vercel function, then visitor-counter.php (PHP hosting).
@@ -21,7 +21,7 @@
     <div class="masthead-row">
       <div>
         <h1>Motor Smart GRID</h1>
-        <div class="place" id="place-text">26 – 31 October 2026</div>
+        <div class="place" id="place-text">03 – 30 November 2026</div>
         <div class="version-note" id="version-note"></div>
       </div>
       <div class="brand-mark"><svg class="brand-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 320" role="img" aria-label="Animated infinity loading logo">
@@ -108,7 +108,7 @@
     </div>
     <div class="search-box">
       <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-      <input type="text" id="search" placeholder="Search insurer, segment, RTO, remark — or combine: age&lt;12 fuel:diesel rto:TN07 cc&lt;=150 gvw:7500 seats&gt;30" autocomplete="off">
+      <input type="text" id="search" placeholder="Search insurer, segment, RTO, remark — separate keywords with ; (e.g. SBI; with nil dep; with NCB) — or keys: age&lt;12 fuel:diesel rto:TN07 gvw:7500" autocomplete="off">
     </div>
     <div class="result-count-row">
       <div class="result-count" id="result-count"></div>
@@ -130,7 +130,6 @@
 </div>
 
 <div class="watermark" id="watermark"></div>
-
 
 <script src="assets/app.js" defer></script>
 </body>

@@ -168,21 +168,21 @@ function startGrid(DATA){
   // Each condition of a rate is read for vehicle age: the Age column first, otherwise the
   // Discount and Remark text ("New Vehicle", "Renewal & Rollover", "Above 6 Years", "With NCB"...).
   // 'new', 'old' (rollover / renewal) or 'both'. A condition that says nothing about age
-  // applies to all ages: it is labelled "Age (Com/TP): All ages" and shown in every position.
+  // applies to all ages: it is labelled "Age: All ages" and shown in every position.
   // Choosing New or Rollover / Renewal hides only the other kind; ranks (top 3, BEST) are
   // recounted over what remains.
   // OFF for now (13 Oct 2026): the age wording in the GRID data still needs checking.
   // Set to true to show the New | Both | Rollover / Renewal selector and the "All ages" labels.
   var AGE_FILTER_ON = false;
   var showNew = true, showOld = true;
-  // Vehicle-age reading for one rate condition ("Age (Com/TP): … | Discount: … | Remark: … | RTO: …").
+  // Vehicle-age reading for one rate condition ("Age: … | Discount: … | Remark: … | RTO: …").
   // Returns { kind: 'new' | 'old' | 'both', stated: true when the text says something about age }.
   // Order: the Age column first; if it holds no age wording, the Discount and Remark text.
   function ageInfo(cond){
     cond = cond || '';
     function field(name){ var m = new RegExp(name + ':\\s*(.*?)(?:\\s\\|\\s|$)').exec(cond); return m ? m[1] : ''; }
     var AGE_WORD = /\bnew\b|roll\s*over|renewal|\bold\b|year|yrs|\bage|ncb|validity|^\s*\d+(\s*\/\s*\d+)?\s*$|^\s*\d+\s*(?:-|to)\s*\d+\s*$/i;
-    var age = field('Age \\(Com\\/TP\\)');
+    var age = field('(?:^|\\s)Age');
     if (age && AGE_WORD.test(age)) return read(age, true);
     var r = read(field('Discount') + ' ; ' + field('Remark'), false);
     return r;
@@ -697,10 +697,29 @@ function startGrid(DATA){
 
   function highlight(text, q){
     if (!q) return escapeHtml(text);
-    var idx = text.toLowerCase().indexOf(q.toLowerCase());
-    if (idx === -1) return escapeHtml(text);
-    return escapeHtml(text.slice(0,idx)) + '<mark style="background:var(--gold-tint-strong);color:inherit;border-radius:2px;">' +
-           escapeHtml(text.slice(idx, idx+q.length)) + '</mark>' + escapeHtml(text.slice(idx+q.length));
+    var low = text.toLowerCase(), ql = q.toLowerCase();
+    // whole query first; otherwise each ';' phrase, then each keyword of 2+ letters
+    var parts = low.indexOf(ql) !== -1 ? [ql] : ql.split(';').map(function(s){ return s.trim(); }).filter(Boolean);
+    var ranges = [];
+    function mark(p){
+      var i = low.indexOf(p);
+      if (i !== -1){ ranges.push([i, i + p.length]); return true; }
+      return false;
+    }
+    parts.forEach(function(p){
+      if (mark(p)) return;
+      p.split(/\s+/).forEach(function(w){ if (w.length >= 2 && !/^(with|without|non|no|and|or|the|of|to|upto|up)$/.test(w)) mark(w); });
+    });
+    if (!ranges.length) return escapeHtml(text);
+    ranges.sort(function(a, b){ return a[0] - b[0]; });
+    var out = '', pos = 0;
+    ranges.forEach(function(rg){
+      if (rg[0] < pos) return;
+      out += escapeHtml(text.slice(pos, rg[0])) + '<mark style="background:var(--gold-tint-strong);color:inherit;border-radius:2px;">' +
+             escapeHtml(text.slice(rg[0], rg[1])) + '</mark>';
+      pos = rg[1];
+    });
+    return out + escapeHtml(text.slice(pos));
   }
 
   // Wraps any genuine RTO-decline clause in a flashing red span, and the rest of the
@@ -776,11 +795,13 @@ function startGrid(DATA){
   // New when there was no earlier rate. Hovering shows the earlier rate.
   function revHtml(r){
     if (!r || !r.chg) return '';
+    if (r.cchg) return '';      // increased AND decreased conditions: each remark line carries its own label
+
     var was = r.was ? 'Earlier rate: ' + r.was : '';
     var first = String(r.rev) === '1';
     var tip = function(k){
-      if (k === 'new') return first ? 'New rate added in Version 1 (not in the original GRID workbook)' : 'New since Version 1 – no Version 1 rate to compare';
-      return (k === 'up' ? 'Increased' : 'Decreased') + (first ? ' in Version 1' : ' since Version 1') + (first ? ' (against the original GRID workbook)' : ' (against Version 1)') + (was ? ' – ' + was : '');
+      if (k === 'new') return first ? 'New rate added in Version 1 (not in the ' + (r.basis || 'original GRID workbook') + ')' : 'New since Version 1 – no Version 1 rate to compare';
+      return (k === 'up' ? 'Increased' : 'Decreased') + (first ? ' in Version 1' : ' since Version 1') + (first ? ' (against the ' + (r.basis || 'original GRID workbook') + ')' : ' (against Version 1)') + (was ? ' – ' + was : '');
     };
     var b = function(k, txt){ return '<span class="chg-badge ' + k + '" title="' + escapeHtml(tip(k)) + '">' + txt + '</span>'; };
     // the change itself, e.g. "▲ Increased +3.00", "▼ Decreased −5.00(OD)", "▲ Increased TP +5.00"
@@ -789,7 +810,7 @@ function startGrid(DATA){
     if (r.chg === 'up') return b('up', up);
     if (r.chg === 'down') return b('down', dn);
     if (r.chg === 'mixed') return b('up', up) + b('down', dn);
-    if (r.chg === 'new') return b('new', 'New');
+    if (r.chg === 'new') return b('new', 'Newly added GRID');
     return '';
   }
   // A promotional offer attached to a rate (manual correction), shown as its own branded badge.
@@ -804,19 +825,38 @@ function startGrid(DATA){
   // A condition with no age wording anywhere applies to every vehicle age: say so.
   function withAgeLabel(b){
     if (!AGE_FILTER_ON) return b;
-    if (!b || !b.trim()) return 'Age (Com/TP): All ages';
-    if (/Age \(Com\/TP\):/.test(b) || ageInfo(b).stated) return b;
-    return 'Age (Com/TP): All ages | ' + b;
+    if (!b || !b.trim()) return 'Age: All ages';
+    if (/(?:^|\s)Age:/.test(b) || ageInfo(b).stated) return b;
+    return 'Age: All ages | ' + b;
   }
-  function formatRemarks(text, q){
+  // Label for one condition of a rate whose conditions moved in opposite directions,
+  // e.g. "▲ Increased +10.00" on the Except Electric line, "▼ Decreased −10.00" on the Electric line.
+  function condChgHtml(e){
+    if (!e || !e.chg) return '';
+    var was = e.was ? ' – Earlier rate: ' + e.was : '';
+    var b = function(k, txt){
+      var tip = e.basis ? (k === 'new' ? 'New rate – not in the ' + e.basis : (k === 'up' ? 'Increased' : 'Decreased') + ' against the ' + e.basis + was)
+              : k === 'new' ? 'New since Version 1 – no Version 1 rate to compare'
+              : (k === 'up' ? 'Increased' : 'Decreased') + ' since Version 1 (against Version 1)' + was;
+      return '<span class="chg-badge chg-cond ' + k + '" title="' + escapeHtml(tip) + '">' + txt + '</span>';
+    };
+    var up = '\u25B2 Increased' + (e.dup ? ' <b class="chg-val">' + escapeHtml(e.dup) + '</b>' : '');
+    var dn = '\u25BC Decreased' + (e.ddn ? ' <b class="chg-val">' + escapeHtml(e.ddn) + '</b>' : '');
+    if (e.chg === 'up') return b('up', up);
+    if (e.chg === 'down') return b('down', dn);
+    if (e.chg === 'mixed') return b('up', up) + b('down', dn);
+    if (e.chg === 'new') return b('new', 'Newly added GRID');
+    return '';
+  }
+  function formatRemarks(text, q, cchg){
     if (text.indexOf(' OR (') === -1){
-      return markDeclined(withAgeLabel(text), q);
+      return condChgHtml(cchg && cchg[0]) + markDeclined(withAgeLabel(text), q);
     }
     var bundles = text.split(' OR ').map(function(b){
       return b.replace(/^\(/, '').replace(/\)$/, '');
     });
-    return bundles.map(function(b){
-      return '<div class="remark-bundle">' + markDeclined(withAgeLabel(b), q) + '</div>';
+    return bundles.map(function(b, i){
+      return '<div class="remark-bundle">' + condChgHtml(cchg && cchg[i]) + markDeclined(withAgeLabel(b), q) + '</div>';
     }).join('<div class="remark-or">OR</div>');
   }
 
@@ -917,6 +957,68 @@ function startGrid(DATA){
     return normalizeQuery(String(s).toLowerCase().replace(/other\s+than\s+[^|,]*/g, ' '));
   }
 
+  // ---- Multi-keyword search ----
+  // ";" separates phrases and every phrase must match (AND), e.g. "SBI; with nil dep; with NCB".
+  // Inside a phrase, spaces separate keywords that must all appear in the SAME condition
+  // of a rate. Qualifier words (with / without / non / upto / above / other than ...) stay
+  // attached to the word after them, so "with nil dep" never matches "Without Nil Dep".
+  // Common spellings are treated alike: Nil Dep / Nil Dip / Nil-Dep / Zero Dep / Nil
+  // Depreciation, and Non NCB / No NCB = Without NCB.
+  var SEARCH_MODS = /^(with|without|non|no|not|except|excluding|only|other|than|upto|up|to|above|below|more|less|over|under|and|&)$/;
+  function normSearch(s, isHay){
+    var t = normalizeQuery(String(s).toLowerCase())
+      .replace(/nil[\s-]*(?:dep|dip)\w*|zero[\s-]*dep\w*/g, 'nildep')
+      .replace(/\bnon[\s-]*nildep\b/g, 'without nildep')
+      .replace(/\bnon[\s-]*ncb\b|\bno[\s-]+ncb\b/g, 'without ncb')
+      .replace(/[^a-z0-9+%.&\/]+/g, ' ')
+      .replace(/\s+/g, ' ').trim();
+    if (isHay){
+      // in a rate's own text a bare "Nil Dep" / "NCB" means WITH it ("Nil Depreciation", "NCB Cases Only")
+      t = t.replace(/\b(with|without) (nildep|ncb)\b/g, function(m, a, b){ return (a === 'with' ? 'qqw' : 'qqwo') + b; })
+           .replace(/\bnildep\b/g, 'with nildep').replace(/\bncb\b/g, 'with ncb')
+           .replace(/\bqqwo(nildep|ncb)\b/g, 'without $1').replace(/\bqqw(nildep|ncb)\b/g, 'with $1');
+    }
+    return t;
+  }
+  function parseSearchTerms(raw){
+    if (!/[;\s]/.test(String(raw).trim())) return null;            // one word: the usual search
+    var terms = String(raw).split(';').map(function(part){
+      var words = normSearch(part).split(' ').filter(Boolean), units = [], buf = [];
+      words.forEach(function(w){ buf.push(w); if (!SEARCH_MODS.test(w)){ units.push(buf.join(' ')); buf = []; } });
+      if (buf.length) units.push(buf.join(' '));
+      return { phrase: normSearch(part), units: units, full: /other\s+than/i.test(part) };
+    }).filter(function(t){ return t.phrase; });
+    return terms.length ? terms : null;
+  }
+  function hasSearchUnit(hay, u){
+    return new RegExp('(^|[^a-z0-9])' + u.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).test(hay);
+  }
+  // indexes of the conditions of r that satisfy every term (record text + that condition)
+  function searchTermConds(r, terms){
+    var head = r.company + (r.chg ? ' revised' + ({up:' increased', down:' decreased', mixed:' increased decreased', 'new':' new rate newly added grid'}[r.chg] || '') : '') +
+               ' ' + r.title + ' ' + r.segment + (r.offer ? ' ' + (typeof r.offer === 'string' ? r.offer : (r.offer.title || '') + ' ' + (r.offer.text || '')) : '');
+    var out = [];
+    kCondList(r.remarks).forEach(function(c, i){
+      var full = normSearch(head + ' ' + c, true);
+      var stripped = normSearch(String(head + ' ' + c).replace(/other\s+than\s+[^|;]*/gi, ' '), true);
+      var ok = terms.every(function(t){
+        var hay = t.full ? full : stripped;
+        return hasSearchUnit(hay, t.phrase) || t.units.every(function(u){ return hasSearchUnit(hay, u); });
+      });
+      if (ok) out.push(i);
+    });
+    return out;
+  }
+  function searchTermView(r, terms){
+    var idx = searchTermConds(r, terms), all = kCondList(r.remarks);
+    if (!idx.length || idx.length === all.length) return r;
+    var copy = {}; for (var f in r) copy[f] = r[f];
+    var kept = idx.map(function(i){ return all[i]; });
+    copy.remarks = kept.length === 1 ? kept[0] : '(' + kept.join(') OR (') + ')';
+    if (r.cchg) copy.cchg = idx.map(function(i){ return r.cchg[i]; });
+    return copy;
+  }
+
   var ALL_RTO_PATTERN = /all\s+(?:tn\s+|south\s+state\s+)?rtos?\b/i;
   var RTO_CODE_PATTERN = /^(tn|py)\s*-?\s*\d+$/i;
   var PLACE_WORDS = /\b(rto|tn|py|ka|kl|ap|ts|mh|chennai|coimbatore|bangalore|bengaluru|pondicherry|hyderabad|mumbai|pune|nagpur|aurangabad|kerala|karnataka|telangana|andhra|maharashtra)\b/i;
@@ -940,7 +1042,7 @@ function startGrid(DATA){
   // A clause stops at a field separator (|), a bracket, or the end of a sentence
   // (". "), so e.g. "Declined New Mahindra. Doable Hazardous category - ..." flags only
   // the declined sentence, never the doable list after it. Decimals (2.5) don't split.
-  var DECLINE_RE = /\(?(?:[^|().]|\.(?!\s))*\b(?:declin\w*|except\w*)\b(?:[^|().]|\.(?!\s))*\)?/gi;
+  var DECLINE_RE = /\(?(?:[^|().;]|\.(?!\s))*\b(?:declin\w*|except\w*)\b(?:[^|().;]|\.(?!\s))*\)?/gi;   // stops at ';' so only the declined clause turns red
   function findDeclinedSegments(text){
     // Bundled multi-condition remarks are joined with " OR (...)" (see build_json2.py) —
     // check each condition bundle on its own so an RTO: field from one condition is
@@ -1029,7 +1131,7 @@ function startGrid(DATA){
         pkgHtml + tpHtml +
         '</tr>';
       html += '<tr class="remarks-row '+cls+'">' +
-        '<td class="remarks" colspan="'+colspan+'">' + formatRemarks(r.remarks, q) + offerHtml(r, q) + '</td>' +
+        '<td class="remarks" colspan="'+colspan+'">' + formatRemarks(r.remarks, q, r.cchg) + offerHtml(r, q) + '</td>' +
         '</tr>';
     });
     html += '</tbody></table>';
@@ -1046,7 +1148,7 @@ function startGrid(DATA){
         '<div class="card-top"><div class="card-company">' + highlight(r.company, q) + revHtml(r) + (idx===0?'<span class="badge">BEST</span>':'') + '</div>' +
         '<div class="card-rate">' + escapeHtml(rateStr) + '</div></div>' +
         '<div class="card-segment">' + (showState ? escapeHtml(stateName(r.state)) + ' — ' : '') + highlight(r.segment, q) + '</div>' +
-        '<div class="card-remarks">' + formatRemarks(r.remarks, q) + offerHtml(r, q) + '</div>' +
+        '<div class="card-remarks">' + formatRemarks(r.remarks, q, r.cchg) + offerHtml(r, q) + '</div>' +
         '</div>';
     });
     html += '</div>';
@@ -1092,7 +1194,7 @@ function startGrid(DATA){
         pkgHtml + tpHtml +
         '</tr>';
       html += '<tr class="remarks-row '+cls+'">' +
-        '<td class="remarks" colspan="'+colspan+'">' + formatRemarks(r.remarks, q) + offerHtml(r, q) + '</td>' +
+        '<td class="remarks" colspan="'+colspan+'">' + formatRemarks(r.remarks, q, r.cchg) + offerHtml(r, q) + '</td>' +
         '</tr>';
     });
     html += '</tbody></table>';
@@ -1106,7 +1208,7 @@ function startGrid(DATA){
         '<div class="card-top"><div class="card-company">' + highlight(r.company, q) + revHtml(r) + (r.rank===0?'<span class="badge">BEST</span>':'') + '</div>' +
         '<div class="card-rate">' + escapeHtml(rateStr) + '</div></div>' +
         '<div class="card-segment">' + highlight(r.segment, q) + '</div>' +
-        '<div class="card-remarks">' + formatRemarks(r.remarks, q) + offerHtml(r, q) + '</div>' +
+        '<div class="card-remarks">' + formatRemarks(r.remarks, q, r.cchg) + offerHtml(r, q) + '</div>' +
         '</div>';
     });
     html += '</div>';
@@ -1289,7 +1391,7 @@ function startGrid(DATA){
     var got = kCache && kCache.get(r);
     if (got) return got;
     got = kCondList(r.remarks).map(function(c){
-      var age = kField(c, 'Age \\(Com\\/TP\\)'), rem = kField(c, 'Remark'), disc = kField(c, 'Discount');
+      var age = kField(c, '(?:^|\\s)Age'), rem = kField(c, 'Remark'), disc = kField(c, 'Discount');
       var ageText = (age + ' ; ' + rem).toUpperCase();
       var all = (r.segment + ' | ' + c);
       var p = kParts(all), pa = kParts(age + ' ; ' + rem);
@@ -1391,6 +1493,7 @@ function startGrid(DATA){
     var copy = {}; for (var f in r) copy[f] = r[f];
     var kept = idx.map(function(i){ return all[i]; });
     copy.remarks = kept.length === 1 ? kept[0] : '(' + kept.join(') OR (') + ')';
+    if (r.cchg) copy.cchg = idx.map(function(i){ return r.cchg[i]; });
     return copy;
   }
 
@@ -1408,6 +1511,7 @@ function startGrid(DATA){
     var isRtoCodeQuery = RTO_CODE_PATTERN.test(qRaw);
     var normRtoCode = isRtoCodeQuery ? qRaw.replace(/[\s-]/g,'').toUpperCase() : null;
     var taxiSeatQuery = parseTaxiSeatQuery(qRaw);
+    var searchTerms = (weightQuery === null && !isRtoCodeQuery) ? parseSearchTerms(qRaw) : null;
 
     // Totals for the "X of Y" count in each section header — scoped to the selected
     // state (if any) but NOT to search/company, so it reflects "how many total" for
@@ -1436,8 +1540,10 @@ function startGrid(DATA){
         // show it as a result for that RTO, no matter how else it might match.
         // (a rate with several conditions stays when another of its conditions still covers it)
         if (isRtoCodeQuery && kCondList(r.remarks).every(function(c){ return isRtoDeclined(c, normRtoCode); })) return false;
-        var hay = normalizeHaystack(r.company + (r.chg ? ' revised' + ({up:' increased', down:' decreased', mixed:' increased decreased', 'new':' new rate'}[r.chg] || '') : '') + ' ' + r.title + ' ' + r.segment + ' ' + r.remarks + (r.offer ? ' ' + (r.offer.title || '') + ' ' + (r.offer.text || r.offer) : ''));
+        var hay = normalizeHaystack(r.company + (r.chg ? ' revised' + ({up:' increased', down:' decreased', mixed:' increased decreased', 'new':' new rate newly added grid'}[r.chg] || '') : '') + ' ' + r.title + ' ' + r.segment + ' ' + r.remarks + (r.offer ? ' ' + (r.offer.title || '') + ' ' + (r.offer.text || r.offer) : ''));
         var textMatch = hay.indexOf(normalizeQuery(q)) !== -1;
+        // several keywords ("SBI with nil dep" / "with nil dep; with ncb"): all in one condition
+        if (searchTerms) textMatch = searchTermConds(r, searchTerms).length > 0 || (textMatch && q.indexOf(';') === -1 && !/\b(?:with|without|non|no)\b/.test(q));
         // A specific RTO code search (e.g. "TN07") should also surface rows scoped to
         // "All RTO(s)" / "All TN RTO(s)" — those blanket-cover every RTO, including the
         // one searched for, even though the code itself never appears in that row's text.
@@ -1460,6 +1566,7 @@ function startGrid(DATA){
     });
 
     if (keyed.length) filtered = filtered.map(function(r){ return keyedView(r, keyed); });
+    if (searchTerms) filtered = filtered.map(function(r){ return searchTermView(r, searchTerms); });
 
     // A rate written for a wide weight range (e.g. IFFCO "0 To 40000") is filed under
     // every LCV/MCV/HCV band it overlaps, which is right when browsing by band. A GVW
@@ -1765,21 +1872,15 @@ function startGrid(DATA){
   } // initGrid
 }
 
-/* ---- Loader (split deployment): the version list, then each version's rates when opened ---- */
+/* ---- Data loader (split deployment) ---- */
 (function(){
   var meta = document.querySelector('meta[name="grid-data-url"]');
-  var DATA_URL = (meta && meta.content) || 'data/versions.json';
-  var base = DATA_URL.replace(/[^\/]*$/, '');
+  var DATA_URL = (meta && meta.content) || 'data/grid-data.json';
   var box = document.getElementById('results');
   if (box) box.innerHTML = '<div class="empty"><h3>Loading GRID…</h3></div>';
   fetch(DATA_URL, { cache: 'no-cache' })
     .then(function(r){ if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
-    .then(function(d){
-      var cat = __gridDecode(d);
-      (cat.versions || []).forEach(function(v){ if (v.file && !/^(\/|https?:)/.test(v.file)) v.file = base + v.file; });
-      if (box) box.innerHTML = '';
-      startGrid(cat);
-    })
+    .then(function(d){ if (box) box.innerHTML = ''; startGrid(__gridDecode(d)); })
     .catch(function(err){
       if (box) box.innerHTML = '<div class="empty"><h3>GRID data could not be loaded</h3><p>' +
         String(err.message).replace(/[<>&]/g, '') + ' — please refresh, or contact the MIS team.</p></div>';

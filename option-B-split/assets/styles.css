@@ -371,6 +371,7 @@
   .chg-badge.up{ color:var(--success); }
   .chg-badge.down{ color:var(--danger); }
   .chg-badge.new{ color:var(--navy); }
+  .chg-badge.chg-cond{ margin:0 8px 0 0; vertical-align:baseline; }
   .chg-val{ font-weight:800; letter-spacing:0; text-transform:none; margin-left:2px; font-variant-numeric:tabular-nums; }
   /* ---------- Promotional offer badge (e.g. POSP Special Offer) ---------- */
   .offer-badge{
