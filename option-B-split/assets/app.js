@@ -1764,6 +1764,34 @@ function startGrid(DATA){
   var vOpen = document.getElementById('version-open');
   var vOpenName = document.getElementById('version-open-name');
   var vOpenChip = document.getElementById('version-open-chip');
+
+  // Version flash: runs the version's change list (insurer, state, segments, package types) when it is opened.
+  var vFlash = document.getElementById('version-flash'), vFlashText = document.getElementById('version-flash-text');
+  var vFlashClose = document.getElementById('version-flash-close');
+  if (vFlashClose) vFlashClose.addEventListener('click', function(){ vFlash.hidden = true; });
+  function showFlash(v){
+    if (!vFlash) return;
+    var items = (v && v.flash) || [];
+    if (!items.length){ vFlash.hidden = true; return; }
+    vFlashText.textContent = '';
+    var head = document.createElement('span'); head.className = 'vflash-item';
+    var hb = document.createElement('b'); hb.textContent = (v.name || '') + (v.dates ? ' (' + v.dates + ')' : '') + ':';
+    head.appendChild(hb); head.appendChild(document.createTextNode(' ' + items.length + (items.length === 1 ? ' change' : ' changes')));
+    vFlashText.appendChild(head);
+    var chars = 0;
+    items.forEach(function(it){
+      var s = document.createElement('span'); s.className = 'vflash-item';
+      var b = document.createElement('b'); b.textContent = it.insurer + (it.state ? ' – ' + it.state : '');
+      s.appendChild(b);
+      var t = ' · ' + it.text; s.appendChild(document.createTextNode(t));
+      chars += (it.insurer || '').length + t.length;
+      vFlashText.appendChild(s);
+    });
+    vFlashText.style.setProperty('--vflash-dur', Math.max(18, Math.round((chars + 60) / 7)) + 's');
+    // restart the run from the start each time a version is opened
+    vFlashText.style.animation = 'none'; void vFlashText.offsetWidth; vFlashText.style.animation = '';
+    vFlash.hidden = false;
+  }
   var vTag = document.getElementById('open-version-tag');
   var STATE_LABEL = { current:'Applies today', earlier:'Earlier', upcoming:'Upcoming' };
   var vButtons = [];
@@ -1859,6 +1887,7 @@ function startGrid(DATA){
       tickClock();
       render();
       syncControlsHeight();
+      showFlash(v);
     }).catch(function(err){
       if (token !== switchToken) return;
       updateVersionUI();
@@ -1867,6 +1896,7 @@ function startGrid(DATA){
   }
   renderVersionBar();
   updateVersionUI();
+  showFlash(openVersion);
 
   render();
   } // initGrid

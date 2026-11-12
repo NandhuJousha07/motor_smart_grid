@@ -1,19 +1,19 @@
-# UAT & Go-Live Checklist — Motor Smart GRID · November 2026 Version 1 (03 – 30 Nov 2026)
+# UAT & Go-Live Checklist — EG Smart GRID · November 2026 Version 1 (03 – 30 Nov 2026)
 
 Tick each item on the **portal URL** on desktop and on one Android/iOS phone.
 
 ## Page & version
 - [ ] Masthead shows **03 – 30 November 2026 (Version 1)**
 - [ ] Version bar: "GRID month" = **November 2026**, Version 1 **03-Nov to 30-Nov** with the **Applies today** badge
-- [ ] Bottom-right badge shows **November 2026 · v1**
+- [ ] Bottom-right badge shows **November 2026 · v1** until 14-11-2026 and **November 2026 · v2** from 15-11-2026 (Version 2 is listed as "Upcoming" before then)
 - [ ] No "could not be loaded" message; browser console has no red errors (a blocked Google Fonts request, and a visitor-counter request that is not set up, are acceptable)
 
 ## Data (expected counts, "All segments / All insurers", empty search)
 - [ ] State list shows exactly: Tamil Nadu, Kerala, Karnataka, Andhra Pradesh & Telangana
-- [ ] Tamil Nadu → **1,189** rates shown
-- [ ] Kerala → **654**
-- [ ] Karnataka → **1,007**
-- [ ] Andhra Pradesh & Telangana → **1,663**
+- [ ] Tamil Nadu → **1,119** rates shown
+- [ ] Kerala → **656**
+- [ ] Karnataka → **1,015**
+- [ ] Andhra Pradesh & Telangana → **1,664**
 
 ## Spot checks (Tamil Nadu, November V1)
 - [ ] LCV (Upto 2000): top row **United India 56.00 / 56.00**, marked BEST
@@ -31,6 +31,10 @@ Tick each item on the **portal URL** on desktop and on one Android/iOS phone.
 - [ ] GRID month → **October 2026** opens October Version 3 (26 October – 02 November 2026); back to November works
 - [ ] Mobile: cards layout, no sideways scrolling, filters usable
 - [ ] Reload keeps the last chosen state
+
+## Visitor counter
+- [ ] `https://<site>/api/visitor-counter?check=1` shows `"ok": true, "store": "connected"`
+- [ ] Footer shows "Today's visitors" and "Total visitors"; reopening the page the same day does not increase them; another phone/browser increases both by 1
 
 ## Go-live
 - [ ] `no-cache` headers active on `.json` / `.html` (DevTools → Network → Response headers)

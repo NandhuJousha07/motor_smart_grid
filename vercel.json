@@ -1,0 +1,12 @@
+{
+  "routes": [
+    { "src": "/(monthly-update|source|server-config|embed|option-A-single-file)(/.*)?", "status": 404 },
+    { "src": "/[^/]+\\.(md|sha256)", "status": 404 },
+    { "src": "/manifest\\.json", "status": 404 },
+    { "handle": "filesystem" },
+    { "src": "/", "dest": "/option-B-split/index.html", "headers": { "Cache-Control": "no-cache" } },
+    { "src": "/index\\.html", "dest": "/option-B-split/index.html", "headers": { "Cache-Control": "no-cache" } },
+    { "src": "/data/(.*)", "dest": "/option-B-split/data/$1", "headers": { "Cache-Control": "no-cache, must-revalidate" } },
+    { "src": "/assets/(.*)", "dest": "/option-B-split/assets/$1" }
+  ]
+}

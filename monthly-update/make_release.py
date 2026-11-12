@@ -132,9 +132,18 @@ open(os.path.join(pb, 'assets', 'styles.css'), 'w', encoding='utf-8').write(css.
 open(os.path.join(pb, 'assets', 'app.js'), 'w', encoding='utf-8').write(app.strip() + '\n')
 json.dump(payload, open(os.path.join(pb, 'data', 'grid-data.json'), 'w', encoding='utf-8'), separators=(',', ':'))
 
+# ---- visitor counter (copied next to each option): Vercel function + PHP fallback
+import shutil
+CNT = os.path.join(HERE, 'counter')
+if os.path.isdir(CNT):
+    for base in (pa, pb, a.out):
+        os.makedirs(os.path.join(base, 'api'), exist_ok=True)
+        shutil.copy(os.path.join(CNT, 'visitor-counter.js'), os.path.join(base, 'api', 'visitor-counter.js'))
+        shutil.copy(os.path.join(CNT, 'visitor-counter.php'), os.path.join(base, 'visitor-counter.php'))
+
 # ---- manifest (current version = the one applying on its start date, i.e. the last one)
 cur = grid['versions'][-1]; recs = cur['data']['records']
-man = dict(product='Motor Smart GRID', version=f"{cur['month']} - Version {cur['version']}",
+man = dict(product=re.search(r'<title>(.*?)</title>', tpl).group(1), version=f"{cur['month']} - Version {cur['version']}",
            period=cur['period'], publishedMonth=cur['month'], revisionNote=cur.get('note', ''),
            source=source,
            versions=[dict(name=v['name'], dates=v['dates'], rates=len(v['data']['records']) if 'data' in v else None)

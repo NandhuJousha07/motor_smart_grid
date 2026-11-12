@@ -7,7 +7,7 @@
 <!-- Visitor counter URLs, tried in order: the Vercel function, then visitor-counter.php (PHP hosting).
      Where neither answers (e.g. claude.ai) the page falls back to its own counter. -->
 <meta name="grid-visitor-counter" content="/api/visitor-counter visitor-counter.php">
-<title>Motor Smart GRID</title>
+<title>EG Smart GRID</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@500;600;700&display=swap" rel="stylesheet">
@@ -418,8 +418,28 @@
   .protect-shield p{ margin:0; color:var(--ink-soft); font-size:14px; }
   @media print{
     body > *{ display:none !important; }
-    body::after{ content:"Printing is disabled for the Motor Smart GRID."; display:block; padding:40px; font:16px sans-serif; }
+    body::after{ content:"Printing is disabled for the EG Smart GRID."; display:block; padding:40px; font:16px sans-serif; }
   }
+
+  /* ---------- Version flash: what changed in the opened version ---------- */
+  .vflash{ margin-top:12px; display:flex; align-items:center; gap:10px; border:1px solid #E8A33D; border-radius:8px;
+    background:linear-gradient(90deg,#FFF4DE,#FFE9C2); color:#3A2200; padding:6px 8px 6px 10px; overflow:hidden; }
+  .vflash[hidden]{ display:none; }
+  .vflash-tag{ flex:none; font-weight:800; font-size:12px; letter-spacing:.04em; text-transform:uppercase; color:#fff;
+    background:#C2410C; border-radius:5px; padding:3px 8px; animation:vflashBlink 1.2s ease-in-out infinite; }
+  @keyframes vflashBlink{ 0%,100%{ opacity:1; } 50%{ opacity:.45; } }
+  .vflash-track{ flex:1; min-width:0; overflow:hidden; white-space:nowrap; }
+  .vflash-move{ display:inline-block; padding-left:100%; animation:vflashRun var(--vflash-dur,30s) linear infinite; font-size:14px; }
+  .vflash-track:hover .vflash-move{ animation-play-state:paused; }
+  .vflash-item{ margin-right:48px; }
+  .vflash-item b{ color:#9A3412; }
+  .vflash-close{ flex:none; border:0; background:transparent; color:#7C2D12; font-size:18px; line-height:1; cursor:pointer; padding:2px 6px; }
+  @keyframes vflashRun{ from{ transform:translateX(0); } to{ transform:translateX(-100%); } }
+  @media (prefers-reduced-motion: reduce){
+    .vflash-track{ white-space:normal; } .vflash-move{ padding-left:0; animation:none; } .vflash-tag{ animation:none; }
+  }
+  :root[data-theme="dark"] .vflash{ background:#3A2A12; color:#FBE7C6; border-color:#9A6B1F; }
+  :root[data-theme="dark"] .vflash-item b{ color:#FDBA74; }
 </style>
 </head>
 <body>
@@ -428,7 +448,7 @@
   <div class="masthead">
     <div class="masthead-row">
       <div>
-        <h1>Motor Smart GRID</h1>
+        <h1>EG Smart GRID</h1>
         <div class="place" id="place-text">03 – 30 November 2026</div>
         <div class="version-note" id="version-note"></div>
       </div>
@@ -528,6 +548,7 @@
 
   <section class="version-bar" id="version-bar" aria-label="GRID versions" hidden></section>
   <div class="version-open" id="version-open" hidden><h2 id="version-open-name"></h2><span class="vchip" id="version-open-chip"></span></div>
+  <div class="vflash" id="version-flash" role="status" aria-live="polite" hidden><span class="vflash-tag">What's changed</span><div class="vflash-track"><span class="vflash-move" id="version-flash-text"></span></div><button type="button" class="vflash-close" id="version-flash-close" aria-label="Close">&times;</button></div>
 
   <div id="results"></div>
 
@@ -585,7 +606,7 @@ function __gridDecode(src){
       shield = document.createElement('div');
       shield.className = 'protect-shield';
       shield.setAttribute('role', 'alert');
-      shield.innerHTML = '<div><h2>Protected content</h2><p>Close developer tools to view the Motor Smart GRID.</p></div>';
+      shield.innerHTML = '<div><h2>Protected content</h2><p>Close developer tools to view the EG Smart GRID.</p></div>';
       (document.body || document.documentElement).appendChild(shield);
     }
     shield.classList.toggle('on', on);
@@ -2309,6 +2330,34 @@ function __gridDecode(src){
   var vOpen = document.getElementById('version-open');
   var vOpenName = document.getElementById('version-open-name');
   var vOpenChip = document.getElementById('version-open-chip');
+
+  // Version flash: runs the version's change list (insurer, state, segments, package types) when it is opened.
+  var vFlash = document.getElementById('version-flash'), vFlashText = document.getElementById('version-flash-text');
+  var vFlashClose = document.getElementById('version-flash-close');
+  if (vFlashClose) vFlashClose.addEventListener('click', function(){ vFlash.hidden = true; });
+  function showFlash(v){
+    if (!vFlash) return;
+    var items = (v && v.flash) || [];
+    if (!items.length){ vFlash.hidden = true; return; }
+    vFlashText.textContent = '';
+    var head = document.createElement('span'); head.className = 'vflash-item';
+    var hb = document.createElement('b'); hb.textContent = (v.name || '') + (v.dates ? ' (' + v.dates + ')' : '') + ':';
+    head.appendChild(hb); head.appendChild(document.createTextNode(' ' + items.length + (items.length === 1 ? ' change' : ' changes')));
+    vFlashText.appendChild(head);
+    var chars = 0;
+    items.forEach(function(it){
+      var s = document.createElement('span'); s.className = 'vflash-item';
+      var b = document.createElement('b'); b.textContent = it.insurer + (it.state ? ' – ' + it.state : '');
+      s.appendChild(b);
+      var t = ' · ' + it.text; s.appendChild(document.createTextNode(t));
+      chars += (it.insurer || '').length + t.length;
+      vFlashText.appendChild(s);
+    });
+    vFlashText.style.setProperty('--vflash-dur', Math.max(18, Math.round((chars + 60) / 7)) + 's');
+    // restart the run from the start each time a version is opened
+    vFlashText.style.animation = 'none'; void vFlashText.offsetWidth; vFlashText.style.animation = '';
+    vFlash.hidden = false;
+  }
   var vTag = document.getElementById('open-version-tag');
   var STATE_LABEL = { current:'Applies today', earlier:'Earlier', upcoming:'Upcoming' };
   var vButtons = [];
@@ -2404,6 +2453,7 @@ function __gridDecode(src){
       tickClock();
       render();
       syncControlsHeight();
+      showFlash(v);
     }).catch(function(err){
       if (token !== switchToken) return;
       updateVersionUI();
@@ -2412,6 +2462,7 @@ function __gridDecode(src){
   }
   renderVersionBar();
   updateVersionUI();
+  showFlash(openVersion);
 
   render();
   } // initGrid

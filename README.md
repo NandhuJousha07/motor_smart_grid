@@ -1,8 +1,8 @@
-# Motor Smart GRID — Deployment Kit
+# EG Smart GRID — Deployment Kit
 
-**Release:** November 2026 · Version 1 · 03 – 30 November 2026
+**Release:** November 2026 · Version 2 · 15 – 30 November 2026 (Version 1: 03 – 14 November 2026)
 **States:** Tamil Nadu, Kerala, Karnataka, Andhra Pradesh & Telangana
-**Rates (November V1):** 4,513 from 23 insurers (TN 1,189 · KL 654 · KA 1,007 · AP-TS 1,663)
+**Rates (November V2):** 4,454 from 23 insurers (TN 1,119 · KL 656 · KA 1,015 · AP-TS 1,664)
 **Also inside:** October 2026 Versions 1–3, under the "GRID month" selector (October V3 now ends 02-11-2026)
 
 Start here, then follow `DEPLOYMENT_GUIDE.md`.
@@ -12,7 +12,8 @@ Start here, then follow `DEPLOYMENT_GUIDE.md`.
 | Folder / file | Purpose | Who uses it |
 |---|---|---|
 | `option-A-single-file/motor-smart-grid.html` | One self-contained page (design, script and data in one file). Upload and open — nothing else needed. | Dev team — quickest go-live |
-| `option-B-split/` | Same page split into `index.html`, `assets/styles.css`, `assets/app.js`, `data/grid-data.json`. A data-only update = replace **one JSON file**. Works with a strict CSP (no inline script). | Dev team — **recommended** for the portal |
+| `option-B-split/` | Same page split into `index.html`, `assets/styles.css`, `assets/app.js`, `data/grid-data.json`, plus the visitor counter (`api/visitor-counter.js`, `visitor-counter.php`). A data-only update = replace **one JSON file**. Works with a strict CSP (no inline script). | Dev team — **recommended** for the portal |
+| `vercel.json` + `api/visitor-counter.js` | Vercel: deploy the whole kit as the project — the site opens the GRID, `/api/visitor-counter` counts visits, other kit files stay private (404) | Dev team (Vercel) |
 | `embed/portal-embed-snippet.html` | iframe snippet to show the GRID inside an existing portal page | Dev team |
 | `server-config/` | Ready configs for nginx, Apache (`.htaccess`) and IIS (`web.config`): caching, compression, security headers | Dev / server team |
 | `monthly-update/` | Release script and page template that turn the GRID data into both options | MIS team |
@@ -36,4 +37,4 @@ Both behave identically (same versions, filters, multi-keyword search, change la
 - HTTPS recommended. Option B must be served over http(s) — it does not work when opened as a local file (browsers block loading the JSON from `file://`). Option A works either way.
 - Browsers: current Chrome, Edge, Safari, Firefox; Android & iOS.
 - Only external dependency: Google Fonts (IBM Plex Serif). If blocked, the page falls back to system fonts automatically — nothing breaks.
-- Optional: the "Total visitors" counter at the bottom calls `/api/visitor-counter` (Vercel function), then `visitor-counter.php`. If neither exists, the page shows its own local count — nothing breaks.
+- Visitor counter: the footer "Today's visitors · Total visitors" needs the included `api/visitor-counter.js` (Vercel) plus a connected Upstash Redis database, or `visitor-counter.php` (PHP hosting). Setup: `DEPLOYMENT_GUIDE.md` section 9. Without it the line stays hidden — nothing else breaks.

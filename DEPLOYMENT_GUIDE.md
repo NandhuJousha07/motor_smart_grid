@@ -1,4 +1,4 @@
-# Deployment Guide — Motor Smart GRID
+# Deployment Guide — EG Smart GRID
 
 ## 1. Before you start
 
@@ -85,3 +85,35 @@ Keep the previous release folder. To roll back, restore the previous `data/grid-
 | Old month still showing | Browser/CDN cache → apply the `no-cache` headers; purge CDN for `*.json` and `*.html`. |
 | Works on server but not from desktop double-click | Expected for Option B (`file://`); use Option A for offline viewing. |
 | Fonts look different | Google Fonts blocked by network → harmless system-font fallback. |
+
+## 9. Visitor counter ("Today's visitors · Total visitors")
+
+The page asks, in this order: `/api/visitor-counter` (Vercel function), then `visitor-counter.php` (PHP hosting). The first one that answers is used; if neither answers, the line stays hidden — nothing else on the page is affected.
+A visit = one browser on one day (India time), using an anonymous random cookie (`sg_vid`). Nothing else about the visitor is stored.
+
+Files (already inside both option folders):
+```
+api/visitor-counter.js     ← Vercel serverless function
+visitor-counter.php        ← PHP hosting (Apache / IIS with PHP)
+```
+
+### Vercel (the official website)
+1. **Whole kit in the GitHub repository (as now):** nothing to set. The kit root has `vercel.json` and `api/visitor-counter.js`: the site address opens the GRID (`option-B-split`), `/api/visitor-counter` is the counter, and the kit's other folders and files (scripts, notes, sources, server configs) answer 404 so they are not public. Keep **Project → Settings → General → Root Directory** empty and **Framework Preset = Other**, with no Build Command or Output Directory.
+   *Alternative:* put only the contents of `option-B-split/` in the repository (or set Root Directory to `option-B-split`). Its own `api/` folder is used then.
+2. Connect a Redis database for the counts: Vercel dashboard → project → **Storage** → create / connect **Upstash for Redis** (free plan is enough) → connect it to this project for Production (and Preview if wanted). Vercel adds the environment variables `KV_REST_API_URL` and `KV_REST_API_TOKEN` (the function also accepts `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN`).
+3. **Redeploy** (environment variables only reach new deployments).
+4. Open `https://<site>/api/visitor-counter?check=1` — it must show `"ok": true, "store": "connected"`. Then open the GRID: the footer shows the counts.
+5. Optional: `GRID_COUNTER_PREFIX` (default `egsg`) — set a different value if the same Redis database is shared with another site.
+
+No npm packages or build step are needed (Node 18+ built-in `fetch`).
+
+### PHP hosting
+Upload `visitor-counter.php` next to the page. The web server must be able to create/write the folder `visitor-counter-data/` beside it (the script adds an `.htaccess` that blocks direct access to it on Apache; on IIS deny that folder in `web.config`). Check with `visitor-counter.php?check=1` → `"ok": true`.
+
+### Troubleshooting
+| `?check=1` shows | Fix |
+|---|---|
+| 404 page (also for the GRID itself) | `vercel.json` / `api/` are not at the project root: deploy the kit root as is with Root Directory empty, or set Root Directory to `option-B-split` (step 1). Check Settings → General: Framework Preset Other, no Output Directory. |
+| `"store": "not connected"` | Redis not connected to this project/environment, or not redeployed after connecting (steps 2–3). |
+| `"store": "connected but failing"` | Token/URL wrong or database paused — reconnect the database and redeploy. |
+The page also writes the reason in the browser console as `[Smart GRID] Visitor counter: …`.

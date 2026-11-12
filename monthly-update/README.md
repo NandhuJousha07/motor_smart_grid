@@ -7,6 +7,7 @@
 | `build.py` | Workbook rules (only for the PAYOUT Grid workbook route): segment classification (GVW bands, PCV, Misc-D, Private Car, Two-Wheeler), insurer-name cleanup, merging identical offers, ranking |
 | `parse.py` | Reads the state sheets (`TN PO`, `KL PO`, `KA PO`, `AP-TS PO`, `MH PO`) of a PAYOUT Grid workbook |
 | `corrections_Oct2026.json` | October's manual correction (kept for the record). Start a new file for a month that needs one (`--corrections`) |
+| `counter/` | Visitor counter sources (`visitor-counter.js` for Vercel, `visitor-counter.php` for PHP); copied into both options on every release |
 | `requirements.txt` | Python dependency for the workbook route (`openpyxl`) |
 
 Needs Python 3.9+.

@@ -406,3 +406,23 @@
     body > *{ display:none !important; }
     body::after{ content:"Printing is disabled for the EG Smart GRID."; display:block; padding:40px; font:16px sans-serif; }
   }
+
+  /* ---------- Version flash: what changed in the opened version ---------- */
+  .vflash{ margin-top:12px; display:flex; align-items:center; gap:10px; border:1px solid #E8A33D; border-radius:8px;
+    background:linear-gradient(90deg,#FFF4DE,#FFE9C2); color:#3A2200; padding:6px 8px 6px 10px; overflow:hidden; }
+  .vflash[hidden]{ display:none; }
+  .vflash-tag{ flex:none; font-weight:800; font-size:12px; letter-spacing:.04em; text-transform:uppercase; color:#fff;
+    background:#C2410C; border-radius:5px; padding:3px 8px; animation:vflashBlink 1.2s ease-in-out infinite; }
+  @keyframes vflashBlink{ 0%,100%{ opacity:1; } 50%{ opacity:.45; } }
+  .vflash-track{ flex:1; min-width:0; overflow:hidden; white-space:nowrap; }
+  .vflash-move{ display:inline-block; padding-left:100%; animation:vflashRun var(--vflash-dur,30s) linear infinite; font-size:14px; }
+  .vflash-track:hover .vflash-move{ animation-play-state:paused; }
+  .vflash-item{ margin-right:48px; }
+  .vflash-item b{ color:#9A3412; }
+  .vflash-close{ flex:none; border:0; background:transparent; color:#7C2D12; font-size:18px; line-height:1; cursor:pointer; padding:2px 6px; }
+  @keyframes vflashRun{ from{ transform:translateX(0); } to{ transform:translateX(-100%); } }
+  @media (prefers-reduced-motion: reduce){
+    .vflash-track{ white-space:normal; } .vflash-move{ padding-left:0; animation:none; } .vflash-tag{ animation:none; }
+  }
+  :root[data-theme="dark"] .vflash{ background:#3A2A12; color:#FBE7C6; border-color:#9A6B1F; }
+  :root[data-theme="dark"] .vflash-item b{ color:#FDBA74; }

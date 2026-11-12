@@ -1,10 +1,10 @@
 {
-  "product": "Motor Smart GRID",
-  "version": "November 2026 - Version 1",
-  "period": "03 – 30 November 2026",
+  "product": "EG Smart GRID",
+  "version": "November 2026 - Version 2",
+  "period": "15 – 30 November 2026",
   "publishedMonth": "November 2026",
-  "revisionNote": "",
-  "source": "Smart GRID project data (November 2026 V1)",
+  "revisionNote": "Kshema revised Two-Wheeler terms for Rest of Karnataka",
+  "source": "Smart GRID project data (November 2026 V2)",
   "versions": [
     {
       "name": "Smart Grid October 2026 - Version 1",
@@ -23,29 +23,34 @@
     },
     {
       "name": "Smart Grid November 2026 - Version 1",
-      "dates": "03-11-2026 to 30-11-2026",
-      "rates": 4513
+      "dates": "03-11-2026 to 14-11-2026",
+      "rates": 4453
+    },
+    {
+      "name": "Smart Grid November 2026 - Version 2",
+      "dates": "15-11-2026 to 30-11-2026",
+      "rates": 4454
     }
   ],
-  "builtAt": "2026-11-02T19:55:49+00:00",
+  "builtAt": "2026-11-11T10:26:28+00:00",
   "states": [
     "TN",
     "KL",
     "KA",
     "AP-TS"
   ],
-  "totalRates": 4513,
+  "totalRates": 4454,
   "ratesByState": {
-    "TN": 1189,
-    "KL": 654,
-    "KA": 1007,
-    "AP-TS": 1663
+    "TN": 1119,
+    "KL": 656,
+    "KA": 1015,
+    "AP-TS": 1664
   },
   "insurers": 23,
   "changeLabels": {
-    "Decreased": 422,
-    "Increased": 196,
-    "Newly added GRID": 428,
-    "Mixed": 12
+    "Decreased": 439,
+    "Increased": 219,
+    "Newly added GRID": 380,
+    "Mixed": 24
   }
 }
