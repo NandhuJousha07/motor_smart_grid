@@ -10,10 +10,10 @@ Tick each item on the **portal URL** on desktop and on one Android/iOS phone.
 
 ## Data (expected counts, "All segments / All insurers", empty search)
 - [ ] State list shows exactly: Tamil Nadu, Kerala, Karnataka, Andhra Pradesh & Telangana
-- [ ] Tamil Nadu → **1,119** rates shown
-- [ ] Kerala → **656**
-- [ ] Karnataka → **1,015**
-- [ ] Andhra Pradesh & Telangana → **1,664**
+- [ ] Tamil Nadu → **1,120** rates shown
+- [ ] Kerala → **665**
+- [ ] Karnataka → **1,022**
+- [ ] Andhra Pradesh & Telangana → **1,675**
 
 ## Spot checks (Tamil Nadu, November V1)
 - [ ] LCV (Upto 2000): top row **United India 56.00 / 56.00**, marked BEST

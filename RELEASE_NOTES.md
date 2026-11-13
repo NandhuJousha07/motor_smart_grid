@@ -1,5 +1,45 @@
 # Release Notes — EG Smart GRID
 
+## November 2026 · Version 2, build 30 — 13 Nov 2026 (Chola MS Private Car Package on OD)
+
+Option B: replace `data/grid-data.json` only. Option A: replace the single HTML file.
+
+- **Chola MS – Private Car – Package (all states, November Versions 1 and 2):** payout values now show "(OD)" (commission is on OD premium), e.g. 30.00(OD). Values unchanged.
+
+## November 2026 · Version 2, build 29 — 13 Nov 2026 (IFFCO KL, KA, AP-TS aligned to IFFCO heat maps)
+
+Option B: replace `data/grid-data.json` only. Option A: replace the single HTML file.
+
+- **IFFCO – Kerala, Karnataka, AP-TS (November Versions 1 and 2), 15.50 (above-6-lakh slab):** segments now follow IFFCO's heat maps — comprehensive (Package) and Act-only/SATP (TP). Red segments are not shown; a Red policy type shows "NA".
+  - Kerala: goods up to 20,000 GVW 15.50/15.50; 20,000–40,000 TP only (NA/15.50); Taxi up to 6 and 7–18 seats 15.50/15.50; Misc-D Excavators & E-Rickshaw 15.50/NA. Above 40,000 not applicable.
+  - Karnataka: goods up to 7,500 15.50/15.50; 12,000–40,000 15.50/NA; Taxi 7–10 seats 15.50/15.50; Misc-D Excavators & E-Rickshaw 15.50/NA. 7,500–12,000, above 40,000 and Taxi up to 6 not applicable.
+  - AP-TS: goods up to 7,500 and above 40,000 Telangana RTOs only; 7,500–40,000 AP & TS; Taxi up to 6 and 7–18 seats AP & TS; Misc-D Excavators AP only and E-Rickshaw AP & TS (15.50/NA).
+- November V2: 4,482 rates (TN 1,120 · KL 665 · KA 1,022 · AP-TS 1,675).
+
+## November 2026 · Version 2, build 28 — 13 Nov 2026 (IFFCO added for KL, KA and AP-TS)
+
+Option B: replace `data/grid-data.json` only. Option A: replace the single HTML file.
+
+- **IFFCO – Kerala, Karnataka, AP-TS (November Versions 1 and 2), all at 15.50 / 15.50** (IFFCO commission structure, above-6-lakh premium slab), labelled "Newly added GRID":
+  - Kerala: goods carrying up to 40,000 GVW (LCV to HCV 20000–40000), Taxi (up to 6 and 7–18 seats), Misc-D Excavators & E-Rickshaw.
+  - Karnataka: goods carrying up to 7,500 GVW, Taxi (up to 6 and 7–10 seats).
+  - AP-TS: goods carrying all GVW (incl. above 40,000), Taxi (up to 6 and 7–10 seats), Misc-D Excavators & E-Rickshaw.
+  - Goods carrying: BharatBenz declined.
+- November V2: 4,479 rates (TN 1,120 · KL 665 · KA 1,020 · AP-TS 1,674).
+
+## November 2026 · Version 2, build 27 — 13 Nov 2026 (IFFCO TN above 40000 GVW payout corrected)
+
+Option B: replace `data/grid-data.json` only. Option A: replace the single HTML file.
+
+- **IFFCO – Tamil Nadu – HCV Above 40000:** payout corrected to **15.50 / 15.50** (IFFCO commission structure, above-6-lakh premium slab). The November special approval (18.50 / 18.00) applies only up to 40,000 GVW. Remark: Goods Carrying only; BharatBenz declined. November Versions 1 and 2.
+
+## November 2026 · Version 2, build 26 — 13 Nov 2026 (IFFCO TN above 40000 GVW)
+
+Option B: replace `data/grid-data.json` only. Option A: replace the single HTML file.
+
+- **IFFCO – Tamil Nadu – HCV Above 40000:** added at 18.50 / 18.00 (Goods Carrying only; BharatBenz declined; all TN RTOs), November Versions 1 and 2, labelled "Newly added GRID". IFFCO's heat map shows A1 Goods Carrying GT 40000 as Green for Tamil Nadu. It now ranks first in TN HCV Above 40000.
+- November V2: 4,455 rates (TN 1,120 · KL 656 · KA 1,015 · AP-TS 1,664).
+
 ## November 2026 · Version 2, build 25 — 11 Nov 2026 (TATA AIG Taxi removed)
 
 Option B: replace `data/grid-data.json` only. Option A: replace the single HTML file.

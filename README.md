@@ -2,7 +2,7 @@
 
 **Release:** November 2026 · Version 2 · 15 – 30 November 2026 (Version 1: 03 – 14 November 2026)
 **States:** Tamil Nadu, Kerala, Karnataka, Andhra Pradesh & Telangana
-**Rates (November V2):** 4,454 from 23 insurers (TN 1,119 · KL 656 · KA 1,015 · AP-TS 1,664)
+**Rates (November V2):** 4,482 from 23 insurers (TN 1,120 · KL 665 · KA 1,022 · AP-TS 1,675)
 **Also inside:** October 2026 Versions 1–3, under the "GRID month" selector (October V3 now ends 02-11-2026)
 
 Start here, then follow `DEPLOYMENT_GUIDE.md`.
