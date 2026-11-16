@@ -8,7 +8,7 @@ which must never be published. They are kept by the MIS team.
 |---|---|
 | Magma | EG_GRID_Magma_Nov26.xlsx (Pay sheet) |
 | TATA AIG | TATA AIG November EG GRID (Pay sheet); TN School Bus: October payout continued (TATA AIG approval) |
-| SBI | SBI November EG GRID (Pay sheet) |
+| SBI | SBI November EG GRID (Pay sheet); Version 2: SBI "Agent C & D Cat. Broker Grid revision Nov26 w.e.f. 17th Nov26" (TN & KL) |
 | Shriram | Shriram November PO sheets |
 | ICICI | ICICI November EG GRID + insurer CV_Grid_Nov_26.xlsx (CV_AOTP) + ICICI Chennai branch message (PCV Auto) |
 | Royal Sundaram | Mail: GCV 4W COMP New / Old payout sheets Nov-26, Other than GCV Nov-26 (GCV STP) |

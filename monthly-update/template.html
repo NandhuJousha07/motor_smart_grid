@@ -553,7 +553,7 @@
   <div id="results"></div>
 
   <footer>
-    For every vehicle category and RTO zone, the best available payout per insurer is ranked first within its segment — the top three rows in each table are highlighted, with the leading offer marked <strong>BEST</strong>. Search matches insurer names, segment text, RTO codes and remark text together — or type <strong>GVW: 1547</strong> to find every LCV/MCV/HCV segment whose weight range actually covers that figure, including wide-span bands like "0 to 40000". This grid reflects insurer-submitted commission terms for the period shown and may change without notice — always confirm before quoting a rate.
+    For every vehicle category and RTO zone, the best available payout per insurer is ranked first within its segment — the top three rows in each table are highlighted, with the leading offer marked <strong>BEST</strong>. Search matches insurer names, segment text, RTO codes and remark text together — or type <strong>GVW: 1547</strong> to find every LCV/MCV/HCV segment whose weight range actually covers that figure, including wide-span bands like "0 to 40000". This grid reflects insurer-submitted commission terms for the period shown and may change without notice — always confirm before quoting a rate. The page refreshes itself every hour so you always see the latest GRID.
     <div class="visitor-count" id="visitor-count" hidden>Today's visitors: <b id="visitor-today-n"></b> &nbsp;·&nbsp; Total visitors: <b id="visitor-count-n"></b></div>
   </footer>
 </div>
@@ -694,6 +694,27 @@ function __gridDecode(src){
       .catch(function(){ notes.push(url + ' could not be reached'); tryUrl(i + 1); });
   }
   tryUrl(0);
+})();
+/* ---- Auto refresh: reload the page every hour so an open tab never keeps showing an old GRID.
+   It waits until the user has been idle for 2 minutes (or the tab is in the background) so a search in
+   progress is not cut off; after 90 minutes it refreshes anyway. Returning to a tab that has been open
+   for an hour or more refreshes it straight away. ---- */
+(function(){
+  var EVERY = 60 * 60 * 1000, IDLE = 2 * 60 * 1000, HARD = 90 * 60 * 1000;
+  var loadedAt = Date.now(), lastAct = Date.now(), going = false;
+  ['pointerdown', 'keydown', 'wheel', 'touchstart', 'input', 'scroll'].forEach(function(ev){
+    try { window.addEventListener(ev, function(){ lastAct = Date.now(); }, { passive: true, capture: true }); } catch(e){}
+  });
+  function age(){ return Date.now() - loadedAt; }
+  function reload(){ if (going) return; going = true; try { window.location.reload(); } catch(e){ going = false; } }
+  function check(){
+    if (age() < EVERY) return;
+    if (document.hidden || Date.now() - lastAct >= IDLE || age() >= HARD) reload();
+  }
+  setInterval(check, 30 * 1000);
+  document.addEventListener('visibilitychange', function(){ if (!document.hidden && age() >= EVERY) reload(); });
+  window.addEventListener('focus', function(){ if (age() >= EVERY) reload(); });
+  window.addEventListener('pageshow', function(e){ if (e.persisted && age() >= EVERY) reload(); });
 })();
 (function(){
   var DATA = __gridDecode(document.getElementById('grid-data').textContent);

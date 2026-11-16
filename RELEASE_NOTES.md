@@ -1,5 +1,37 @@
 # Release Notes — EG Smart GRID
 
+## November 2026 · Version 2, build 33 — 16 Nov 2026 (Version 3 folded into Version 2)
+
+Option B: replace `data/grid-data.json` only. Option A: replace the single HTML file.
+
+- **Version 3 removed; its SBI changes are now part of Smart Grid November 2026 – Version 2, 15-11-2026 to 30-11-2026** (Version 2 keeps its original dates). The November versions are now Version 1 (03–14 Nov) and Version 2 (15–30 Nov).
+- Version 2 now carries both the Kshema Rest of Karnataka Two-Wheeler revision and the SBI Tamil Nadu & Kerala revision (Two-Wheeler SAOD, Scooter Package & SATP, PCV Auto Renewal, Private Car SATP 1–10 years — values as in build 31). Labels still compare against November Version 1.
+- "What's changed" flash for Version 2 lists the Kshema and SBI changes.
+- Hourly auto refresh (build 32) unchanged. November V2: 4,482 rates (TN 1,120 · KL 665 · KA 1,022 · AP-TS 1,675).
+
+## November 2026 · Version 3, build 32 — 16 Nov 2026 (hourly auto refresh)
+
+Replace the page files: Option B `index.html` and `assets/app.js` (`data/grid-data.json` and `assets/styles.css` are unchanged from build 31); Option A the single HTML file.
+
+- **Auto refresh every hour:** an open GRID page now reloads itself once it has been open for an hour, so users no longer keep working from an old GRID. To avoid cutting off someone mid-search it waits until there has been no click, typing or scrolling for 2 minutes (or the tab is in the background); after 90 minutes it reloads regardless. Coming back to a tab that has been open for an hour or more (switching tabs, unlocking the PC, reopening the phone browser) reloads it straight away. As before, a reload starts with cleared filters and opens the version that applies today.
+- Footer line added: "The page refreshes itself every hour so you always see the latest GRID."
+- One-time step: pages already open before this deployment don't have the timer yet — they pick it up at their next manual refresh.
+- Rates unchanged from build 31 (November V3: 4,482).
+
+## November 2026 · Version 3, build 31 — 16 Nov 2026 (SBI revision for Tamil Nadu & Kerala, w.e.f. 17 Nov)
+
+Option B: replace `data/grid-data.json` only. Option A: replace the single HTML file.
+
+- **New version: Smart Grid November 2026 – Version 3, 17-11-2026 to 30-11-2026** (effective date of SBI's revised Agency / C & D / Broker grid, 17 Nov 2026). Version 2 now ends 16-11-2026; Versions 1 and 2 stay in the version selector.
+- **SBI – Tamil Nadu & Kerala** (labels compare against November Version 1):
+  - Two-Wheeler SAOD, all TN clusters (Chennai, Coimbatore, NTS, Rest of TN) and Kerala: Scooter **20.00** (−25.00), Bike **15.00** (−10.00).
+  - Two-Wheeler Scooter Package and Scooter SATP, Chennai: **20.00** (−25.00).
+  - PCV Auto, Renewal/Rollover (non-diesel), Chennai: **45.00 / 46.00** (−2.00 / TP −2.00). New vehicle unchanged.
+  - Private Car SATP, 1 to 10 years (Chennai, petrol/hybrid/EV above 1500CC): **15.00** (−2.00) — SBI now applies 5% less for 1–10-year-old vehicles (was 3%). More than 10 years unchanged.
+- "What's changed" flash for Version 3 lists the SBI changes for Tamil Nadu and Kerala.
+- SBI's Maharashtra tractor declined-RTO list and the Haryana GCV note in the same revision are outside the GRID's states.
+- November V3: 4,482 rates (TN 1,120 · KL 665 · KA 1,022 · AP-TS 1,675). Change labels: Increased 218 · Decreased 447 · Mixed 24 · Newly added GRID 407.
+
 ## November 2026 · Version 2, build 30 — 13 Nov 2026 (Chola MS Private Car Package on OD)
 
 Option B: replace `data/grid-data.json` only. Option A: replace the single HTML file.

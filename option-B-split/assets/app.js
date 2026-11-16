@@ -130,6 +130,27 @@ function __gridDecode(src){
   }
   tryUrl(0);
 })();
+/* ---- Auto refresh: reload the page every hour so an open tab never keeps showing an old GRID.
+   It waits until the user has been idle for 2 minutes (or the tab is in the background) so a search in
+   progress is not cut off; after 90 minutes it refreshes anyway. Returning to a tab that has been open
+   for an hour or more refreshes it straight away. ---- */
+(function(){
+  var EVERY = 60 * 60 * 1000, IDLE = 2 * 60 * 1000, HARD = 90 * 60 * 1000;
+  var loadedAt = Date.now(), lastAct = Date.now(), going = false;
+  ['pointerdown', 'keydown', 'wheel', 'touchstart', 'input', 'scroll'].forEach(function(ev){
+    try { window.addEventListener(ev, function(){ lastAct = Date.now(); }, { passive: true, capture: true }); } catch(e){}
+  });
+  function age(){ return Date.now() - loadedAt; }
+  function reload(){ if (going) return; going = true; try { window.location.reload(); } catch(e){ going = false; } }
+  function check(){
+    if (age() < EVERY) return;
+    if (document.hidden || Date.now() - lastAct >= IDLE || age() >= HARD) reload();
+  }
+  setInterval(check, 30 * 1000);
+  document.addEventListener('visibilitychange', function(){ if (!document.hidden && age() >= EVERY) reload(); });
+  window.addEventListener('focus', function(){ if (age() >= EVERY) reload(); });
+  window.addEventListener('pageshow', function(e){ if (e.persisted && age() >= EVERY) reload(); });
+})();
 function startGrid(DATA){
   // ---- GRID versions, month-wise. DATA = {versions:[{id,name,label,month,version,start,end,period,note,data|file}]}
   // A version carries its rates inline (data) or as a separate file (file), loaded when it is opened.

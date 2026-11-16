@@ -3,7 +3,7 @@
   "version": "November 2026 - Version 2",
   "period": "15 – 30 November 2026",
   "publishedMonth": "November 2026",
-  "revisionNote": "Kshema revised Two-Wheeler terms for Rest of Karnataka",
+  "revisionNote": "Kshema revised Two-Wheeler terms for Rest of Karnataka; SBI revised Two-Wheeler, PCV Auto and Private Car SATP terms for Tamil Nadu & Kerala",
   "source": "Smart GRID project data (November 2026 V2)",
   "versions": [
     {
@@ -32,7 +32,7 @@
       "rates": 4482
     }
   ],
-  "builtAt": "2026-11-13T10:11:45+00:00",
+  "builtAt": "2026-11-16T10:50:43+00:00",
   "states": [
     "TN",
     "KL",
@@ -48,9 +48,9 @@
   },
   "insurers": 23,
   "changeLabels": {
-    "Decreased": 439,
-    "Increased": 219,
-    "Newly added GRID": 408,
+    "Decreased": 447,
+    "Increased": 218,
+    "Newly added GRID": 407,
     "Mixed": 24
   }
 }

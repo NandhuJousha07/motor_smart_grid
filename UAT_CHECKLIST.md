@@ -41,3 +41,8 @@ Tick each item on the **portal URL** on desktop and on one Android/iOS phone.
 - [ ] Previous release kept for rollback
 - [ ] Portal menu link / iframe page updated
 - [ ] Signed off by: ____________________  Date: __________
+
+## Auto refresh (build 32)
+- [ ] Leave the page open and idle for just over an hour: it reloads by itself and shows the version that applies today
+- [ ] Keep typing/scrolling past the hour: no reload until 2 minutes idle (or 90 minutes in total)
+- [ ] Switch to another tab for over an hour, then come back: the page reloads straight away
