@@ -1,5 +1,21 @@
 # Release Notes — EG Smart GRID
 
+## November 2026 · Version 2, build 35 — 16 Nov 2026 (5+5 Two-Wheeler removed)
+
+Option B: replace `data/grid-data.json` only. Option A: replace the single HTML file.
+
+- **Two-Wheeler 5+5 (long-term) lines removed from November Version 2**, all states: National "Bike / Scooter – Long Term Package (5+5)" and IndusInd (Reliance) Bundle lines with Policy Type 5+5. Where an IndusInd line covered both 1+5 and 5+5, only the 1+5 condition is kept. Rankings in the Two-Wheeler Bundle sections are recalculated. November Version 1 and October are unchanged.
+- Same removal on the Capivision GRID and POSP GRID pages.
+- November V2: 4,453 rates (TN 1,112 · KL 659 · KA 1,014 · AP-TS 1,668).
+
+## November 2026 · Version 2, build 34 — 16 Nov 2026 (POSP Special Offer, all states)
+
+Option B: replace `data/grid-data.json` only. Option A: replace the single HTML file.
+
+- **POSP Special Offer badge restored from November Version 2** on IndusInd (Reliance) School Bus in Tamil Nadu, Kerala, Karnataka and AP-TS (same terms as October): "Hit ₹5L volume to unlock an additional 3.0% payout. No seating capacity restrictions." — TN 68.5% → 71.5%; KL, KA, AP-TS 70% → 73%.
+- Same offer added on the Capivision GRID (TN 64.5% → 67.5%; other states 66% → 69%) and POSP GRID (TN 66.5% → 69.5%; other states 68% → 71%) pages.
+- Rates unchanged (November V2: 4,482).
+
 ## November 2026 · Version 2, build 33 — 16 Nov 2026 (Version 3 folded into Version 2)
 
 Option B: replace `data/grid-data.json` only. Option A: replace the single HTML file.

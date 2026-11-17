@@ -29,28 +29,28 @@
     {
       "name": "Smart Grid November 2026 - Version 2",
       "dates": "15-11-2026 to 30-11-2026",
-      "rates": 4482
+      "rates": 4453
     }
   ],
-  "builtAt": "2026-11-16T10:50:43+00:00",
+  "builtAt": "2026-11-16T12:59:32+00:00",
   "states": [
     "TN",
     "KL",
     "KA",
     "AP-TS"
   ],
-  "totalRates": 4482,
+  "totalRates": 4453,
   "ratesByState": {
-    "TN": 1120,
-    "KL": 665,
-    "KA": 1022,
-    "AP-TS": 1675
+    "TN": 1112,
+    "KL": 659,
+    "KA": 1014,
+    "AP-TS": 1668
   },
   "insurers": 23,
   "changeLabels": {
-    "Decreased": 447,
+    "Decreased": 448,
     "Increased": 218,
-    "Newly added GRID": 407,
-    "Mixed": 24
+    "Newly added GRID": 402,
+    "Mixed": 23
   }
 }
